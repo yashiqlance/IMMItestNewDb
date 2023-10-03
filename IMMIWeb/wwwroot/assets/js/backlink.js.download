@@ -1,0 +1,17 @@
+var revHelpLinkElement = document.querySelector('link[rev="help"][href]:not([href=""]), link[rel="DCTERMS.isReferencedBy"][href]:not([href=""])');
+
+if (revHelpLinkElement && revHelpLinkElement.href)
+{
+	var aElement = document.createElement('a');
+	aElement.id = 'isReferencedBy';
+	aElement.href = revHelpLinkElement.href;
+	aElement.target = '_blank';
+	aElement.textContent = '⬅︎ Backlink';	
+	document.body.appendChild(aElement);
+	
+	var styleheetLinkElement = document.createElement('link');
+	styleheetLinkElement.rel = 'stylesheet';
+	styleheetLinkElement.href = '//bittersmann.de/lib/backlink/backlink.css';
+	document.head.appendChild(styleheetLinkElement);
+}
+

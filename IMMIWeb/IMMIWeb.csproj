@@ -1,0 +1,258 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+	  <AspNetCoreHostingModel>OutOfProcess</AspNetCoreHostingModel>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="Models\CommonListViewModel.cs" />
+    <Compile Remove="Models\ConsultantProfileViewModel.cs" />
+    <Compile Remove="Models\ConsultantViewModel.cs" />
+    <Compile Remove="Models\CountryViewModel.cs" />
+    <Compile Remove="Models\ErrorViewModel.cs" />
+    <Compile Remove="Models\LoginViewModel.cs" />
+    <Compile Remove="Models\SlotViewModel.cs" />
+    <Compile Remove="Models\TypeOfServiceViewModel.cs" />
+    <Compile Remove="Models\UserViewModel.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="12.0.1" />
+    <PackageReference Include="AWSSDK.Core" Version="3.7.107.12" />
+    <PackageReference Include="AWSSDK.S3" Version="3.7.107.3" />
+    <PackageReference Include="Dapper" Version="2.0.123" />
+    <PackageReference Include="DeepL.net" Version="1.7.1" />
+    <PackageReference Include="FirebaseAdmin" Version="2.4.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.Google" Version="6.0.19" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.OpenIdConnect" Version="6.0.19" />
+    <PackageReference Include="Microsoft.AspNetCore.Session" Version="2.2.0" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="7.0.5">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="7.0.5" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="7.0.5">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="7.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Hosting" Version="7.0.1" />
+    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="6.0.13" />
+    <PackageReference Include="RestSharp" Version="110.2.0" />
+    <PackageReference Include="Stripe.net" Version="41.18.0" />
+    <PackageReference Include="System.ServiceModel.Syndication" Version="7.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\IMMIWeb.Service\IMMIWeb.Service.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Areas\Consultant\Data\" />
+    <Folder Include="Areas\Consultant\Models\" />
+    <Folder Include="Infrastructure\MailTemplate\" />
+    <Folder Include="Models\" />
+    <Folder Include="Views\UserAppointment\" />
+    <Folder Include="wwwroot\ImagesTest\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Update="Areas\Consultant\Views\Shared\_AboutUs.cshtml">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Update="Areas\Consultant\Views\Shared\_Layout.cshtml">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Update="Areas\Consultant\Views\Shared\_PrivacyPolicy.cshtml">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Update="Areas\Consultant\Views\Shared\_Terms&amp;Condition.cshtml">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Update="Areas\Consultant\Views\Shared\_ValidationScriptsPartial.cshtml">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+  </ItemGroup>
+
+  <ItemGroup>
+    <UpToDateCheckInput Remove="Areas\Consultant\Views\Shared\Error.cshtml" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <_ContentIncludedByDefault Remove="Areas\Consultant\Views\Shared\Error.cshtml" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="wwwroot\assets\.DS_Store" />
+    <None Include="wwwroot\assets\fonts\Manrope-Bold.woff2" />
+    <None Include="wwwroot\assets\fonts\Manrope-Regular.woff2" />
+    <None Include="wwwroot\assets\fonts\Rubik-Black.woff2" />
+    <None Include="wwwroot\assets\fonts\Rubik-Bold.woff2" />
+    <None Include="wwwroot\assets\fonts\Rubik-ExtraBold.woff2" />
+    <None Include="wwwroot\assets\fonts\Rubik-Light.woff2" />
+    <None Include="wwwroot\assets\fonts\Rubik-Medium.woff2" />
+    <None Include="wwwroot\assets\fonts\Rubik-Regular.woff2" />
+    <None Include="wwwroot\assets\fonts\Rubik-SemiBold.woff2" />
+    <None Include="wwwroot\assets\images\.DS_Store" />
+    <None Include="wwwroot\assets\images\annette-black.svg" />
+    <None Include="wwwroot\assets\images\apple.svg" />
+    <None Include="wwwroot\assets\images\appstore.svg" />
+    <None Include="wwwroot\assets\images\arrow-1.svg" />
+    <None Include="wwwroot\assets\images\arrow-3.svg" />
+    <None Include="wwwroot\assets\images\arrow-up-2.svg" />
+    <None Include="wwwroot\assets\images\arrow-up.svg" />
+    <None Include="wwwroot\assets\images\arrow.svg" />
+    <None Include="wwwroot\assets\images\audio-call.svg" />
+    <None Include="wwwroot\assets\images\banner.svg" />
+    <None Include="wwwroot\assets\images\bars-graphic.svg" />
+    <None Include="wwwroot\assets\images\big-Star.svg" />
+    <None Include="wwwroot\assets\images\calendar.svg" />
+    <None Include="wwwroot\assets\images\call.svg" />
+    <None Include="wwwroot\assets\images\camera.svg" />
+    <None Include="wwwroot\assets\images\check-circle.svg" />
+    <None Include="wwwroot\assets\images\clock.svg" />
+    <None Include="wwwroot\assets\images\close-gray.svg" />
+    <None Include="wwwroot\assets\images\communication.svg" />
+    <None Include="wwwroot\assets\images\credit-card.svg" />
+    <None Include="wwwroot\assets\images\cross-ar.svg" />
+    <None Include="wwwroot\assets\images\Defaultprofile.svg" />
+    <None Include="wwwroot\assets\images\done.svg" />
+    <None Include="wwwroot\assets\images\down-arrow-2.svg" />
+    <None Include="wwwroot\assets\images\down-arrow-acc.svg" />
+    <None Include="wwwroot\assets\images\down-arrow.svg" />
+    <None Include="wwwroot\assets\images\down-arrow2.svg" />
+    <None Include="wwwroot\assets\images\download.svg" />
+    <None Include="wwwroot\assets\images\edit.svg" />
+    <None Include="wwwroot\assets\images\fannie.svg" />
+    <None Include="wwwroot\assets\images\fappstore.svg" />
+    <None Include="wwwroot\assets\images\fb.svg" />
+    <None Include="wwwroot\assets\images\feature.svg" />
+    <None Include="wwwroot\assets\images\fgoogleplay.svg" />
+    <None Include="wwwroot\assets\images\full-star.svg" />
+    <None Include="wwwroot\assets\images\g-arrow.svg" />
+    <None Include="wwwroot\assets\images\gogo.svg" />
+    <None Include="wwwroot\assets\images\google.svg" />
+    <None Include="wwwroot\assets\images\googleplay.svg" />
+    <None Include="wwwroot\assets\images\gray-arrow.svg" />
+    <None Include="wwwroot\assets\images\gray-down-arrow.svg" />
+    <None Include="wwwroot\assets\images\greater.svg" />
+    <None Include="wwwroot\assets\images\green-arrow.svg" />
+    <None Include="wwwroot\assets\images\green-left-arrow.svg" />
+    <None Include="wwwroot\assets\images\happy.svg" />
+    <None Include="wwwroot\assets\images\heart.svg" />
+    <None Include="wwwroot\assets\images\Incoming-call.svg" />
+    <None Include="wwwroot\assets\images\insta.svg" />
+    <None Include="wwwroot\assets\images\iPhone-12-Pro.svg" />
+    <None Include="wwwroot\assets\images\iPhone12Pro.svg" />
+    <None Include="wwwroot\assets\images\iPhone12Pro2.svg" />
+    <None Include="wwwroot\assets\images\left-arrow-2.svg" />
+    <None Include="wwwroot\assets\images\left-arrow.svg" />
+    <None Include="wwwroot\assets\images\left-ptn.svg" />
+    <None Include="wwwroot\assets\images\like.svg" />
+    <None Include="wwwroot\assets\images\loading.svg" />
+    <None Include="wwwroot\assets\images\logo.svg" />
+    <None Include="wwwroot\assets\images\logoipsum.svg" />
+    <None Include="wwwroot\assets\images\logoipsum2.svg" />
+    <None Include="wwwroot\assets\images\logoipsum3.svg" />
+    <None Include="wwwroot\assets\images\logoipsum4.svg" />
+    <None Include="wwwroot\assets\images\logoipsum5.svg" />
+    <None Include="wwwroot\assets\images\mail.svg" />
+    <None Include="wwwroot\assets\images\main-down-arrow.svg" />
+    <None Include="wwwroot\assets\images\messages-2.svg" />
+    <None Include="wwwroot\assets\images\messages.svg" />
+    <None Include="wwwroot\assets\images\next-btn.svg" />
+    <None Include="wwwroot\assets\images\NotFavourite.svg" />
+    <None Include="wwwroot\assets\images\Notification-2.svg" />
+    <None Include="wwwroot\assets\images\Notification.svg" />
+    <None Include="wwwroot\assets\images\null-star.svg" />
+    <None Include="wwwroot\assets\images\pdf.svg" />
+    <None Include="wwwroot\assets\images\phone-white.svg" />
+    <None Include="wwwroot\assets\images\profile-pic.svg" />
+    <None Include="wwwroot\assets\images\profile.svg" />
+    <None Include="wwwroot\assets\images\profile2.svg" />
+    <None Include="wwwroot\assets\images\quote.svg" />
+    <None Include="wwwroot\assets\images\red-arrow.svg" />
+    <None Include="wwwroot\assets\images\right-arrow-2.svg" />
+    <None Include="wwwroot\assets\images\right-arrow-3.svg" />
+    <None Include="wwwroot\assets\images\right-arrow.svg" />
+    <None Include="wwwroot\assets\images\right-patn.svg" />
+    <None Include="wwwroot\assets\images\robert-fox.svg" />
+    <None Include="wwwroot\assets\images\shield.svg" />
+    <None Include="wwwroot\assets\images\signin.svg" />
+    <None Include="wwwroot\assets\images\sms.svg" />
+    <None Include="wwwroot\assets\images\Star.svg" />
+    <None Include="wwwroot\assets\images\twiter.svg" />
+    <None Include="wwwroot\assets\images\up-arrow.svg" />
+    <None Include="wwwroot\assets\images\user.svg" />
+    <None Include="wwwroot\assets\images\verify.svg" />
+    <None Include="wwwroot\assets\images\video.svg" />
+    <None Include="wwwroot\assets\images\wade-warren.svg" />
+    <None Include="wwwroot\assets\images\wallet.svg" />
+    <None Include="wwwroot\assets\images\youtube.svg" />
+    <None Include="wwwroot\assets\js\.DS_Store" />
+    <None Include="wwwroot\assets\js\backlink.js.download" />
+    <None Include="wwwroot\assets\js\bootstrap.bundle.min.js.download" />
+    <None Include="wwwroot\assets\js\custom.js" />
+    <None Include="wwwroot\assets\js\custom.js.download" />
+    <None Include="wwwroot\assets\js\intlTelInput.js.download" />
+    <None Include="wwwroot\assets\js\jquery.min.js" />
+    <None Include="wwwroot\assets\js\jquery.min.js.download" />
+    <None Include="wwwroot\assets\js\nice.js" />
+    <None Include="wwwroot\assets\js\owl.carousel.js" />
+    <None Include="wwwroot\assets\js\owl.carousel.js.download" />
+    <None Include="wwwroot\assets\js\wow.js" />
+    <None Include="wwwroot\assets\js\wow.js.download" />
+    <None Include="wwwroot\assets\video\.DS_Store" />
+    <None Include="wwwroot\js\cchat.js" />
+    <None Include="wwwroot\js\jquery.payform.min.js" />
+    <None Include="wwwroot\js\site.js" />
+    <None Include="wwwroot\lib\bootstrap\dist\css\bootstrap-grid.css.map" />
+    <None Include="wwwroot\lib\bootstrap\dist\css\bootstrap-grid.min.css.map" />
+    <None Include="wwwroot\lib\bootstrap\dist\css\bootstrap-grid.rtl.css.map" />
+    <None Include="wwwroot\lib\bootstrap\dist\css\bootstrap-grid.rtl.min.css.map" />
+    <None Include="wwwroot\lib\bootstrap\dist\css\bootstrap-reboot.css.map" />
+    <None Include="wwwroot\lib\bootstrap\dist\css\bootstrap-reboot.min.css.map" />
+    <None Include="wwwroot\lib\bootstrap\dist\css\bootstrap-reboot.rtl.css.map" />
+    <None Include="wwwroot\lib\bootstrap\dist\css\bootstrap-reboot.rtl.min.css.map" />
+    <None Include="wwwroot\lib\bootstrap\dist\css\bootstrap-utilities.css.map" />
+    <None Include="wwwroot\lib\bootstrap\dist\css\bootstrap-utilities.min.css.map" />
+    <None Include="wwwroot\lib\bootstrap\dist\css\bootstrap-utilities.rtl.css.map" />
+    <None Include="wwwroot\lib\bootstrap\dist\css\bootstrap-utilities.rtl.min.css.map" />
+    <None Include="wwwroot\lib\bootstrap\dist\css\bootstrap.css.map" />
+    <None Include="wwwroot\lib\bootstrap\dist\css\bootstrap.min.css.map" />
+    <None Include="wwwroot\lib\bootstrap\dist\css\bootstrap.rtl.css.map" />
+    <None Include="wwwroot\lib\bootstrap\dist\css\bootstrap.rtl.min.css.map" />
+    <None Include="wwwroot\lib\bootstrap\dist\js\bootstrap.bundle.js" />
+    <None Include="wwwroot\lib\bootstrap\dist\js\bootstrap.bundle.js.map" />
+    <None Include="wwwroot\lib\bootstrap\dist\js\bootstrap.bundle.min.js" />
+    <None Include="wwwroot\lib\bootstrap\dist\js\bootstrap.bundle.min.js.map" />
+    <None Include="wwwroot\lib\bootstrap\dist\js\bootstrap.esm.js" />
+    <None Include="wwwroot\lib\bootstrap\dist\js\bootstrap.esm.js.map" />
+    <None Include="wwwroot\lib\bootstrap\dist\js\bootstrap.esm.min.js" />
+    <None Include="wwwroot\lib\bootstrap\dist\js\bootstrap.esm.min.js.map" />
+    <None Include="wwwroot\lib\bootstrap\dist\js\bootstrap.js" />
+    <None Include="wwwroot\lib\bootstrap\dist\js\bootstrap.js.map" />
+    <None Include="wwwroot\lib\bootstrap\dist\js\bootstrap.min.js" />
+    <None Include="wwwroot\lib\bootstrap\dist\js\bootstrap.min.js.map" />
+    <None Include="wwwroot\lib\bootstrap\LICENSE" />
+    <None Include="wwwroot\lib\jquery-validation-unobtrusive\jquery.validate.unobtrusive.js" />
+    <None Include="wwwroot\lib\jquery-validation-unobtrusive\jquery.validate.unobtrusive.min.js" />
+    <None Include="wwwroot\lib\jquery-validation\dist\additional-methods.js" />
+    <None Include="wwwroot\lib\jquery-validation\dist\additional-methods.min.js" />
+    <None Include="wwwroot\lib\jquery-validation\dist\jquery.validate.js" />
+    <None Include="wwwroot\lib\jquery-validation\dist\jquery.validate.min.js" />
+    <None Include="wwwroot\lib\jquery-validation\LICENSE.md" />
+    <None Include="wwwroot\lib\jquery\dist\jquery.js" />
+    <None Include="wwwroot\lib\jquery\dist\jquery.min.js" />
+    <None Include="wwwroot\lib\jquery\dist\jquery.min.map" />
+  </ItemGroup>
+
+</Project>

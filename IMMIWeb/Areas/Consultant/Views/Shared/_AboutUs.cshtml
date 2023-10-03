@@ -1,0 +1,9 @@
+﻿@model IEnumerable<IMMIWeb.Service.Models.CMSViewModel>
+
+@foreach (var item in Model)
+{
+    @if (item.Module == 1 && item.UserRole == 1)
+    {
+        <h5>@Html.Raw(item.Description)</h5>
+    }
+}

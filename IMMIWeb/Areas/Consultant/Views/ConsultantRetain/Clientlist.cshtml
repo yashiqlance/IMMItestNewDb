@@ -1,0 +1,53 @@
+﻿@model IEnumerable<IMMIWeb.Service.Models.ConsultantRetainClientListViewModel>
+@using IMMIWeb.Infrastructure;
+<section class="login-home fav-con-sec mt-90">
+    <div class="upcoming-app">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="title">
+                        <h2>My Client</h2>
+                    </div>
+                </div>
+                @foreach (var item in Model)
+                {
+                    <div class="col-lg-4 col-md-6">
+                        <a href="/Consultant/ConsultantRetain/ClientDetail?UserId=@item.UserId">
+                            <div class="login-home-wrap">
+                                <div class="login-img-wrap" id="responsiveHeaderImg">
+                                    @if (@item.ProfilePic == null)
+                                    {
+                                        <img src="~/assets/images/defaultProfile.png" />
+                                    }
+                                    else
+                                    {
+                                        <img src="@item.ProfilePic" alt="Profile" />
+                                    }
+                                </div>
+                                <div class="login-conent-wrap">
+                                    <h3>@item.FirstName @item.LastName</h3>
+                                    <p class="dark-text mb-0">@item.CountryCode @item.MobileNumber</p>
+                                    <p class="dark-text">@item.Email</p>
+                                    <p class="mb-0">Country for Immigration</p>
+                                    <p class="dark-text">@item.ImmigrationCountryName</p>
+                                    <p class="mb-0">Belonging Country</p>
+                                    <p class="dark-text">@item.BelongCountryName</p>
+                                    <p class="mb-0">Retained Date</p>
+                                    <p class="dark-text">
+                                        @{
+                                            var convertfromutctolocal = TimeZoneInfo.ConvertTimeFromUtc(@item.CreatedOn, TimeZoneInfo.Local);
+                                            var LocalTime = TimeZoneInfo.ConvertTimeBySystemTimeZoneId(convertfromutctolocal, TimeZoneInfo.Local.Id, SessionFactory.TimeZone);
+                                            var Date = LocalTime.Date;
+                                        }
+
+                                        @Date.ToString("dd MMM yyyy")
+                                    </p>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</section>

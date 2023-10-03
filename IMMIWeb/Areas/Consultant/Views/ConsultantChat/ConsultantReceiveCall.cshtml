@@ -1,0 +1,82 @@
+﻿@{
+    Layout = "~/Areas/Consultant/Views/Shared/_Layout.cshtml";
+}
+
+
+<div id="callScreen" class="startCallCss">
+
+</div>
+
+<script>
+    $(document).ready(function () {
+
+
+        
+
+        setTimeout(function () {
+            RecCall()
+        }, 30000);
+    });
+
+
+
+    function RecCall()
+    {
+        
+        var sessionId = sessionStorage.getItem("userAcceptedCallsessionId");
+        var callType = "video";
+
+
+        var callSettings = new CometChat.CallSettingsBuilder().setSessionID(sessionId).enableDefaultLayout(true).setIsAudioOnlyCall(callType == 'audio' ? true : false).
+            build();
+
+
+        CometChat.startCall(callSettings, document.getElementById("callScreen"), new CometChat.OngoingCallListener
+            ({
+
+                onUserJoined: user => {
+                    console.log("User joined call:", user);
+                },
+                onUserLeft: user => {
+                    console.log("User left call:", user);
+                },
+                onUserListUpdated: userList => {
+                    console.log("user list:", userList);
+                },
+                onCallEnded: call => {
+                    console.log("Call ended:", call);
+                    $("#videoCallModal").hide();
+                    sessionStorage.setItem("callStarted", "");
+                },
+                onError: error => {
+                    console.log("Error :", error);
+                },
+                onMediaDeviceListUpdated: deviceList => {
+                    console.log("Device List:", deviceList);
+                },
+                onUserMuted: (userMuted, userMutedBy) => {
+                    // This event will work in JS SDK v3.0.2-beta1 & later.
+                    console.log("Listener => onUserMuted:", userMuted, userMutedBy);
+                },
+                onScreenShareStarted: () => {
+                    // This event will work in JS SDK v3.0.3 & later.
+                    console.log("Screen sharing started.");
+                },
+                onScreenShareStopped: () => {
+                    // This event will work in JS SDK v3.0.3 & later.
+                    console.log("Screen sharing stopped.");
+                },
+                onCallSwitchedToVideo: (sessionId, callSwitchInitiatedBy, callSwitchAcceptedBy) => {
+                    // This event will work in JS SDK v3.0.8 & later.
+                    console.log("call switched to video:", { sessionId, callSwitchInitiatedBy, callSwitchAcceptedBy });
+                }
+            }));
+
+
+
+
+    }
+
+
+</script>
+

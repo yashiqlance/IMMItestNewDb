@@ -1,0 +1,94 @@
+﻿@model IMMIWeb.Service.Models.ChangeMobileViewModel
+
+<section class="signin-section mt-90">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-xl-7 col-lg-6">
+                <div class="signin-img">
+                    <img src="~/assets/images/signin.svg" alt="signin">
+                </div>
+            </div>
+            <div class="col-xl-5 col-lg-6">
+                <div class="signin-wrap change-num-wrap text-center">
+                    <h1 class="mb-2">New Mobile Number</h1>
+                    <br />
+                    @using (Html.BeginForm("AddNewMobile", "UserAccount", FormMethod.Post, new { id = "signupform", enctype = "multipart/form-data" }))
+                    {
+                        <input value="@Model.lstMobileVal" type="hidden" id="txtlstMobileVal" name="txtlstMobileVal">
+
+                        <input type="hidden" id="RandomNumber" name="RandomNumber" value="@Model.RandomNumber">
+
+                        <div class="col-lg-12 position-relative mb-2">
+                            <div class="cst-slect">
+                                <select class="mySelect fontColor" name="NewMobileCountryCode" id="NewMobileCountryCode">
+                                    @foreach (var item in Model.lstMobile.ToList())
+                                    {
+                                        <option value="+@item.Name">+@item.Name @item.Prefix</option>
+                                    }
+                                </select>
+                            </div>
+                            <div class="form-group clsOther">
+                                <input type="tel" maxlength="12" style="padding-left: 105px;" class="fgd form-control" id="NewMobile" name="NewMobile" value="@Model.Mobile" placeholder="Mobile number*" />
+                            </div>
+                            <div style="text-align:left;">
+                                <span class="clsErrorMsg text-danger" id="ErrorMobile"></span>
+                            </div>
+                        </div>
+
+                        <button type="button" id="btnSubmit" class="g-btn mt-4 clsOther btnSubmit">Submit</button>
+                        <div class="sign-up-link-wrap">
+                            <p> <img src="~/assets/images/g-arrow.svg" alt="arrow left" /> Back to <a asp-action="Login">Login In</a> </p>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+<script type="text/javascript">
+    $(document).ready(function () {
+
+        $("#NewMobile").on("input", function () {
+            var mobileInput = $(this).val();
+            var sanitizedInput = mobileInput.replace(/[^0-9]/g, '');
+            $(this).val(sanitizedInput);
+        });
+
+        var modelMessage = '@Model.ErrorMsg';
+
+        if (modelMessage && modelMessage.length > 0) {
+            $(".clsErrorMsg").html('@Model.ErrorMsg');
+        }
+        var mobileCodeVal = $("#txtlstMobileVal").val();
+
+        if (mobileCodeVal != "") {
+            $("#NewMobileCountryCode").val(mobileCodeVal);
+        }
+
+        $('#btnSubmit').click(function (event) {
+            var isValidForm = true;
+            var mobile = $("#NewMobile").val();
+
+
+            if (mobile.trim() === "") {
+                $("#ErrorMobile").text("Mobile number is required.");
+                isValidForm = false;
+            } else if (!/^\d{6,12}$/.test(mobile)) {
+                $("#ErrorMobile").text("Mobile number must be between 6 and 12 digits.");
+                isValidForm = false;
+            } else if (!/^[0-9]+$/.test(mobile)) {
+                $("#ErrorMobile").text("Mobile number should be only numeric digits.");
+                isValidForm = false;
+            } else {
+                $("#ErrorMobile").text("");
+            }
+
+            if (isValidForm) {
+                $("#signupform").submit();
+            }
+
+        });
+    });
+</script>

@@ -1,0 +1,147 @@
+﻿@model IMMIWeb.Service.Models.ConsultantApponintmentDetailByUserIdViewModel
+@using IMMIWeb.Infrastructure;
+@{
+    string bookingTime = "";
+    //if (Model.BookingTime == 0) { bookingTime = "00 AM - 01 AM"; }
+    //else if (Model.BookingTime == 1) { bookingTime = "01 AM - 02 AM"; }
+    //else if (Model.BookingTime == 2) { bookingTime = "02 AM - 03 AM"; }
+    //else if (Model.BookingTime == 3) { bookingTime = "03 AM - 04 AM"; }
+    //else if (Model.BookingTime == 4) { bookingTime = "04 AM - 05 AM"; }
+    //else if (Model.BookingTime == 5) { bookingTime = "05 AM - 06 AM"; }
+    //else if (Model.BookingTime == 6) { bookingTime = "06 AM - 07 AM"; }
+    //else if (Model.BookingTime == 7) { bookingTime = "07 AM - 08 AM"; }
+    //else if (Model.BookingTime == 8) { bookingTime = "08 AM - 09 AM"; }
+    //else if (Model.BookingTime == 9) { bookingTime = "09 AM - 10 AM"; }
+    //else if (Model.BookingTime == 10) { bookingTime = "10 AM - 11 AM"; }
+    //else if (Model.BookingTime == 11) { bookingTime = "11 AM - 00 PM"; }
+    //else if (Model.BookingTime == 12) { bookingTime = "00 PM - 01 PM"; }
+    //else if (Model.BookingTime == 13) { bookingTime = "01 PM - 02 PM"; }
+    //else if (Model.BookingTime == 14) { bookingTime = "02 PM - 03 PM"; }
+    //else if (Model.BookingTime == 15) { bookingTime = "03 PM - 04 PM"; }
+    //else if (Model.BookingTime == 16) { bookingTime = "04 PM - 05 PM"; }
+    //else if (Model.BookingTime == 17) { bookingTime = "05 PM - 06 PM"; }
+    //else if (Model.BookingTime == 18) { bookingTime = "06 PM - 07 PM"; }
+    //else if (Model.BookingTime == 19) { bookingTime = "07 PM - 08 PM"; }
+    //else if (Model.BookingTime == 20) { bookingTime = "08 PM - 09 PM"; }
+    //else if (Model.BookingTime == 21) { bookingTime = "09 PM - 10 PM"; }
+    //else if (Model.BookingTime == 22) { bookingTime = "10 PM - 11 PM"; }
+    //else if (Model.BookingTime == 23) { bookingTime = "11 PM - 12 PM"; }
+   
+    var convertfromutctolocal = TimeZoneInfo.ConvertTimeFromUtc(Model.BookingDate, TimeZoneInfo.Local);
+    var LocalTime = TimeZoneInfo.ConvertTimeBySystemTimeZoneId(convertfromutctolocal, TimeZoneInfo.Local.Id, SessionFactory.TimeZone);
+    var Date = LocalTime.Date;
+    var Hour = LocalTime.Hour; //@TimeZone.CurrentTimeZone.ToLocalTime(@item.BookingDate).Hour;
+    var Minute = LocalTime.Minute;
+    Model.BookingDate = Date;
+    Model.BookingTime = Hour;
+    Model.BookingMinutes = Minute;
+    
+    
+    
+    switch (Model.BookingTime)
+    {
+        case int i when i >= 0 && i <= 23:
+            string amPm = i < 12 ? "AM" : "PM";
+            string startHour = (i % 12).ToString() ?? "12"; // Handle 12 AM and 12 PM
+            string endHour = ((i + 1) % 12).ToString() ?? "12"; // Handle 12 AM and 12 PM
+
+            string formattedMinutes = Model.BookingMinutes.ToString().PadLeft(2, '0'); // Add leading zero if necessary
+
+
+            bookingTime = $"{startHour}:{formattedMinutes} {amPm} - {endHour}:{formattedMinutes} {amPm}";
+            break;
+        default:
+            bookingTime = "Invalid item.BookingTime";
+            break;
+    }
+}
+
+<section class="login-home consultant-details-section-main-wrap mt-90">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="title">
+                    <h1>Appointment Details</h1>
+                </div>
+            </div>
+            <div class="col-lg-12">
+                <div class="box-wrapper appointment-detail">
+                    <div class="row">
+                        <div class="col-lg-4 col-md-4 col-sm-12">
+                            <div class="left-side-area line-after" id="appointmentDetail">
+                                <img src="@Model.ProfilePic" class="img-fluid circle-img" alt="profile" />
+                                <h2>@Model.FirstName @Model.LastName</h2>
+                                <div class="login-conent-wrap">
+                                    <div class="c-item">
+                                        <p>Types of Service </p>
+                                        <p class="dark-text mb-3">@Model.TypeOfService</p>
+                                    </div>
+                                    <div class="c-item">
+                                        <p>Country for Immigration</p>
+                                        <p class="dark-text mb-3">@Model.ApplyForCountry</p>
+                                    </div>
+                                </div>
+                                <div class="login-conent-wrap">
+                                    <div class="c-item">
+                                        <p>Belonging County </p>
+                                        <p class="dark-text mb-3">@Model.BelongCountry</p>
+                                    </div>
+                                    <div class="c-item">
+                                        <p>Preferred Language</p>
+                                        <p class="dark-text mb-3">@Model.LanguageName </p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-8 col-md-8 col-sm-12 bottom-content">
+                            <div class="right-side-area">
+                                <div class="login-conent-wrap">
+                                    <div class="c-item">
+                                        <p>Tile Slot </p>
+                                        <p class="dark-text mb-3"> @bookingTime</p>
+                                    </div>
+                                </div>
+                                <div class="login-conent-wrap">
+                                    <div class="c-item">
+                                        <p>Appointment Date </p>
+                                        <p class="dark-text mb-3">@Model.BookingDate.ToString("dd MMM yy")</p>
+                                    </div>
+                                    <div class="c-item">
+                                        <p>Requested on</p>
+                                        <p class="dark-text mb-3">@Model.CreatedOn</p>
+                                    </div>
+                                </div>
+                                <div class="login-conent-wrap">
+                                    <div class="c-item">
+                                        <p>Appointment Mode </p>
+                                        @if (Model.SessionTitle.ToLower() == "video")
+                                        {
+                                            <p class="dark-text mb-3"> <span><img src="~/assets/images/video.svg" alt="Video Call"></span> @Model.SessionTitle</p>
+                                        }
+                                        else if (Model.SessionTitle.ToLower() == "audio")
+                                        {
+                                            <p class="dark-text mb-3"> <span><img src="~/assets/images/audio-call.svg" alt="Audio Call"></span> @Model.SessionTitle</p>
+                                        }
+                                        else
+                                        {
+                                            <p class="dark-text mb-3"> <span><img src="~/assets/images/communication.svg" alt="chat"></span> @Model.SessionTitle</p>
+                                        }
+                                    </div>
+                                   @* @if(Model.){
+                                        
+                                    }*@
+                                    <div class="c-item">
+                                        <p>Rejection Reason</p>
+                                        <p class="dark-text mb-3">Due to Medical Emergency at Home </p>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

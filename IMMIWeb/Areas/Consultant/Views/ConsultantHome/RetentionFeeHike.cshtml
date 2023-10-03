@@ -1,0 +1,116 @@
+﻿<section class="login-home consultant-details-section-main-wrap mt-90">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="title text-center">
+                    <h1>Retention charge</h1>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-6">
+                <div class="box-wrapper retention-charge">
+                    <div class="row">
+                        <div class="col-lg-12 col-md-12 col-sm-12">
+                            <div class="payment-recieve">
+                                <div class="input-group btn mb-5">
+                                    <a href="#" class="back-home-btn" data-bs-toggle="modal" data-bs-target="#requestHike">@ViewBag.RetentionCharge</a>
+                                </div>
+                                <h3>Earning calculation:</h3>
+                                <ul class="payment-detail">
+                                    <li><p>Retaining Fees</p> <span>+@ViewBag.RetentionCharge</span></li>
+                                    <li><p>App charge</p> <span>-@ViewBag.AppCharge</span></li>
+                                    <li><p>Tax </p> <span>-@ViewBag.TaxCharge</span></li>
+                                    <li class="total"><p>Total </p> <span>@ViewBag.totalCharge</span></li>
+                                </ul>
+                                <div class="input-group btn end">
+                                    <a href="#" data-bs-toggle="modal" data-bs-target="#requestRetentionHike" class="g-btn">Request for increase the fees</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Rejected Modal -->
+<div class="modal retain-consultant reject-consultant modal-md" id="requestRetentionHike" tabindex="-1">
+    <div class="modal-dialog ">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="btn-close" data-bs-dismiss="modal"><img src="./assets/images/close-gray.svg" alt=""></button>
+                <div class="call-content text-center">
+                    <h3>Request for Fees Hike</h3>
+                </div>
+                <div class="modal-body signin-wrap text-center">
+                    @*<div class="input-group select-lang">
+                        <select name="" id="" class="form-control">
+                            <option value="">Expected fees</option>
+                            <option value="1000">$1000</option>
+                            <option value="1000">$3000</option>
+                            <option value="1000">$4000</option>
+                            <option value="1000">$5000</option>
+                        </select>
+                        <label for="">Request Amount</label>
+                    </div>*@
+                    <input type="text" class="form-control" id="txtRetentionAmount" placeholder="Enter Retention Amount">
+                   @* <label for="">Request Amount</label>*@
+                    <p>You will be notified shortly about the fees hike status.</p>
+                    <button type="button" id="btnsubmitretentionamount" class="g-btn">Submit</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div> 
+
+
+<script type="text/javascript">
+    $('#btnsubmitretentionamount').click(function () {
+        //var retentionCharge = @ViewBag.RetentionCharge;
+        var RetentionAmount = $("#txtRetentionAmount").val();
+        //if (RetentionAmount !== 0 && RetentionAmount <= retentionCharge) {
+            
+        //}
+        RequestRetentionhike(RetentionAmount);
+    });
+    function RequestRetentionhike(param) {
+        if(param!=""){
+            $.ajax({
+                type: "POST",
+                url: '@Url.Action("Addhikeretentionamount", "ConsultantHome")',
+                data: { "RetentionAmount": param },
+                success: function (response) {
+                    if(response != ""){
+                        if (response.redirect) {
+                            window.location.href = response.redirect; // Redirect the user
+                        } 
+                    }
+                    else{
+                        toastr.error('Error occured!!');
+                    }
+                    
+                },
+                error: function () {
+                    toastr.error('Error occured!!');
+                }
+            });
+        }
+        else{
+            toastr.error('Enter Retention Amount.');
+        }
+       
+    }
+
+
+    const txtRetentionAmount = document.getElementById("txtRetentionAmount");
+    // Add an oninput event listener to validate and restrict input
+    txtRetentionAmount.addEventListener("input", function () {
+        // Remove non-numeric characters using a regular expression
+        this.value = this.value.replace(/[^0-9]/g, "");
+    });
+</script>

@@ -1,0 +1,156 @@
+﻿@model IMMIWeb.Service.Models.ClientDetailViewModel
+
+<section class="login-home consultant-details-section-main-wrap mt-90">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="title">
+                    <h1>Clients Details</h1>
+                </div>
+            </div>
+            <div class="col-lg-12">
+                <div class="box-wrapper appointment-detail">
+                    <div class="row">
+                        <div class="col-lg-4 col-md-6 col-sm-12">
+                            <div class="left-side-area line-after">
+                                <div class="profile-wrap" id="clientDetail">
+                                    @if (Model.ClientDetails.ProfilePic == null)
+                                    {
+
+                                        <img src="~/assets/images/defaultProfile.png" class="img-fluid circle-img" alt="profile" />
+                                    }
+                                    else
+                                    {
+                                        <img src="@Model.ClientDetails.ProfilePic" class="img-fluid circle-img" alt="profile" />
+                                    }
+                                    <div class="pr-detail">
+                                        <h3>@Model.ClientDetails.FirstName @Model.ClientDetails.LastName</h3>
+                                        <p class="dark-text mb-0">@Model.ClientDetails.CountryCode @Model.ClientDetails.MobileNumber</p>
+                                        <p class="dark-text">@Model.ClientDetails.Email</p>
+                                    </div>
+                                </div>
+                                <div class="login-conent-wrap mt-5">
+                                    <div class="c-item">
+                                        <p>Types of Service </p>
+                                        <h4 class="mb-3">@Model.ClientDetails.TypeofService</h4>
+                                    </div>
+                                    <div class="c-item">
+                                        <p>Country for Immigration</p>
+                                        <h4 class="mb-3">@Model.ClientDetails.ImmigrationCountryName</h4>
+                                    </div>
+                                </div>
+                                <div class="login-conent-wrap">
+                                    <div class="c-item">
+                                        <p>Retain Date</p>
+                                        <h4>@Model.ClientDetails.CreatedOn.ToString("dd MMM yyy")</h4>
+                                    </div>
+                                    <div class="c-item">
+                                        <p>Belonging County </p>
+                                        <h4 class="mb-3">@Model.ClientDetails.BelongCountryName</h4>
+                                    </div>
+                                </div>
+                                <div class="login-conent-wrap">
+                                    <div class="c-item">
+                                        <p>Requested on</p>
+                                        <h4 class="mb-3">@Model.ClientDetails.CreatedOn.ToString("dd MMM yyy")</h4>
+                                    </div>
+                                    <div class="c-item">
+                                        <p>Payment</p>
+                                        @if (Model.ClientDetails.PaymentMode == 1)
+                                        {
+                                            <h4>Hold</h4>
+                                        }
+                                        else if (Model.ClientDetails.PaymentMode == 2)
+                                        {
+                                            <h4>Success</h4>
+                                        }
+                                        else if (Model.ClientDetails.PaymentMode == 3)
+                                        {
+                                            <h4>Refunded</h4>
+                                        }
+                                        else if (Model.ClientDetails.PaymentMode == 4)
+                                        {
+                                            <h4>Cancelled</h4>
+                                        }
+                                        else if (Model.ClientDetails.PaymentMode == 5)
+                                        {
+                                            <h4>Completed</h4>
+                                        }
+                                        else if (Model.ClientDetails.PaymentMode == 6)
+                                        {
+                                            <h4>Pending</h4>
+                                        }
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-4 col-md-6 col-sm-12">
+                            <div class="right-side-area line-after">
+                                <div class="login-conent-wrap mb-3">
+                                    <div class="c-item">
+                                        <h4 class="mb-0">Document</h4>
+                                        @if (Model.UserDocuments != null)
+                                        {
+                                        }
+                                        else
+                                        {
+                                            <p class="mt-5">Pending</p>
+                                        }
+                                        @* <p class="mb-2">Status </p>
+                                        <div class="input-group select-lang">
+                                        <select class="form-control">
+                                        <option value="Emergency">Pending</option>
+                                        <option value="Emergency">Approve</option>
+                                        </select>
+                                        </div>*@
+                                    </div>
+                                </div>
+                                <div class="login-conent-wrap">
+                                    <div class="document-list">
+                                        @foreach (var document in Model.UserDocuments)
+                                        {
+                                            <div class="item">
+                                                <div class="doc"><img src="~/assets/images/pdf.svg" alt="pdf"></div>
+                                                <div class="doc-name">
+                                                    <p>@document.Filename@document.Extensions</p>
+                                                    <a href="@document.DocUrl" target="_blank">
+                                                        <img class="icon-download" src="~/assets/images/download.svg" alt="download"> Download
+                                                    </a>
+                                                </div>
+                                            </div>
+                                        }
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-4 col-md-12 col-sm-12">
+                            <div class="payment-recieve">
+                                <h3>Payment Received:</h3>
+                                <ul class="payment-detail">
+                                    <li>
+                                        <p>Retaining Fees</p>
+                                        <span>+@Model.ClientDetails.ReatinAmount</span>
+                                    </li>
+                                    <li>
+                                        <p>App charge</p>
+                                        <span>-@Model.ClientDetails.AppCharge</span>
+                                    </li>
+                                    <li>
+                                        <p>Tax</p>
+                                        <span>-@Model.ClientDetails.TaxCharge</span>
+                                    </li>
+                                    <li class="total">
+                                        <p>Total</p>
+                                        <span>@(Model.ClientDetails.ReatinAmount - Model.ClientDetails.AppCharge - Model.ClientDetails.TaxCharge)</span>
+                                    </li>
+                                </ul>
+
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

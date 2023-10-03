@@ -1,0 +1,230 @@
+﻿@model IMMIWeb.Service.Models.UserViewModel
+
+@{
+    string OTPTimer = Convert.ToString(new ConfigurationBuilder().AddJsonFile("appsettings.json").Build().GetSection("GeneralInfo")["OTPTimer"]);
+}
+
+<style>
+
+    .change-num-wrap .g-btn {
+        margin: 0px 0 30px;
+    }
+</style>
+<section class="signin-section mt-90">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-xl-7 col-lg-6">
+                <div class="signin-img">
+                    <img src="~/assets/images/signin.svg" alt="signin">
+                </div>
+            </div>
+            <div class="col-xl-5 col-lg-6">
+                <div class="signin-wrap change-num-wrap text-center">
+                    <h1 class="mb-2">Guest User</h1>
+                    <p class="mb-4">Provide below details to continue as guest</p>
+                    <p class="clsErrorMsg" style="color:red;"></p>
+                    @using (Html.BeginForm("GuestSignUp", "UserAccount", FormMethod.Post, new { id = "guestSignupform", enctype = "multipart/form-data" }))
+                    {
+                        <input value="@Model.MobileCountryCode" type="hidden" id="txtlstMobileVal" name="txtlstMobileVal">
+
+                        <div class="col-lg-12 position-relative mb-2">
+                            <div class="cst-slect">
+                                <select class="mySelect fontColor" name="MobileCountryCode" id="MobileCountryCode">
+                                    @foreach (var item in Model.lstMobile.ToList())
+                                    {
+                                        <option value="+@item.Name">+@item.Name @item.Prefix</option>
+                                    }
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <input type="tel" maxlength="12" style="padding-left: 105px;" class="fgd form-control" id="Mobile" name="Mobile" value="@Model.Mobile" placeholder="Mobile number*" />
+                            </div>
+                            <div style="text-align:left;">
+                                <span id="ErrorMobile" class="text-danger"></span>
+                            </div>
+                        </div>
+
+
+                        <div class="input-group">
+                            <select id="ImmigrationCountry" name="ImmigrationCountry" class="form-control">
+                                <option value="0">Immigration Country*</option>
+                                @foreach (var item in Model.lstCountryByTypeOfService)
+                                {
+                                    <option value="@item.Id">@item.Name</option>
+                                }
+                            </select>
+                            <label for="">Immigration Country</label>
+                            <span id="ErrorImmigrationCountry" class="text-danger"></span>
+                        </div>
+
+                        <div class="input-group clsTos" style="display:none;">
+                            <select id="TypeOfServiceName" name="TypeOfServiceName" class="form-control clsTos" style="display:none;">
+                                <option value="0">Type of immigration stream</option>
+                            </select>
+                            <label for="">Type of immigration stream</label>
+                            <span id="ErrorTypeOfServiceName" class="text-danger"></span>
+                        </div>
+
+                        <button type="button" id="btnSubmit" class="g-btn mt-4  btnSubmit">Submit</button>
+
+                        <div class="sign-up-login-wrap ">
+                            <a href="@Url.Action("Login", "UserAccount")">Login</a>
+                            <a href="@Url.Action("UserSignUp", "UserAccount")">Sign up</a>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+<script>
+
+    $(document).ready(function () {
+
+        var modelMessage = '@Model.Message';
+
+        console.log('@Model.MobileCountryCode' + 'val')
+
+        if (modelMessage && modelMessage.length > 0) {
+            $(".clsErrorMsg").html('@Model.Message');
+        }
+
+        var mobileCodeVal = $("#txtlstMobileVal").val();
+
+        if (mobileCodeVal != "") {
+            $("#MobileCountryCode").val(mobileCodeVal);
+        }
+        if ('@Model.Mobile' != "") {
+            $("#Mobile").val('@Model.Mobile');
+        }
+        if ('@Model.ImmigrationCountry' != "") {
+            $("#ImmigrationCountry").val('@Model.ImmigrationCountry');
+            var getCurrentVal = $("#ImmigrationCountry").val();
+
+            if (getCurrentVal != "0") {
+                let countryObj = {
+                    countryId: $('#ImmigrationCountry').val()
+                }
+
+                if (countryObj.countryId != "") {
+                    $.ajax({
+                        type: "POST",
+                        url: "/UserAccount/GetServiceByCountry",
+                        data: countryObj,
+                        success: function (data) {
+                            $('#TypeOfServiceName').html('');
+                            var options = '';
+                            options += '<option value="">Type of immigration stream</option>';
+                            for (var i = 0; i < data.length; i++) {
+                                options += '<option value="' + data[i].id + '">' + data[i].name + '</option>';
+                            }
+                            $('#TypeOfServiceName').append(options);
+                            $('.clsTos').show();
+                            $("#TypeOfServiceName").val('@Model.lstTypeOfServiceVal');
+
+                        },
+                        error: function () {
+                            alert("Error occured!!")
+                        }
+                    });
+                }
+            }
+            else {
+                $('.clsTos').hide();
+            }
+        }
+
+    });
+
+    $('#ImmigrationCountry').change(function () {
+
+
+        var getCurrentVal = $("#ImmigrationCountry").val();
+
+        if (getCurrentVal != "0") {
+            let countryObj = {
+                countryId: $('#ImmigrationCountry').val()
+            }
+
+            if (countryObj.countryId != "") {
+                $.ajax({
+                    type: "POST",
+                    url: "/UserAccount/GetServiceByCountry",
+                    data: countryObj,
+                    success: function (data) {
+                        $('#TypeOfServiceName').html('');
+                        var options = '';
+                        options += '<option value="">Type of service</option>';
+                        for (var i = 0; i < data.length; i++) {
+                            options += '<option value="' + data[i].id + '">' + data[i].name + '</option>';
+                        }
+                        $('#TypeOfServiceName').append(options);
+                        $('.clsTos').show();
+
+                    },
+                    error: function () {
+                        alert("Error occured!!")
+                    }
+                });
+            }
+        }
+        else {
+            $('.clsTos').hide();
+        }
+
+
+    });
+
+    $("#Mobile").on("input", function () {
+        var mobileInput = $(this).val();
+        var sanitizedInput = mobileInput.replace(/[^0-9]/g, ''); // Remove non-numeric characters
+
+        // Update the input value with sanitized input
+        $(this).val(sanitizedInput);
+    });
+
+    $('#btnSubmit').click(function (event) {
+
+        var isValidForm = true;
+
+        var mobile = $("#Mobile").val();
+        var country = $("#Country").val();
+        var immigrationCountry = $("#ImmigrationCountry").val();
+        var typeofservice = $("#TypeOfServiceName").val();
+
+        if (mobile.trim() === "") {
+            $("#ErrorMobile").text("Mobile number is required.");
+            isValidForm = false;
+        } else if (!/^\d{6,12}$/.test(mobile)) {
+            $("#ErrorMobile").text("Mobile number must be between 6 and 12 digits.");
+            isValidForm = false;
+        } else if (!/^[0-9]+$/.test(mobile)) {
+            $("#ErrorMobile").text("Please enter only numeric digits in the mobile number");
+            isValidForm = false;
+        } else {
+            $("#ErrorMobile").text("");
+        }
+
+        if (immigrationCountry === "0") {
+            $("#ErrorImmigrationCountry").text("Please select an immigration country.");
+            isValidForm = false;
+        } else {
+            $("#ErrorImmigrationCountry").text("");
+        }
+
+        if (typeofservice === "0") {
+            $("#ErrorTypeOfServiceName").text("Please select an type of service.");
+            isValidForm = false;
+        } else {
+            $("#ErrorTypeOfServiceName").text("");
+        }
+
+        if (isValidForm) {
+            $("#guestSignupform").submit();
+        }
+
+    });
+
+</script>

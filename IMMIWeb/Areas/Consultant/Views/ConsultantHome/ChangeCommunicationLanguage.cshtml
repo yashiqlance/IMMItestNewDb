@@ -1,0 +1,168 @@
+﻿@model List<CommonListViewModel>
+
+@{
+    string[] myStrings = ViewBag.LanguageParts;
+}
+<input type="text" id="commlang" name="commlang">
+<section class="login-home consultant-details-section-main-wrap mt-90">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="title text-center">
+                    <h1>Language for Communication</h1>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-7">
+                <div class="box-wrapper signin-wrap">
+                    <div class="row">
+                        <div class="col-lg-12 col-md-12 col-sm-12">
+                            <div class="select-country mb-5">
+                                @foreach(var item in Model)
+                                {
+                                    @*<p>
+                                        <input type="radio" id="@item.Id">
+                                        <label id="@item.Id" class ="radio-group">@item.Name</label>
+                                    </p>*@
+                                    <p>
+                                        <input type="radio" class="comm-language-checkbox" id="rdTime_@item.Id" @if (myStrings.Contains(item.Name))
+                                        {
+                                            <text>checked</text>
+                                        }>
+                                        <label class="radioTimer" id="lblTime_@item.Id">@item.Name</label>
+                                    </p>
+                                }
+                               
+                               @* <p>
+                                    <input type="radio" id="CAN-english" name="radio-group">
+                                    <label for="CAN-english">CAN English</label>
+                                </p>
+                                <p>
+                                    <input type="radio" id="spanish" name="radio-group">
+                                    <label for="spanish">Spanish(Español)</label>
+                                </p>
+                                <p>
+                                    <input type="radio" id="russian" name="radio-group">
+                                    <label for="russian">Russian(русский)</label>
+                                </p>
+                                <p>
+                                    <input type="radio" id="french" name="radio-group">
+                                    <label for="french">French(Français)</label>
+                                </p>
+                                <p>
+                                    <input type="radio" id="CANfrench" name="radio-group">
+                                    <label for="CANfrench">CAN French(CAN Français)</label>
+                                </p>
+                                <p>
+                                    <input type="radio" id="chinese" name="radio-group">
+                                    <label for="chinese">Chinese(中国人)</label>
+                                </p>*@
+
+                            </div>
+                            <div class="btn-wrap text-center">
+                                <button type="submit" id="btnupdatecommunicationlanguage" class="g-btn">Update</button>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Rejected Modal -->
+<div class="modal retain-consultant reject-consultant modal-md" id="requestHike" tabindex="-1">
+    <div class="modal-dialog ">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="btn-close" data-bs-dismiss="modal"><img src="./assets/images/close-gray.svg" alt=""></button>
+                <div class="call-content text-center">
+                    <h3>Request for Fees Hike</h3>
+                </div>
+                <div class="modal-body signin-wrap text-center">
+                    <div class="input-group select-lang">
+                        <select name="" id="" class="form-control">
+                            <option value="">Expected fees</option>
+                            <option value="1000">$1000</option>
+                            <option value="1000">$3000</option>
+                            <option value="1000">$4000</option>
+                            <option value="1000">$5000</option>
+                        </select>
+                        <label for="">Request Amount</label>
+                    </div>
+                    <p>You will be notified shortly about the fees hike status.</p>
+                    <a href="#"><button type="button" class="g-btn">Submit</button></a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div> 
+<script type="text/javascript">
+    var maxChecked = 3;
+    $(".radioTimer").click(function () {
+        var currentChkVal = $(this).attr("id");
+        var selectedChkboxVal = currentChkVal.substring(8);
+
+       
+        var chkBox = $("#rdTime_" + selectedChkboxVal);
+        var isChecked = chkBox.is(':checked');
+
+        var numChecked = $("[id^='rdTime_']:checked").length; // Count currently checked checkboxes
+
+        if (!isChecked && numChecked >= maxChecked) {
+            // If trying to check more than the limit, prevent checking
+            return;
+        }
+        chkBox.prop('checked', !isChecked);
+        
+    });
+    var text = [];
+    $('#btnupdatecommunicationlanguage').click(function (event) {
+        //debugger;
+        for (let i = 0; i <= @Model.Count; i++) {
+
+            var chkBox = $("#rdTime_" + i).is(':checked');
+
+            if (chkBox == true) {
+                text.push(i);
+            }
+        }
+
+        $("#commlang").val(text);
+        if ($("#commlang").val() != "") {
+            $.ajax({
+                type: "POST",
+                url: '@Url.Action("Updatecommunicationlanguage", "ConsultantHome")',
+                data: { "CommunicationLanguage": $("#commlang").val() },
+                success: function (response) {
+                    //debugger;
+                    //alert("hi");
+                    if (response.redirect) {
+                        window.location.href = response.redirect; // Redirect the user
+                    } else {
+                        // Handle other response data if needed
+                    }
+                },
+                error: function () {
+                    //alert("Error occured!!")
+                    toastr.error('Error occured!!');
+                }
+            });
+        }
+        else {
+            if ($("#commlang").val() === "") {
+                //alert("Please Select Date");
+                toastr.error('Please Select Communication Language');
+
+            }            
+        }
+
+
+
+
+    });
+</script>

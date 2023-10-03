@@ -1,0 +1,14 @@
+﻿<div>
+
+    @using (Html.BeginForm("ConsultantLoginOTPVerification", "ConsultantAccount", FormMethod.Post))
+    {
+        <table border="1">
+            <tr>
+                <td>OTP</td>
+                <td><input type="text" id="otp" name="otp"></td>
+                <td> <input type="submit" value="Verify" id="btnVerify" /> </td>
+            </tr>
+        </table>
+    }
+
+</div>

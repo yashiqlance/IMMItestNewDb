@@ -1,0 +1,83 @@
+﻿@model IEnumerable<IMMIWeb.Service.Models.ConsultantPaymentHistoryViewModel>
+
+<section class="login-home fav-con-sec mt-90">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="title">
+                    <h2>Payment History</h2>
+                </div>
+            </div>
+            @foreach (var item in Model)
+            {
+                if (item.RetainAmount > 0)
+                {
+                    <div class="col-lg-4 col-md-6">
+                        <div class="login-home-wrap payment-history">
+                            <div class="amount">
+                                <span>RA: +@item.RetainAmount</span>
+                            </div>
+                            <div class="login-img-wrap">
+                                <img src="@item.ProfilePic" alt="Profile">
+                            </div>
+                            <div class="login-conent-wrap">
+                                <h3>@item.FirstName @item.LastName</h3>
+                                <p>@item.RetainDate.ToString("dd MMM yyyy") at @item.RetainDate.ToString("hh:mm tt")</p>
+                                @*<h4>@item.CancellationReason</h4>*@
+                            </div>
+                        </div>
+                    </div>
+                }
+                if (item.Amount > 0)
+                {
+                    <div class="col-lg-4 col-md-6">
+                        <div class="login-home-wrap payment-history">
+                            <div class="amount">
+                                <span>A: +@item.Amount</span>
+                            </div>
+                            <div class="login-img-wrap">
+                                <img src="@item.ProfilePic" alt="Profile">
+                            </div>
+                            <div class="login-conent-wrap">
+                                <h3>@item.FirstName @item.LastName</h3>
+                                <p>@item.AppointmentDate.ToString("dd MMM yyyy") at @item.AppointmentDate.ToString("hh:mm tt")</p>
+                                @*<h4>@item.CancellationReason</h4>*@
+                            </div>
+                        </div>
+                    </div>
+                }
+                if (item.RejectionAmount > 0)
+                {
+                    <div class="col-lg-4 col-md-6">
+                        <div class="login-home-wrap payment-history">
+                            <div class="amount">
+                                <span>R: +@item.RejectionAmount</span>
+                                @*@if (item.RetainAmount > 0)
+                                {
+                                    <span>RA: +@item.RetainAmount</span>
+                                }
+                                @if (item.Amount > 0)
+                                {
+                                    <span>A: +@item.Amount</span>
+                                }
+                                @if (item.RejectionAmount > 0)
+                                {
+                                    <span>R: +@item.RejectionAmount</span>
+                                }*@
+                            </div>
+                            <div class="login-img-wrap">
+                                <img src="@item.ProfilePic" alt="Profile">
+                            </div>
+                            <div class="login-conent-wrap">
+                                <h3>@item.FirstName @item.LastName</h3>
+                                <p>@item.RejectionDate.ToString("dd MMM yyyy") at @item.RejectionDate.ToString("hh:mm tt")</p>
+                                <h4>@item.CancellationReason</h4>
+                            </div>
+                        </div>
+                    </div>
+                }
+                
+            }
+        </div>
+    </div>
+</section>

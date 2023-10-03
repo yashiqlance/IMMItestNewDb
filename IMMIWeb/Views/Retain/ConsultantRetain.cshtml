@@ -1,0 +1,360 @@
+﻿@model IMMIWeb.Service.Models.ConsultantRetainViewModel
+@using IMMIWeb.Infrastructure;
+<style>
+    .modal {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.5);
+    }
+
+    .modal-dialog {
+        max-width: 600px; /* Set the maximum width for the modal */
+    }
+
+    .modal-content {
+        position: relative;
+    }
+</style>
+<section class="login-home consultation-booked-section mt-90">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">
+                <ul class="nav nav-tabs border-0" id="myTab" role="tablist">
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link active" id="retain-tab" data-bs-toggle="tab" data-bs-target="#retain" type="button" role="tab" aria-controls="retain" aria-selected="true">retain</button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="booked-tab" data-bs-toggle="tab" data-bs-target="#booked" type="button" role="tab" aria-controls="booked" aria-selected="false">booked</button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="history-tab" data-bs-toggle="tab" data-bs-target="#history" type="button" role="tab" aria-controls="history" aria-selected="false">history</button>
+                    </li>
+                </ul>
+                <div class="tab-content" id="myTabContent">
+                    <div class="tab-pane fade show active" id="retain" role="tabpanel" aria-labelledby="retain-tab">
+                        <div class="row">
+                            @if (Model.lstRetainAppoitment != null && Model.lstRetainAppoitment.Count() > 0)
+                            {
+                                foreach (var item in Model.lstRetainAppoitment)
+                                {
+                                    <div class="col-lg-4">
+                                        <a href="@Url.Action("UserRetainConsultantDetails", "Retain", new{ area= "",ConsultantId = @item.ConsultantId })">
+                                            <div class="login-home-wrap">
+                                                <div class="login-img-wrap" id="userProfileImg">
+                                                    @if (item.ProfilePic != "")
+                                                    {
+                                                        <img src="@item.ProfilePic" alt="Profile" />
+                                                    }
+                                                    else
+                                                    {
+                                                        <img src="~/assets/images/defaultProfile.png" alt="Profile" />
+                                                    }
+                                                </div>
+                                                <div class="login-conent-wrap">
+                                                    <h3>
+                                                        @item.FirstName @item.LastName <img src="~/assets/images/full-star.svg" alt="full-star" /> @item.AverageRating <span>
+                                                            @{
+                                                                var reviewCountAbbreviated = "";
+                                                                var reviewCount = @item.ReviewCount;
+
+                                                                var suffixes = new string[] { "", "k", "M", "B", "T" }; // Add more suffixes as needed
+
+                                                                for (var i = 0; i < suffixes.Length; i++)
+                                                                {
+                                                                    if (reviewCount < 1000)
+                                                                    {
+                                                                        reviewCountAbbreviated = reviewCount + suffixes[i];
+                                                                        break;
+                                                                    }
+                                                                    reviewCount /= 1000;
+                                                                }
+                                                            }
+                                                            @Html.Raw(reviewCountAbbreviated + " Reviews")
+                                                        </span>
+                                                    </h3>
+                                                    <p class="dark-text">@item.Language</p>
+                                                    <p>Type of services</p>
+                                                    <h4 class="mb-0">@item.TypeofService</h4>
+                                                </div>
+                                            </div>
+
+
+                                        </a>
+                                    </div>
+                                }
+                            }
+
+                        </div>
+                    </div>
+                    <div class="tab-pane fade" id="booked" role="tabpanel" aria-labelledby="booked-tab">
+                        <div class="row">
+                            <div class="col-lg-4">
+                                <div class="login-home-wrap">
+                                    @if (Model.lstModelAppoitment != null && Model.lstModelAppoitment.Count() > 0)
+                                    {
+                                        foreach (var item in Model.lstModelAppoitment)
+                                        {
+                                            <input type="hidden" id="appointmentId" value="@item.AppointmentId" />
+                                            <div class="login-img-wrap" id="userProfileImg">
+                                                @if (item.ConsultantProfilePic == "")
+                                                {
+                                                    <img src="~/assets/images/profile-pic-2.png" alt="Profile" />
+                                                }
+                                                else
+                                                {
+                                                    <img src="@item.ConsultantProfilePic" alt="Profile">
+                                                }
+                                            </div>
+
+
+
+                                            @*if (item.BookingTime == 0) { bookingTime = "00 AM - 01 AM"; }
+                                    else if (item.BookingTime == 1) { bookingTime = "01 AM - 02 AM"; }
+                                    else if (item.BookingTime == 2) { bookingTime = "02 AM - 03 AM"; }
+                                    else if (item.BookingTime == 3) { bookingTime = "03 AM - 04 AM"; }
+                                    else if (item.BookingTime == 4) { bookingTime = "04 AM - 05 AM"; }
+                                    else if (item.BookingTime == 5) { bookingTime = "05 AM - 06 AM"; }
+                                    else if (item.BookingTime == 6) { bookingTime = "06 AM - 07 AM"; }
+                                    else if (item.BookingTime == 7) { bookingTime = "07 AM - 08 AM"; }
+                                    else if (item.BookingTime == 8) { bookingTime = "08 AM - 09 AM"; }
+                                    else if (item.BookingTime == 9) { bookingTime = "09 AM - 10 AM"; }
+                                    else if (item.BookingTime == 10) { bookingTime = "10 AM - 11 AM"; }
+                                    else if (item.BookingTime == 11) { bookingTime = "11 AM - 00 PM"; }
+                                    else if (item.BookingTime == 12) { bookingTime = "00 PM - 01 PM"; }
+                                    else if (item.BookingTime == 13) { bookingTime = "01 PM - 02 PM"; }
+                                    else if (item.BookingTime == 14) { bookingTime = "02 PM - 03 PM"; }
+                                    else if (item.BookingTime == 15) { bookingTime = "03 PM - 04 PM"; }
+                                    else if (item.BookingTime == 16) { bookingTime = "04 PM - 05 PM"; }
+                                    else if (item.BookingTime == 17) { bookingTime = "05 PM - 06 PM"; }
+                                    else if (item.BookingTime == 18) { bookingTime = "06 PM - 07 PM"; }
+                                    else if (item.BookingTime == 19) { bookingTime = "07 PM - 08 PM"; }
+                                    else if (item.BookingTime == 20) { bookingTime = "08 PM - 09 PM"; }
+                                    else if (item.BookingTime == 21) { bookingTime = "09 PM - 10 PM"; }
+                                    else if (item.BookingTime == 22) { bookingTime = "10 PM - 11 PM"; }
+                                    else if (item.BookingTime == 23) { bookingTime = "11 PM - 12 PM"; }
+                                    *@
+                                            string bookingTime = "";
+                                            var convertfromutctolocal = TimeZoneInfo.ConvertTimeFromUtc(@item.BookingDate, TimeZoneInfo.Local);
+                                            var LocalTime = TimeZoneInfo.ConvertTimeBySystemTimeZoneId(convertfromutctolocal, TimeZoneInfo.Local.Id, SessionFactory.TimeZone);
+                                            var Date = LocalTime.Date;
+                                            var Hour = LocalTime.Hour; //@TimeZone.CurrentTimeZone.ToLocalTime(@item.BookingDate).Hour;
+                                            var Minute = LocalTime.Minute;
+                                            item.BookingDate = Date;
+                                            item.BookingTime = Hour;
+                                            item.BookingMinutes = Minute;
+                                            
+                                            
+                                            switch (item.BookingTime)
+                                            {
+                                                case int i when i >= 0 && i <= 23:
+                                                    string amPm = i < 12 ? "AM" : "PM";
+                                                    string startHour = (i % 12).ToString() ?? "12"; // Handle 12 AM and 12 PM
+                                                    string endHour = ((i + 1) % 12).ToString() ?? "12"; // Handle 12 AM and 12 PM
+
+                                                    string formattedMinutes = item.BookingMinutes.ToString().PadLeft(2, '0'); // Add leading zero if necessary
+
+                                                    bookingTime = $"{startHour}:{formattedMinutes} {amPm} - {endHour}:{formattedMinutes} {amPm}";
+                                                    break;
+                                                default:
+                                                    bookingTime = "Invalid item.BookingTime";
+                                                    break;
+                                            }
+
+
+
+
+                                            <div class="login-conent-wrap">
+                                                <h3 style="text-transform: capitalize;">@item.ConsultantName <img src="~/assets/images/full-star.svg" alt="full-star" /> 4.5 <span>(2.3k Reviews)</span> </h3>
+                                                <p class="dark-text">Slot: @item.BookingDate.ToString("dd MMM yyyy") at @bookingTime</p>
+                                                <p class="dark-text">English | French | Russian</p>
+                                                <p class="mb-0">Communication Mode  </p>
+                                            </div>
+                                            <div class="right-side-review-content cont-guest-wrap">
+                                                <a href="#" class="cont-guest" id="showModalBtn">Cancel</a>
+                                            </div>
+                                        }
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="tab-pane fade" id="history" role="tabpanel" aria-labelledby="history-tab">
+                        <div class="row">
+                            @if (Model.lstHistoryAppoitment != null && Model.lstHistoryAppoitment.Count() > 0)
+                            {
+                                foreach (var item in Model.lstHistoryAppoitment)
+                                {
+                                    string bookingTime = "";
+
+                                    var convertfromutctolocal = TimeZoneInfo.ConvertTimeFromUtc(@item.AppointmentDate, TimeZoneInfo.Local);
+                                    var LocalTime = TimeZoneInfo.ConvertTimeBySystemTimeZoneId(convertfromutctolocal, TimeZoneInfo.Local.Id, SessionFactory.TimeZone);
+                                    var Date = LocalTime.Date;
+                                    var Hour = LocalTime.Hour; //@TimeZone.CurrentTimeZone.ToLocalTime(@item.BookingDate).Hour;
+                                    var Minute = LocalTime.Minute;
+                                    item.AppointmentDate = Date;
+                                    item.BookingTime = Hour;
+                                    item.BookingMinutes = Minute;
+                                    switch (item.BookingTime)
+                                    {
+                                        case int i when i >= 0 && i <= 23:
+                                            string amPm = i < 12 ? "AM" : "PM";
+                                            string startHour = (i % 12).ToString() ?? "12"; // Handle 12 AM and 12 PM
+                                            string endHour = ((i + 1) % 12).ToString() ?? "12"; // Handle 12 AM and 12 PM
+
+                                            string formattedMinutes = item.BookingMinutes.ToString().PadLeft(2, '0'); // Add leading zero if necessary
+
+
+                                            bookingTime = $"{startHour}:{formattedMinutes} {amPm} - {endHour}:{formattedMinutes} {amPm}";
+                                            break;
+                                        default:
+                                            bookingTime = "Invalid item.BookingTime";
+                                            break;
+                                    }
+
+                                    <div class="col-lg-6">
+                                        <div class="login-home-wrapper-main">
+                                            <div class="login-home-wrap c-history">
+                                                <div class="login-img-wrap" id="userProfileImg">
+                                                    @if (item.ProfilePic != "")
+                                                    {
+                                                        <img src="@item.ProfilePic" alt="Profile" />
+                                                    }
+                                                    else
+                                                    {
+                                                        <img src="~/assets/images/defaultProfile.png" alt="Profile" />
+                                                    }
+
+                                                </div>
+                                                <div class="login-conent-wrap">
+                                                    <h3>@item.FirstName @item.LastName</h3>
+                                                    <p class="dark-text">Slot: @item.AppointmentDate.ToString("dd MMM yy") at @bookingTime</p>
+                                                    <p class="mb-0" data-bs-toggle="modal" data-bs-target="#cardSuccess">Communication Mode</p>
+                                                    @if (item.CommunicationMode == "Video")
+                                                    {
+                                                        <div class="inline-icon-text"><span><img src="~/assets/images/video.svg" alt="Video Call"></span> Video Call</div>
+                                                    }
+                                                    else if (item.CommunicationMode == "Audio")
+                                                    {
+                                                        <div class="inline-icon-text"><span><img src="~/assets/images/call.svg" alt="Audio Call"></span> Audio Call</div>
+                                                    }
+                                                    else
+                                                    {
+                                                        <div class="inline-icon-text"><span><img src="~/assets/images/communication.svg" alt="Chat"></span> Chat</div>
+                                                    }
+
+                                                    <div class="duration">
+                                                        Call duration <span class="time">
+                                                            @if (item.CallExtendedCount == 1)
+                                                            {
+                                                                <text>20 mins</text>
+                                                            }
+                                                            else if (item.CallExtendedCount == 2)
+                                                            {
+                                                                <text>25 mins</text>
+                                                            }
+                                                            else
+                                                            {
+                                                                <text>30 mins</text>
+                                                            }
+                                                        </span> Payment <span>@item.Payment</span>
+                                                    </div>
+
+                                                </div>
+                                            </div>
+                                            <div class="right-side-review-content cont-guest-wrap">
+                                                <div class="rating-wrapper">
+                                                    @for (int i = 0; i < item.Rating; i++)
+                                                    {
+                                                        <img src="/assets/images/full-star.svg" alt="full-star">
+                                                    }
+                                                    @for (int i = item.Rating; i < 5; i++)
+                                                    {
+                                                        <img src="/assets/images/null-star.svg" alt="null-star">
+                                                    }
+                                                </div>
+                                                @*<a href="#" class="cont-guest" data-bs-toggle="modal" data-bs-target="#writeReview">View Review</a>*@
+                                                @*<a href="#" class="cont-guest" data-toggle="modal" data-target="#writeReview">View Review</a>*@
+                                                <a href="#" class="cont-guest" id="showModalBtn">View Review</a>
+
+                                            </div>
+
+                                        </div>
+
+                                    </div>
+
+
+                                }
+                            }
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<div class="modal extend-call-modal cancel-consultation-modal msg-submitted-modal check-your-main-modal" id="cancelAppointmentModal">
+    <div class="modal-dialog extend-call-wrap">
+        <div class="modal-content">
+            <button type="button" class="btn-close" data-bs-dismiss="modal"><img src="./assets/images/close-gray.svg" alt=""></button>
+            <div class="modal-body signin-wrap card-modal">
+                @*<h2 class="mb-2">Card Successfully Added!</h2>*@
+                <h3>Are you sure you want to cancel consultation?</h3>
+
+                <ul>
+                    <li>If you cancel consultation before 24 hours you will be charged 20% of the fees.</li>
+                    <li> If you cancel consultation within 24 hours you will charge 100% off the fees.</li>
+                    <li>Payment will be refunded to the same payment method within 7 working days. </li>
+                </ul>
+                <div class="d-flex align-items-center yes-no-btn-wrap">
+                    <a href="#" class="g-btn mt-0 btnSubmit" id="btnSubmit">Yes, Cancel</a>
+                    <a href="#" class="back-home-btn d-block" data-bs-dismiss="modal" id="noButton">No</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://code.jquery.com/ui/1.13.0/jquery-ui.js"></script>
+<script>
+    $(document).ready(function () {
+        $("#cancelAppointmentModal").hide();
+        $("#showModalBtn").click(function () {
+            $("#cancelAppointmentModal").show();
+        });
+
+        $("#noButton").click(function () {
+            $("#cancelAppointmentModal").hide();
+        });
+
+
+
+
+        $('#btnSubmit').click(function (event) {
+            var appointmentId = $("#appointmentId").val();
+            $.ajax({
+                type: "POST",
+                url: "/UserRetain/cancelAppointment",
+                data: { appointmentId: appointmentId },
+                success: function (data) {
+                    if (data.success) {
+                        alert("Appointment cancelled successfully.");
+                    } else {
+                        alert("Appointment cancellation failed.");
+                    }
+                },
+                error: function (error) {
+                    console.error("Error:", error);
+                }
+            });
+        });
+    });
+</script>

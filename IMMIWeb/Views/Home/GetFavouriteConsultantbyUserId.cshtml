@@ -1,0 +1,121 @@
+﻿@model List<IMMIWeb.Service.Models.GetFavouriteConsultantByUserIdViewModel>
+@using IMMIWeb.Infrastructure
+
+<section class="login-home fav-con-sec mt-90">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="title">
+                    <h2>Favourite Consultants</h2>
+                </div>
+            </div>
+            <div class="col-lg-12">
+                <div class="row">
+                    @if (Model != null && Model.Count() > 0)
+                    {
+                        @foreach (var consultant in Model)
+                        {
+                            <div class="col-lg-4 col-md-6">
+                                <a href="/Home/ConsultantDetail?id=@consultant.CurrentId">
+                                    <div class="login-home-wrap">
+
+                                        <img src="~/assets/images/Heart.svg" class="like-svg FavouritesConsultant" data-model-value="@consultant.CurrentId" alt="Favourite" />
+
+
+                                        <div class="login-img-wrap" id="userProfileImg">
+                                            @if (consultant.ProfilePic == "")
+                                            {
+                                                <img src="~/assets/images/profile-pic-2.png" alt="Profile" />
+                                            }
+                                            else
+                                            {
+                                                <img src="@consultant.ProfilePic" alt="Profile" />
+                                            }
+                                        </div>
+                                        <div class="login-conent-wrap">
+                                            <h3>@consultant.FirstName <img src="~/assets/images/full-star.svg" alt="full-star" /> @consultant.CountRating <span>(@consultant.AvgRating Reviews)</span> </h3>
+                                            <p class="dark-text">@consultant.LanguageName</p>
+                                            <p>Type of services</p>
+                                            <h4 class="mb-0">@consultant.TypeOfServiceName</h4>
+                                        </div>
+                                    </div>
+                                </a>
+                            </div>
+                        }
+                    }
+                    else
+                    {
+                        <div class="col-lg-12">
+                            <h2>No Favourite consultant yet...</h2>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<script>
+    $(".FavouritesConsultant").on("click", handleFavouriteConsultantClick);
+
+
+    function handleNotFavouriteConsultantClick(event) {
+        // Your existing click event handling code for ".NotFavouriteConsultant" class
+        event.preventDefault();
+        var clickedElement = $(this);
+        var ConsultantId = clickedElement.data('model-value');
+        var currentImageSrc = clickedElement.attr("src");
+        clickedElement.off("click", handleNotFavouriteConsultantClick);
+        $.ajax({
+            type: "POST",
+            url: "/Home/AddFavouriteConsultant",
+            data: { "ConsultantId": ConsultantId },
+            success: function (response) {
+                if (response != 0) {
+                    if (currentImageSrc.includes("NotFavourite.svg")) {
+                        clickedElement.removeClass("NotFavouritesConsultant").addClass("FavouritesConsultant");
+                        clickedElement.attr("src", "/assets/images/Heart.svg");
+
+                        clickedElement.on("click", handleFavouriteConsultantClick);
+                    }
+                    //clickedElement.attr("src", "/assets/images/Heart.svg");
+                }
+                location.reload();
+            },
+            error: function () {
+                alert("Error occured!!")
+            }
+        });
+    }
+
+    function handleFavouriteConsultantClick(event) {
+
+        // Your existing click event handling code for ".NotFavouriteConsultant" class
+        event.preventDefault();
+        var clickedElement = $(this);
+        var ConsultantId = clickedElement.data('model-value');
+        var currentImageSrc = clickedElement.attr("src");
+
+        clickedElement.off("click", handleFavouriteConsultantClick);
+        $.ajax({
+            type: "POST",
+            url: "/Home/RemoveFavouriteConsultant",
+            data: { "ConsultantId": ConsultantId },
+            success: function (response) {
+                if (response != 0) {
+                    if (currentImageSrc.includes("Heart.svg")) {
+                        clickedElement.removeClass("FavouritesConsultant").addClass("NotFavouritesConsultant");
+                        clickedElement.attr("src", "/assets/images/NotFavourite.svg");
+
+                        clickedElement.on("click", handleNotFavouriteConsultantClick);
+                    }
+                    //clickedElement.attr("src", "/assets/images/NotFavourite.svg");
+                }
+                location.reload();
+            },
+            error: function () {
+                alert("Error occured!!")
+            }
+        });
+    }
+    $(".NotFavouritesConsultant").on("click", handleNotFavouriteConsultantClick);
+</script>

@@ -1,0 +1,171 @@
+﻿@model IMMIWeb.Service.Models.ConsultantAppointmentByStatusViewModel
+@using IMMIWeb.Infrastructure
+
+<section class="login-home consultation-booked-section mt-90">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">
+                <ul class="nav nav-tabs border-0" id="myTab" role="tablist">
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="pending-tab" type="button" role="tab" aria-controls="pending" aria-selected="true">Pending</button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="accepted-tab" type="button" role="tab" aria-controls="accepted" aria-selected="false">Accepted</button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link active" id="rejected-tab" type="button" role="tab" aria-controls="rejected" aria-selected="false">Rejected</button>
+                    </li>
+                </ul>
+                <div class="tab-content" id="myTabContent">
+                    <div class="tab-pane fade  show active" id="rejected" role="tabpanel" aria-labelledby="rejected-tab">
+                        <div class="row">
+                            @foreach (var item in Model.lstconsultantAppointmentByStatus)
+                            {
+
+                                string bookingTime = "";
+                                @*if (item.BookingTime == 0) { bookingTime = "00 AM - 01 AM"; }
+                                else if (item.BookingTime == 1) { bookingTime = "01 AM - 02 AM"; }
+                                else if (item.BookingTime == 2) { bookingTime = "02 AM - 03 AM"; }
+                                else if (item.BookingTime == 3) { bookingTime = "03 AM - 04 AM"; }
+                                else if (item.BookingTime == 4) { bookingTime = "04 AM - 05 AM"; }
+                                else if (item.BookingTime == 5) { bookingTime = "05 AM - 06 AM"; }
+                                else if (item.BookingTime == 6) { bookingTime = "06 AM - 07 AM"; }
+                                else if (item.BookingTime == 7) { bookingTime = "07 AM - 08 AM"; }
+                                else if (item.BookingTime == 8) { bookingTime = "08 AM - 09 AM"; }
+                                else if (item.BookingTime == 9) { bookingTime = "09 AM - 10 AM"; }
+                                else if (item.BookingTime == 10) { bookingTime = "10 AM - 11 AM"; }
+                                else if (item.BookingTime == 11) { bookingTime = "11 AM - 00 PM"; }
+                                else if (item.BookingTime == 12) { bookingTime = "00 PM - 01 PM"; }
+                                else if (item.BookingTime == 13) { bookingTime = "01 PM - 02 PM"; }
+                                else if (item.BookingTime == 14) { bookingTime = "02 PM - 03 PM"; }
+                                else if (item.BookingTime == 15) { bookingTime = "03 PM - 04 PM"; }
+                                else if (item.BookingTime == 16) { bookingTime = "04 PM - 05 PM"; }
+                                else if (item.BookingTime == 17) { bookingTime = "05 PM - 06 PM"; }
+                                else if (item.BookingTime == 18) { bookingTime = "06 PM - 07 PM"; }
+                                else if (item.BookingTime == 19) { bookingTime = "07 PM - 08 PM"; }
+                                else if (item.BookingTime == 20) { bookingTime = "08 PM - 09 PM"; }
+                                else if (item.BookingTime == 21) { bookingTime = "09 PM - 10 PM"; }
+                                else if (item.BookingTime == 22) { bookingTime = "10 PM - 11 PM"; }
+                                else if (item.BookingTime == 23) { bookingTime = "11 PM - 12 PM"; }*@
+
+
+                                var convertfromutctolocal = TimeZoneInfo.ConvertTimeFromUtc(@item.BookingDate, TimeZoneInfo.Local);
+                                var LocalTime = TimeZoneInfo.ConvertTimeBySystemTimeZoneId(convertfromutctolocal, TimeZoneInfo.Local.Id, SessionFactory.TimeZone);
+                                var Date = LocalTime.Date;
+                                var Hour = LocalTime.Hour; //@TimeZone.CurrentTimeZone.ToLocalTime(@item.BookingDate).Hour;
+                                var Minute = LocalTime.Minute;
+                                item.BookingDate = Date;
+                                item.BookingTime = Hour;
+                                item.BookingMinutes = Minute;
+                                
+                                
+                                
+                                switch (item.BookingTime)
+                                {
+                                    case int i when i >= 0 && i <= 23:
+                                        string amPm = i < 12 ? "AM" : "PM";
+                                        string startHour = (i % 12).ToString() ?? "12"; // Handle 12 AM and 12 PM
+                                        string endHour = ((i + 1) % 12).ToString() ?? "12"; // Handle 12 AM and 12 PM
+
+                                        string formattedMinutes = item.BookingMinutes.ToString().PadLeft(2, '0'); // Add leading zero if necessary
+
+
+                                        bookingTime = $"{startHour}:{formattedMinutes} {amPm} - {endHour}:{formattedMinutes} {amPm}";
+                                        break;
+                                    default:
+                                        bookingTime = "Invalid item.BookingTime";
+                                        break;
+                                }
+
+                                <div class="col-lg-4 col-sm-12 col-md-6">
+                                    <a href="/Consultant/ConsultantAppointment/AppointmentDetails?appointmentId=@item.AppointmentId">
+                                        <div class="login-home-wrap">
+                                            <div class="login-img-wrap" id="userProfileImg">
+                                                @if (item.ProfilePic == "" || item.ProfilePic == null)
+                                                                                {
+                                                    <img src="~/assets/images/defaultProfile.png" alt="Profile" />
+                                                }
+                                                else
+                                                {
+                                                    <img src="@item.ProfilePic" alt="Profile">
+                                                }
+                                            </div>
+                                            <div class="login-conent-wrap">
+                                                <h3>@item.FirstName @item.LastName </h3>
+                                                <p class="dark-text">Slot: @item.BookingDate.ToString("dd MMM yyyy") at @bookingTime</p>
+                                                <p class="dark-text">@item.LanguageName</p>
+                                                <p>Type of services</p>
+                                                <h4 class="mb-0">@item.TypeOfService</h4>
+                                            </div>
+                                        </div>
+                                    </a>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+
+<!-- Accepted Success Modal -->
+<div class="modal extend-call-modal msg-submitted-modal" id="acceptModal">
+    <div class="modal-dialog extend-call-wrap">
+        <div class="modal-content">
+            <button type="button" class="btn-close" data-bs-dismiss="modal"><img src="./assets/images/close-gray.svg" alt=""></button>
+            <div class="modal-body">
+                <img src="./assets/images/done.svg" alt="done" />
+                <h2 class="mb-0 mt-3">Appointment Accepted successfully!</h2>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Rejected Modal -->
+<div class="modal retain-consultant reject-consultant modal-md" id="rejectedModal" tabindex="-1">
+    <div class="modal-dialog ">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="btn-close" data-bs-dismiss="modal"><img src="./assets/images/close-gray.svg" alt=""></button>
+                <div class="call-content text-center">
+                    <h3>Select Reason for Rejection</h3>
+                </div>
+                <div class="modal-body signin-wrap text-center">
+                    <div class="input-group select-lang">
+                        <select name="" id="" class="form-control">
+                            <option value="Emergency">Due to Medical Emergency</option>
+                            <option value="Emergency">Due to Medical Emergency</option>
+                            <option value="Emergency">Due to Medical Emergency</option>
+                            <option value="Emergency">Due to Medical Emergency</option>
+                            <option value="Emergency">Due to Medical Emergency</option>
+                            <option value="Emergency">Due to Medical Emergency</option>
+                            <option value="Emergency">Due to Medical Emergency</option>
+                        </select>
+                        <label for="">Select reason</label>
+                    </div>
+                    <p>You will be fined 20% of the Appointment fee.</p>
+                    <a href="#"><button type="button" class="g-btn">Submit</button></a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Add a click event listener to each button
+    document.getElementById("pending-tab").addEventListener("click", function () {
+        // Use window.location to navigate to the desired URL
+        window.location.href = '@Url.Action("AppointmentPendingList", "ConsultantAppointment", new { Area = "Consultant" })';
+    });
+
+    document.getElementById("accepted-tab").addEventListener("click", function () {
+        window.location.href = '@Url.Action("AppointmentAcceptedList", "ConsultantAppointment", new { Area = "Consultant" })';
+    });
+
+    document.getElementById("rejected-tab").addEventListener("click", function () {
+        window.location.href = '@Url.Action("AppointmentRejectedList", "ConsultantAppointment", new { Area = "Consultant" })';
+    });
+</script>

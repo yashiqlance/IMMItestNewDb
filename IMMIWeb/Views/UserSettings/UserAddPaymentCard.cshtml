@@ -1,0 +1,250 @@
+﻿@using IMMIWeb.Infrastructure;
+@{
+    string userName = Convert.ToString(SessionFactory.CurrentUserName);
+    string userEmail = Convert.ToString(SessionFactory.CurrentUserEmail);
+}
+
+<style>
+    .expiry-input {
+        display: flex;
+        align-items: center;
+    }
+
+        .expiry-input input {
+            width: 30px;
+            text-align: center;
+            border: 1px solid #ccc;
+            padding: 5px;
+        }
+
+    .separator {
+        margin: 0 5px;
+    }
+</style>
+
+<section class="my-card-section my-card-add-card mt-90">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-10">
+                <div class="my-card-wrap">
+                    <div class="col-lg-6 col-md-6">
+                        <div class="signin-wrap change-num-wrap">
+                            <h1>Add New Card</h1>
+                           
+                                <div class="input-group">
+                                    <input type="text" class="form-control Name" name="Name" id="Name" placeholder="Card Name*">
+                                    <label for="">Name on Card*</label>
+                                    <span id="ErrorName" class="text-danger"></span>
+                                </div>
+                                <div class="input-group">
+                                    <input class="form-control CardNumber" type="text" name="CardNumber" placeholder="Card number*" size="18" id="CardNumber" minlength="19" maxlength="19" autocomplete="off">
+                                    <label for="">Card number*</label>
+                                    <span id="ErrorCardNumber" class="text-danger"></span>
+                                </div>
+                                <div class="card-detail-wrap">
+                                    <div class="input-group">
+                                        <input type="text" name="exp" class="form-control ExpiryDate" placeholder="MM/YY" size="5" id="exp" minlength="5" maxlength="5">
+                                        <label for="">Expiry Date*</label>
+                                        <span id="ErrorExpityDate" class="text-danger"></span>
+                                    </div>
+                                    <div class="input-group">
+                                        <input type="password" class="cvv form-control Cvv" name="cvv Mobile" id="Cvv" placeholder="000" size="1" minlength="3" maxlength="3" autocomplete="off">
+                                        <label for="">CVV*</label>
+                                        <span id="ErrorCvv" class="text-danger"></span>
+                                    </div>
+                                </div>
+                                <div class="text-center">
+                                    <button type="button" class="g-btn mb-0 btnSubmit" id="btnSubmit">Add Card</button>
+                                </div>   
+                                
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Card Success Modal -->
+<div class="modal extend-call-modal msg-submitted-modal  check-your-main-modal" id="cardAdded">
+    <div class="modal-dialog extend-call-wrap">
+        <div class="modal-content">
+            <button type="button" class="btn-close" data-bs-dismiss="modal"><img src="~/assets/images/close-gray.svg" alt=""></button>
+            <div class="modal-body signin-wrap">
+                <img src="~/assets/images/done.svg" alt="done" />
+                <h2 class="mb-0 mt-4">Card Successfully Added!</h2>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script type="text/javascript">
+
+    function CloseModal() {
+        document.getElementById('cardAdded').style.display = 'none';
+    }
+
+    $("#Cvv").on("input", function () {
+        var mobileInput = $(this).val();
+        var sanitizedInput = mobileInput.replace(/[^0-9]/g, ''); // Remove non-numeric characters
+        $(this).val(sanitizedInput);
+    });
+
+    $("#CardNumber").on("input", function () {
+        var cardNumber = $(this).val();
+        var sanitizedInput = cardNumber.replace(/[^0-9]/g, ''); // Remove non-numeric characters
+        $(this).val(sanitizedInput);
+    });
+
+    $("#exp").on("input", function () {
+        var expDate = $(this).val();
+        var sanitizedInput = expDate.replace(/[^0-9]/g, ''); // Remove non-numeric characters
+        $(this).val(sanitizedInput);
+    });
+
+
+    $(document).ready(function () {
+
+        $('#btnSubmit').click(function (event) {
+
+            var isValidForm = true;
+
+            var cardName = $(".Name").val();
+            var cardNumber = $(".CardNumber").val();
+            var expityDate = $(".ExpiryDate").val();
+            var cvv = $(".Cvv").val();
+
+            var dateArray = expityDate.split("/");
+
+            var month = dateArray[0];
+            var year = dateArray[1];
+
+            if (cardName.trim() === "") {
+                $("#ErrorName").text("Card name is required.");
+                isValidForm = false;
+            } else {
+                $("#ErrorName").text("");
+            }
+
+            if (cardNumber.trim() === "") {
+                $("#ErrorCardNumber").text("Card number is required.");
+                isValidForm = false;
+            } else {
+                $("#ErrorCardNumber").text("");
+            }
+
+            if (month === "" || month === undefined) {
+                $("#ErrorExpityDate").text("Expiry date is required.");
+                isValidForm = false;
+            } else if (year === "" || year === undefined) {
+                $("#ErrorExpityDate").text("Expiry date is required.");
+                isValidForm = false;
+            } else {
+                $("#ErrorExpityDate").text("");
+            }
+
+            if (cvv.trim() === "") {
+                $("#ErrorCvv").text("CVV is required.");
+                isValidForm = false;
+            } else {
+                $("#ErrorCvv").text("");
+            }
+
+            if (isValidForm) {
+                AddCard();
+            }
+        });
+
+        function AddCard() {
+            $('#loading-overlay').show();
+
+            var cardName = $(".Name").val();
+            var cardNumber = $(".CardNumber").val();
+            var expityDate = $(".ExpiryDate").val();
+            var cvv = $(".Cvv").val();
+
+            var dateArray = expityDate.split("/");
+
+            var month = dateArray[0];
+            var year = dateArray[1];
+
+            let AddStripeCustomer = {
+                Name: $("#Name").val(),
+                Email: '@userEmail',
+                CreditCard: {
+                    Name: cardName,
+                    CardNumber: cardNumber,
+                    ExpirationYear: year,
+                    ExpirationMonth: month,
+                    Cvc: cvv
+                }
+            }
+
+
+            $.ajax({
+                type: "post",
+                url: "/UserSettings/UserAddPaymentCard",
+                data: AddStripeCustomer,
+                success: function (response) {
+                    if (response == "Card succesfully added") {
+                        $('#cardAdded').modal('show');
+                        //alert(response)
+                        $('#loading-overlay').hide();
+                        window.location.href = "/UserSettings/PaymentCardList";
+                    }
+                    else
+                    {
+                        $('#loading-overlay').hide();
+                        alert("issue")
+                    }
+                },
+                error: function () {
+                    $('#loading-overlay').hide();
+                    alert("Error occured!!")
+                }
+            });
+
+        }
+
+    });
+</script>
+
+<script>
+    $(document).ready(function () {
+        //For Card Number formatted input
+        var cardNum = document.getElementById('CardNumber');
+        cardNum.onkeyup = function (e) {
+            if (this.value == this.lastValue) return;
+            var caretPosition = this.selectionStart;
+            var sanitizedValue = this.value.replace(/[^0-9]/gi, '');
+            var parts = [];
+            for (var i = 0, len = sanitizedValue.length; i < len; i += 4) { parts.push(sanitizedValue.substring(i, i + 4)); } for (var i = caretPosition - 1; i >= 0; i--) {
+                var c = this.value[i];
+                if (c < '0' || c > '9') {
+                    caretPosition--;
+                }
+            }
+            caretPosition += Math.floor(caretPosition / 4);
+            this.value = this.lastValue = parts.join(' ');
+            this.selectionStart = this.selectionEnd = caretPosition;
+        }
+        //For Date formatted input
+        var expDate = document.getElementById('exp');
+        expDate.onkeyup = function (e) {
+            if (this.value == this.lastValue) return;
+            var caretPosition = this.selectionStart;
+            var sanitizedValue = this.value.replace(/[^0-9]/gi, '');
+            var parts = [];
+            for (var i = 0, len = sanitizedValue.length; i < len; i += 2) { parts.push(sanitizedValue.substring(i, i + 2)); } for (var i = caretPosition - 1; i >= 0; i--) {
+                var c = this.value[i];
+                if (c < '0' || c > '9') {
+                    caretPosition--;
+                }
+            }
+            caretPosition += Math.floor(caretPosition / 2);
+            this.value = this.lastValue = parts.join('/');
+            this.selectionStart = this.selectionEnd = caretPosition;
+        }
+    });
+</script>

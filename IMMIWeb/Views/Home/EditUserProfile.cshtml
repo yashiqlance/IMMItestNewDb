@@ -1,0 +1,100 @@
+﻿@model IMMIWeb.Service.Models.UserViewModel;
+@using IMMIWeb.Infrastructure;
+
+<section class="profile-section mt-90">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-6">
+                <div class="signin-wrap profile-edit change-num-wrap text-center">
+                    <h1>Edit Profile</h1>
+                    @using (Html.BeginForm("EditUserProfile", "Home", FormMethod.Post))
+                    {
+                        <input type="hidden" value="@SessionFactory.CurrentUserId" />
+                        <div class="input-group">
+                            <input type="text" class="form-control text-capitalize" disabled="disabled" value="@Model.GetUserDetails.FirstName">
+                            <label for="">First name</label>
+                        </div>
+
+                        <div class="input-group">
+                            <input type="text" class="form-control text-capitalize" disabled="disabled" value="@Model.GetUserDetails.LastName">
+                            <label for="">Lat name</label>
+                        </div>
+                        <div class="input-group position-relative">
+                            @*<a href="@Url.ActionLink("Settings", "UserCMS")">
+                        <img src="~/assets/images/edit.svg" class="edit-image position-absolute" alt="edit" />
+                        </a>*@
+                            <input type="tel" class="form-control" disabled="disabled" value="@Model.GetUserDetails.MobileCountryCode @Model.GetUserDetails.Mobile">
+                            <label for="">Mobile number</label>
+                        </div>
+                        <div class="input-group position-relative">
+                            <img src="~/assets/images/edit.svg" data-bs-toggle="modal" data-bs-target="#proOpen" class="edit-image position-absolute" alt="edit" />
+                            <input type="email" class="form-control" disabled="disabled" value="@Model.GetUserDetails.Email">
+                            <label for="">Email ID</label>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Edit Profile Success Modal -->
+<div class="modal extend-call-modal msg-submitted-modal check-your-main-modal mb-6" id="proSuccess">
+    <div class="modal-dialog extend-call-wrap">
+        <div class="modal-content">
+            <div class="modal-body signin-wrap">
+                <img src="~/assets/images/mail.svg" alt="done" />
+                <h2 class="mb-0 mt-4">Check Your Email</h2>
+                <p class="mt-2">Follow the link in the email we sent on <span id="emailPlaceholder"></span> to confirm your email address & help secure your account.</p>
+                <button type="button" class="g-btn mt-0" data-bs-dismiss="modal">Okay</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal extend-call-modal msg-submitted-modal check-your-main-modal" id="proOpen">
+    <div class="modal-dialog extend-call-wrap">
+        <div class="modal-content">
+            <div class="modal-body signin-wrap">
+                <h1>New Email</h1>
+                <div class="input-group position-relative">
+                    <input type="email" class="form-control" id="txtEmailEdit" value="@SessionFactory.CurrentUserEmail" placeholder="Enter new email">
+                    <label for="">Email ID</label>
+                </div>
+                <button type="button" id="btnVerify" data-bs-toggle="modal" data-bs-target="#proSuccess" class="g-btn mb-0">Verify</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('.edit-image').click(function () {
+            $('#proOpen').modal('show');
+        });
+
+        $('#btnVerify').click(function () {
+            var Email = $("#txtEmailEdit").val();
+            VerifyEmail(Email);
+        });
+        function VerifyEmail(param) {
+            $.ajax({
+                type: "POST",
+                url: "/Home/VerifyEmail",
+                data: { "Email": param },
+                success: function (response) {
+                    $("#btnVerify").attr("data-bs-toggle", "modal");
+                    $("#btnVerify").attr("data-bs-target", "#proSuccess");
+                    $("#emailPlaceholder").text(param);
+                    $("#proSuccess").modal('show');
+                },
+                error: function () {
+                    alert("Error occured!!")
+                }
+            });
+        }
+    });
+</script>

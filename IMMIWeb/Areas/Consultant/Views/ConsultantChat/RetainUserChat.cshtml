@@ -1,0 +1,291 @@
+﻿@model IMMIWeb.Service.Models.RetainCList
+@{
+    var firstRecord = Model.lstGetRetainConsultnatListForUserViewModel.FirstOrDefault();
+}
+
+<section class="my-card-section login-home message-section mt-90">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="title">
+                    <h1>Messages</h1>
+                </div>
+            </div>
+            <div class="col-lg-4" style="height: 552px;overflow: auto;border: 0px #ccc;">
+                <ul class="nav nav-tabs flex-column" id="myTab" role="tablist">
+
+                    @foreach (var item in Model.lstGetRetainConsultnatListForUserViewModel)
+                    {
+
+                        <li class="nav-item" role="presentation">
+                            <button name="Retain_@item.RetainID" class="nav-link clickOnCurrentTag" id="@item.CometChatUserUID" data-bs-toggle="tab" data-bs-target="#profile" type="button" role="tab" aria-controls="profile" aria-selected="false" tabindex="-1">
+                                <div class="msg-chat-wrap">
+                                    <div class="left-side-profile">
+                                        <div class="chat-profile">
+                                            <img src="@item.ProfilePic" alt="">
+                                        </div>
+                                        <div class="chat-name">
+                                            <h2>@item.UserName</h2>
+                                        </div>
+                                    </div>
+                                    <div id="cls_@item.CometChatUserUID">
+                                        <p id="cnt_@item.CometChatUserUID"></p>
+                                    </div>
+                                </div>
+                            </button>
+                        </li>
+                    }
+
+
+                </ul>
+            </div>
+            <div class="col-lg-8">
+                <div class="tab-content overflow-hidden" id="myTabContent">
+                    <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
+                        <div class="chat">
+                            <div class="msg-chat-wrap">
+                                <div class="left-side-profile">
+                                    <div class="chat-profile">
+                                        <img id="profilePic" src="@firstRecord.ProfilePic" alt="">
+                                    </div>
+                                    <div class="chat-name">
+                                        <h2 id="sName">@firstRecord.UserName</h2>
+                                        <p id="sStatus">Online</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="chat-history" id="messages">
+                                <p>Your messages</p>
+                            </div>
+                            <div class="msg-type-here-wrap">
+                                <input type="file" id="myFile" name="filename">
+                                <textarea name="" id="myMessage" cols="30" rows="10"></textarea>
+                                @*<input type="button" id="btnSendMessage"  onclick="SendMessageFun('Retain_@firstRecord.RetainID')" value="Send" />*@
+                                <input type="button" id="btnSendMessage" value="Send" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+<script>
+
+
+    $('.clickOnCurrentTag').click(function (event) {
+
+        var tagName = $(this).attr("name");
+        var cometchatConsultantUID = $(this).attr("id");
+
+        var btnJoinChat = $('#btnSendMessage');
+        btnJoinChat.attr('onclick', 'SendMessageFun("' + tagName + '")');
+
+
+        sessionStorage.setItem("rId", cometchatConsultantUID);
+
+        CometChat.getUser(sessionStorage.getItem("rId")).then(
+            user => {
+                $("#sName").html(user.name);
+                var newImageUrl = user.avatar;
+                $("#profilePic").attr("src", newImageUrl);
+
+                let tags = [tagName];
+
+                var messagesRequest = new CometChat.MessagesRequestBuilder()
+                    .setUID(sessionStorage.getItem("rId"))
+                    .setMessageId(1)
+                    //.setTags(tags)
+                    .setLimit(100)
+                    .build();
+                $('#loading-overlay').show();
+
+                $("#messages").html("");
+
+                messagesRequest.fetchNext().then(
+                    messages => {
+                        console.log("Message list fetched:", messages);
+                        var i;
+                        for (i = 0; i <= messages.length; ++i) {
+
+                            if (messages[i].receiverId == sessionStorage.getItem("UID")) {
+                                if (messages[i].type == "text") {
+                                    var randerMsg = '<div class="message my-message">' + messages[i].text + '</div>' + '<div class="message-data"><span class="message-data-time">' + MiliSeconedToMin(messages[i].sentAt) + '</span></div>';
+                                    document.getElementById('messages').innerHTML += randerMsg;
+                                }
+                                else if (messages[i].type == "image") {
+
+                                    var varSenderImg = messages[i].data.attachments[0].url;
+                                    var varFileName = messages[i].data.attachments[0].name;
+
+                                    var randerMsg = '<div class="message my-message"> <img src=' + varSenderImg + ' width="250" height="150"></div>' + '<div class="message-data"><span class="message-data-time">' + MiliSeconedToMin(messages[i].sentAt) + '</span></div>';
+                                    document.getElementById('messages').innerHTML += randerMsg;
+                                }
+                                else {
+                                    var varSenderImg = messages[i].data.attachments[0].url;
+                                    var varFileName = messages[i].data.attachments[0].name;
+
+                                    var randerMsg = '<div class="message my-message"> <a  target="_blank" href=' + varSenderImg + ' >' + varFileName + '</a></div>' + '<div class="message-data"><span class="message-data-time">' + MiliSeconedToMin(messages[i].sentAt) + '</span></div>';
+                                    document.getElementById('messages').innerHTML += randerMsg;
+                                }
+                            }
+                            else {
+                                if (messages[i].type == "text") {
+                                    var randerMsg = '<div class="message other-message float-right">' + messages[i].text + '</div>' + '<div class="message-data align-right"><span class="message-data-time">' + MiliSeconedToMin(messages[i].sentAt) + '</span></div>';
+                                    document.getElementById('messages').innerHTML += randerMsg;
+                                }
+                                else if (messages[i].type == "image") {
+                                    var varSenderImg = messages[i].data.attachments[0].url;
+                                    var randerMsg = '<div class="message other-message float-right"><img src=' + varSenderImg + ' width="250" height="150"></div>' + '<div class="message-data align-right"><span class="message-data-time">' + MiliSeconedToMin(messages[i].sentAt) + '</span></div>';
+                                    document.getElementById('messages').innerHTML += randerMsg;
+                                }
+                                else {
+                                    var varSenderImg = messages[i].data.attachments[0].url;
+                                    var varFileName = messages[i].data.attachments[0].name;
+                                    var randerMsg = '<div class="message other-message float-right"><a target="_blank" href=' + varSenderImg + '  >' + varFileName + '</a></div>' + '<div class="message-data align-right"><span class="message-data-time">' + MiliSeconedToMin(messages[i].sentAt) + '</span></div>';
+                                    document.getElementById('messages').innerHTML += randerMsg;
+                                }
+                            }
+
+                            SetScrollBottom();
+
+
+                        }
+
+                    }, error => {
+                        console.log("Message fetching failed with error:", error);
+                    }
+                );
+                $('#loading-overlay').hide();
+                $("#dvTextChatUser").show();
+
+            }
+        );
+
+
+
+    });
+
+
+    $(document).ready(function () {
+
+        sessionStorage.setItem("rId", '@firstRecord.CometChatUserUID');
+
+        CometChat.getUser(sessionStorage.getItem("rId")).then(
+            user => {
+                $("#sName").html(user.name);
+                var newImageUrl = user.avatar;
+                $("#profilePic").attr("src", newImageUrl);
+
+                let tags = ['Retain_@firstRecord.RetainID'];
+
+
+
+                //start count here
+                var data = sessionStorage.getItem("userChatCntList");
+                var dataArray = data.split(',');
+
+                for (var i = 0; i < dataArray.length; i++) {
+                    var value = dataArray[i];
+                    CometChat.getUnreadMessageCountForUser(value).then(
+                        array => {
+                            if (array != null) {
+                                for (var key in array) {
+                                    if ($('#' + key).length) {
+                                        if (array[key] != "" || array[key] != null || array[key] != undefined) {
+                                            $('#cnt_' + key).html(array[key]);
+                                            $('#cls_' + key).addClass('msg-num');
+                                        }
+                                        console.log('Element with ID "myElement" exists.');
+
+                                    }
+                                }
+                            }
+                        });
+                }
+                //end count here
+
+
+                var btnJoinChat = $('#btnSendMessage');
+                btnJoinChat.attr('onclick', 'SendMessageFun("' + tags + '")');
+
+                var messagesRequest = new CometChat.MessagesRequestBuilder()
+                    .setUID(sessionStorage.getItem("rId"))
+                    .setMessageId(1)
+                    //.setTags(tags)
+                    .setLimit(100)
+                    .build();
+                $('#loading-overlay').show();
+                messagesRequest.fetchNext().then(
+                    messages => {
+
+                        
+
+                        console.log("Message list fetched:", messages);
+                        var i;
+                        for (i = 0; i <= messages.length; ++i) {
+
+                            if (messages[i].receiverId == sessionStorage.getItem("UID")) {
+
+
+                                CometChat.markAsRead(messages[i]);
+
+                                if (messages[i].type == "text") {
+                                    var randerMsg = '<div class="message my-message">' + messages[i].text + '</div>' + '<div class="message-data"><span class="message-data-time">' + MiliSeconedToMin(messages[i].sentAt) + '</span></div>';
+                                    document.getElementById('messages').innerHTML += randerMsg;
+                                }
+                                else if (messages[i].type == "image") {
+
+                                    var varSenderImg = messages[i].data.attachments[0].url;
+                                    var varFileName = messages[i].data.attachments[0].name;
+
+                                    var randerMsg = '<div class="message my-message"> <img src=' + varSenderImg + ' width="250" height="150"></div>' + '<div class="message-data"><span class="message-data-time">' + MiliSeconedToMin(messages[i].sentAt) + '</span></div>';
+                                    document.getElementById('messages').innerHTML += randerMsg;
+                                }
+                                else {
+                                    var varSenderImg = messages[i].data.attachments[0].url;
+                                    var varFileName = messages[i].data.attachments[0].name;
+
+                                    var randerMsg = '<div class="message my-message"> <a  target="_blank" href=' + varSenderImg + ' >' + varFileName + '</a></div>' + '<div class="message-data"><span class="message-data-time">' + MiliSeconedToMin(messages[i].sentAt) + '</span></div>';
+                                    document.getElementById('messages').innerHTML += randerMsg;
+                                }
+                            }
+                            else {
+                                if (messages[i].type == "text") {
+                                    var randerMsg = '<div class="message other-message float-right">' + messages[i].text + '</div>' + '<div class="message-data align-right"><span class="message-data-time">' + MiliSeconedToMin(messages[i].sentAt) + '</span></div>';
+                                    document.getElementById('messages').innerHTML += randerMsg;
+                                }
+                                else if (messages[i].type == "image") {
+                                    var varSenderImg = messages[i].data.attachments[0].url;
+                                    var randerMsg = '<div class="message other-message float-right"><img src=' + varSenderImg + ' width="250" height="150"></div>' + '<div class="message-data align-right"><span class="message-data-time">' + MiliSeconedToMin(messages[i].sentAt) + '</span></div>';
+                                    document.getElementById('messages').innerHTML += randerMsg;
+                                }
+                                else {
+                                    var varSenderImg = messages[i].data.attachments[0].url;
+                                    var varFileName = messages[i].data.attachments[0].name;
+                                    var randerMsg = '<div class="message other-message float-right"><a target="_blank" href=' + varSenderImg + '  >' + varFileName + '</a></div>' + '<div class="message-data align-right"><span class="message-data-time">' + MiliSeconedToMin(messages[i].sentAt) + '</span></div>';
+                                    document.getElementById('messages').innerHTML += randerMsg;
+                                }
+                            }
+
+                            SetScrollBottom();
+
+
+                        }
+
+                    }, error => {
+                        console.log("Message fetching failed with error:", error);
+                    }
+                );
+                $('#loading-overlay').hide();
+                $("#dvTextChatUser").show();
+
+            }
+        );
+
+
+    });
+
+</script>

@@ -1,0 +1,759 @@
+﻿@using IMMIWeb.Infrastructure;
+
+@{
+
+    //toastr Msg
+    string AlertMsgSuccess = string.Empty;
+    string AlertMsgFail = string.Empty;
+
+    AlertMsgSuccess = Convert.ToString(TempData["AlertMessageSuccess"]);
+    if (!string.IsNullOrEmpty(AlertMsgSuccess))
+    {
+        TempData.Remove("AlertMessageSuccess");
+    }
+
+    AlertMsgFail = Convert.ToString(TempData["AlertMessageFail"]);
+    if (!string.IsNullOrEmpty(AlertMsgFail))
+    {
+        TempData.Remove("AlertMessageFail");
+    }    
+}
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Advenuss.com</title>
+    <meta charset="utf-8">
+
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+
+    <script src="~/lib/jquery/dist/jquery.js"></script>
+    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+    <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+
+
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="icon" type="image/x-icon" href="~/assets/images/favicon.ico">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/8.4.6/css/intlTelInput.css">
+    <link rel="stylesheet" href="~/assets/css/animate.css">
+    <link rel="stylesheet" href="~/assets/css/owl.carousel.css">
+    <link rel="stylesheet" href="~/assets/css/owl.theme.css">
+    <link rel="stylesheet" href="~/assets/css/bootstrap.min.css">
+    <link rel="stylesheet" href="~/assets/css/style.css">
+    <link rel="stylesheet" href="~/assets/css/responsive.css">
+    <link rel='stylesheet' href='~/assets/css/nice-select.css'>
+    <link rel="stylesheet" href="~/assets/css/nice.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
+
+    <script>
+        function googleTranslateElementInit() {
+            new google.translate.TranslateElement({
+                pageLanguage: 'en',
+                //autoDisplay: 'true',
+                includedLanguages: "en,es,ru,fr,pt",
+                layout: google.translate.TranslateElement.InlineLayout.HORIZONTAL
+            }, 'google_translate_element');
+        }
+    </script>
+    <script src='//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit'></script>
+
+    @*<script type="text/javascript">
+    function googleTranslateElementInit() {
+    new google.translate.TranslateElement({ pageLanguage: 'en' }, 'google_translate_element');
+    }
+    </script>
+
+    <script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+    *@
+
+    <style>
+        #responsiveHeaderImg img {
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            object-fit: cover;
+        }
+
+        #userProfileImg img {
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            object-fit: cover;
+        }
+
+        #userProfilepage img {
+            border-radius: 15%;
+            width: 100px;
+            height: 100px;
+            object-fit: cover;
+        }
+
+        #consultantProfilePic img {
+            border-radius: 50%;
+            width: 78px;
+            height: 78px;
+            object-fit: cover;
+        }
+
+        .header-bold {
+            font-weight: bold; /* Make the header text bold */
+        }
+
+        .notification-icon {
+            margin-right: 5px; /* Add some spacing between the icon and the header */
+            /*width: 20px !important;*/
+        }
+
+        .notification-icon-width {
+            width: 15px !important;
+        }
+
+        .clickable {
+            cursor: pointer;
+        }
+
+
+        #loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.8);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+        }
+
+        .spinner {
+            border: 4px solid rgba(255, 255, 255, 0.3);
+            border-top: 4px solid #14AE5C; /* Change the color to your desired loading color */
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+        }
+
+        @@keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+
+
+
+
+
+        .fixed-con {
+            z-index: 9724790009779558 !important;
+            background-color: #f7f8fc;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            overflow-y: auto;
+        }
+
+        .VIpgJd-ZVi9od-aZ2wEe-wOHMyf {
+            z-index: 9724790009779 !important;
+            top: 0;
+            left: unset;
+            right: -5px;
+            display: none !important;
+            border-radius: 50%;
+            border: 2px solid gold;
+        }
+
+        .VIpgJd-ZVi9od-aZ2wEe-OiiCO {
+            width: 80px;
+            height: 80px;
+        }
+        /*hide google translate link | logo | banner-frame */
+        .goog-logo-link, .gskiptranslate, .goog-te-gadget span, .goog-te-banner-frame, #goog-gt-tt, .goog-te-balloon-frame, div#goog-gt- {
+            display: none !important;
+        }
+
+        .goog-te-gadget {
+            color: transparent !important;
+            font-size: 0px;
+        }
+
+        .goog-text-highlight {
+            background: none !important;
+            box-shadow: none !important;
+        }
+
+        /*google translate Dropdown */
+
+        #google_translate_element select {
+            background: #fff0;
+            color: #0c3261;
+            /*border: none;*/
+            border-radius: 3px;
+            padding: 6px 8px;
+            margin-top: 0px;
+            border-width: 1px;
+            border-color: #8080807a;
+            font-family: 'Rubik-Medium';
+        }
+
+
+        .VIpgJd-ZVi9od-l4eHX-hSRGPd {
+            display: none;
+        }
+
+        .VIpgJd-ZVi9od-ORHb-OEVmcd {
+            display: none;
+        }
+
+    </style>
+</head>
+<body>
+    @*User*@
+    <div id="loading-overlay">
+        <div class="spinner"></div>
+    </div>
+
+    <header class="nav-down">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+                    <nav class="navbar navbar-expand-lg">
+                        @if (SessionFactory.CurrentUserId == 0)
+                        {
+                            <a class="navbar-brand" asp-action="Index" asp-controller="Home">
+                                <img src="~/assets/images/logo.svg" alt="logo" />
+                            </a>
+                        }
+                        else
+                        {
+                            <a class="navbar-brand" asp-action="UserHomeIndex" asp-controller="Home">
+                                <img src="~/assets/images/logo.svg" alt="logo" />
+                            </a>
+                        }
+                        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#collapsibleNavbar">
+                            <span class="navbar-toggler-icon"></span>
+                        </button>
+                        <div class="collapse navbar-collapse" id="collapsibleNavbar">
+                            <ul class="navbar-nav">
+                                <li class="nav-item">
+                                    @if (SessionFactory.CurrentUserId == 0)
+                                    {
+                                        <a class="nav-link" asp-action="Index" asp-controller="Home">Home</a>
+                                    }
+                                    else
+                                    {
+                                        <a class="nav-link" asp-action="UserHomeIndex" asp-controller="Home">Home</a>
+                                    }
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" href="#">Contact</a>
+                                </li>
+                                <li>
+                                    <input type="button" @*onclick="JoinChatByUser()"*@ class="g-btn" id="btnJoinChat" style="background-color:#14AE5C;color:white;display:none;" value="Join Chat" />
+                                </li>
+                                <li style="display:none;">
+                                    <label> Extend Time : <span id="exTime"></span></label>
+                                    <label> End Time : <span id="enTime"></span></label>
+                                    <label> Extend Count : <span id="exCount"></span></label>
+                                </li>
+                                <li>
+                                    <div id="google_translate_element"></div>
+                                </li>
+                            </ul>
+                        </div>
+                        @if (SessionFactory.CurrentUserId != 0)
+                        {
+                           <div class="message-wrap mr-5">
+                               <a id="rssFeedLink" href="@Url.Action("GetRssFeed", "UserAccount", new { Area = "User" }) ">
+                                   <img src="~/assets/images/ic_newslatter.png" alt="messages" />
+                                   <span class="btn__badge pulse-button totalRSSCount">0</span>
+                               </a>
+                           </div>
+                        }
+                        @if (SessionFactory.CurrentUserId == 0)
+                        {
+                            <div class="dropdown-wrap">
+                                <div class="dropdown signup-dropdown">
+                                    <button class="dropdown-toggle g-btn" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+                                        <img src="~/assets/images/user.svg" alt="user" /> Sign in / up
+                                    </button>
+                                    <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                                        <li>
+                                            <a class="dropdown-item" href="@Url.Action("Login", "UserAccount")">
+                                                Continue as a User
+                                                <svg width="7" height="10" viewBox="0 0 7 10" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                    <path fill-rule="evenodd" clip-rule="evenodd" d="M6.50001 4.99975C6.50001 5.25575 6.40201 5.51175 6.20701 5.70675L2.20701 9.70675C1.81601 10.0977 1.18401 10.0977 0.793006 9.70675C0.402006 9.31575 0.402006 8.68375 0.793006 8.29275L4.09801 4.98775L0.918005 1.69475C0.535005 1.29575 0.546005 0.664753 0.943005 0.280753C1.34001 -0.103247 1.97401 -0.0922471 2.35701 0.304753L6.21901 4.30475C6.40701 4.49975 6.50001 4.74975 6.50001 4.99975Z" fill="#0C3261" />
+                                                </svg>
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a class="dropdown-item" href="@Url.Action("ConsultantLogin", "ConsultantAccount", new { Area = "Consultant" })">
+                                                Continue as a Consultant
+                                                <svg width="7" height="10" viewBox="0 0 7 10" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                    <path fill-rule="evenodd" clip-rule="evenodd" d="M6.50001 4.99975C6.50001 5.25575 6.40201 5.51175 6.20701 5.70675L2.20701 9.70675C1.81601 10.0977 1.18401 10.0977 0.793006 9.70675C0.402006 9.31575 0.402006 8.68375 0.793006 8.29275L4.09801 4.98775L0.918005 1.69475C0.535005 1.29575 0.546005 0.664753 0.943005 0.280753C1.34001 -0.103247 1.97401 -0.0922471 2.35701 0.304753L6.21901 4.30475C6.40701 4.49975 6.50001 4.74975 6.50001 4.99975Z" fill="#0C3261" />
+                                                </svg>
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        }
+
+                        <!-- <div class="dropdown-wrap">
+                            <div class="dropdown signup-dropdown">
+                                <button class="dropdown-toggle g-btn" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+                                    <img src="~/assets/images/user.svg" alt="user" /> Sign in / up
+                                </button>
+                                <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                                    <li><a class="dropdown-item" href="#">Continue as a User</a></li>
+                                    <li><a class="dropdown-item" href="#">Continue as a Consultant</a></li>
+                                </ul>
+                            </div>
+                        </div> -->
+                        <div class="login-header">
+                            @*  <div class="header-lag-select">
+                            <select name="" id="" class="form-control">
+                            <option value="">English</option>
+                            <option value="">Spanish(Español)</option>
+                            <option value="">Russian(русский)</option>
+                            <option value="">French(Français)</option>
+                            <option value="">CAN French(CAN Français)</option>
+                            <option value="">Chinese(中国人)</option>
+                            </select>
+                            </div>
+                            *@
+
+
+
+                            @if (SessionFactory.CurrentUserId != 0)
+                            {
+                                @*<div class="message-wrap">
+                                    <a href="@Url.Action("RetainConsultantChat", "Chat", new { Area = "User" }) ">
+                                        <img src="~/assets/images/messages.svg" alt="messages" />
+                                        <span b-3u502hqrmv="" class="btn__badge pulse-button totalUserMsgCountCls" id="totalUserMsgCount">0</span>
+                                    </a>
+                                </div>*@
+
+
+                                <div class="dropdown notification-dropdown">
+                                    <a href="@Url.Action("RetainConsultantChat", "Chat", new { Area = "User" }) ">
+                                    @*<button class="dropdown-toggle position-relative" type="button" id="btnNotification" data-bs-toggle="dropdown" aria-expanded="false">*@
+                                        <img src="~/assets/images/messages.svg" alt="messages" />
+                                        <span b-3u502hqrmv="" class="btn__badge pulse-button totalUserMsgCountCls" id="totalUserMsgCount">0</span>
+                                    @*</button>*@
+                                    </a>
+                                    <ul class="dropdown-menu" id="ulnotificationlist" aria-labelledby="dropdownMenuButton2">
+                                        @*<li><a class="dropdown-item" href="@Url.Action("LogOut", "UserAccount")">Logout</a></li>*@
+
+                                    </ul>
+                                </div>
+
+                                <div class="dropdown notification-dropdown">
+                                    <button class="dropdown-toggle position-relative" type="button" id="btnNotification" data-bs-toggle="dropdown" aria-expanded="false">
+                                        <img src="~/assets/images/Notification.svg" alt="user" />
+                                        <span class="btn__badge pulse-button "></span>
+                                    </button>
+                                    <ul class="dropdown-menu" id="ulnotificationlist" aria-labelledby="dropdownMenuButton2">
+                                        @*<li><a class="dropdown-item" href="@Url.Action("LogOut", "UserAccount")">Logout</a></li>*@
+
+                                    </ul>
+                                </div>
+                                <div class="profile-wrap">
+                                    <button class="dropdown-toggle" type="button" id="dropdownMenuButton3" data-bs-toggle="dropdown" aria-expanded="false">
+                                        <p style="text-transform: capitalize;">@SessionFactory.CurrentUserName</p>
+                                        <div class="profile-image" id="responsiveHeaderImg">
+                                            @if (SessionFactory.CurrentUserProfilePic != null && SessionFactory.CurrentUserProfilePic != "")
+                                            {
+                                                <img src="@SessionFactory.CurrentUserProfilePic" alt="user" />
+                                            }
+                                            else
+                                            {
+                                                <img src="~/assets/images/defaultProfile.png" alt="user" />
+                                            }
+                                        </div>
+                                    </button>
+                                    <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton3">
+                                        <li><a class="dropdown-item" href="@Url.Action("GetFavouriteConsultantbyUserId", "Home")">Favourite Consultant</a></li>
+                                        <li><a class="dropdown-item" href="@Url.Action("UserProfile", "Home")">Edit Profile</a></li>
+                                        <li><a class="dropdown-item" href="@Url.Action("Settings", "UserCMS")">Settings</a></li>
+                                        <li><a class="dropdown-item" href="@Url.Action("ConsultantRetain", "Retain")">Consultant Retain</a></li>
+                                        <li><a class="dropdown-item" href="@Url.Action("LogOut", "UserAccount")">Logout</a></li>
+                                    </ul>
+                                </div>
+                            }
+                        </div>
+                    </nav>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    @RenderBody()
+
+
+
+
+    @if (SessionFactory.CurrentUserId != 0)
+    {
+        <div class="modal incoming-call-modal show" id="inComingCall" tabindex="-1" aria-modal="true" role="dialog" style="display:none;padding-left: 0px;">
+            <div class="modal-dialog ">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <div class="call-group">
+                            <div class="call-content">
+                                <h3 id="clrName"></h3>
+                                <div class="inline-icon-text"><span><img src="../assets/images/Incoming-call.svg"></span> <span id="clrType"></span> </div>
+                            </div>
+                            <div class="call-person">
+                                <img id="clrPic" src="../assets/images/profile-pic.png" alt="Profile">
+                            </div>
+
+                        </div>
+                    </div>
+                    <div class="modal-body signin-wrap">
+                        <button type="button" onclick="RejectCall()" class="g-btn cancel mr-20" data-bs-dismiss="modal">Decline</button>
+                        <button type="button" onclick="AcceptCall()" class="g-btn">Accept</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="videoCallModal" class="modalCall" style="display:none;padding-left: 0px;">
+            <div class="modal-contentCall" id="callScreen">
+                <span id="runningTimer"></span>
+            </div>
+        </div>
+
+        <div class="modal incoming-call-modal call-duration" id="callDuration" tabindex="-1" style="display:none;padding-left: 0px;">
+            <div class="modal-dialog ">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" onclick="HideCallDuration()"><img src="~/assets/images/close-gray.svg" alt=""></button>
+                        <div class="call-content text-center">
+                            <h3>Extend Call Duration</h3>
+                            <p>You have only 5 mins left. Do you wan to extend call by 5 mins?</p>
+                        </div>
+                    </div>
+                    <div class="modal-body signin-wrap">
+                        <button type="button" class="g-btn" onclick="ExtendAppointmentTime()">Yes, Pay $5</button>
+                        <button type="button" class="back-home-btn" onclick="HideCallDuration()" data-bs-dismiss="modal">No</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal retain-consultant" id="retainConsultant" tabindex="-1" style="display:none;padding-left: 0px;">
+            <div class="modal-dialog ">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"><img src="./assets/images/close-gray.svg" alt=""></button>
+                        <div class="call-content text-center">
+                            <h3>Retain Consultant</h3>
+                            <p class="mb-0">Do you want to retain consultant & move further for immigration process?</p>
+                        </div>
+                        <div class="consultant-wrap">
+                            <div class="login-conent-wrap">
+                                <div class="consultant">
+                                    <img class="img-fluid photo" src="" alt="Profile" id="rProfilePic" />
+                                    <div class="rating">
+                                        <h3> <span id="rName"></span></h3>
+                                        <h3><img src="../assets/images/full-star.svg" alt="full-star"> 4.5 </h3>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="login-conent-wrap">
+                                <p>Languages I Know </p>
+                                <h4 class="mb-0" id="rLanguageName"></h4>
+                            </div>
+                            <div class="login-conent-wrap">
+                                <p>Type of services</p>
+                                <h4 class="mb-0" id="rServiceName"></h4>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-body signin-wrap">
+                        @*<a href="document-payment.php" id="retainCidDiv"></a>*@
+                        <span id="retainCidDiv"></span>
+                        <span><button type="button" class="back-home-btn" id="closeModalBtn">No</button></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+
+    <footer>
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="footer-wrap">
+                        <div class="footer-logo text-center">
+                            <a asp-action="Index" asp-controller="Home">
+                                <img src="~/assets/images/logo.svg" alt="logo" />
+                            </a>
+                        </div>
+                    </div>
+                    <div class="footer-menu-wrap text-center">
+                        <ul>
+
+                            <li>
+                                @if (SessionFactory.CurrentUserId == 0)
+                                {
+                                    <a asp-action="Index" asp-controller="Home">Home</a>
+                                }
+                                else
+                                {
+                                    <a asp-action="UserHomeIndex" asp-controller="Home">Home</a>
+                                }
+                            </li>
+                            <li><a href="#">Features</a></li>
+                            <li><a href="#">Overview</a></li>
+                            <li><a href="#">Contact</a></li>
+                        </ul>
+                    </div>
+                    <div class="banner-stores-wrap justify-content-center">
+                        <a href="#" class="store-img"><img src="~/assets/images/fappstore.svg" alt="appstore"></a>
+                        <a href="#" class="store-img"><img src="~/assets/images/fgoogleplay.svg" alt="googleplay"></a>
+                    </div>
+                    @if (SessionFactory.CurrentUserId != 0)
+                    {
+                        <div class="footer-menu-wrap text-center">
+                            <ul>
+                                <li><a href="@Url.ActionLink("PrivacyPolicy", "UserCMS")">Privacy Policy</a></li>
+                                <li><a href="@Url.ActionLink("TermsAndCondition", "UserCMS")">Terms & Conditions</a></li>
+                            </ul>
+                        </div>
+                    }
+                    <div class="copyright">
+                        <p>Copyright © Advenuss <script type="text/javascript">document.write(new Date().getFullYear());</script> | All rights reserved</p>
+                        <div class="social-wrap text-center">
+                            <ul>
+                                <li><a href="#" class="icon-wrap"><img src="~/assets/images/fb.svg" alt="fb" /></a></li>
+                                <li><a href="#" class="icon-wrap"><img src="~/assets/images/twiter.svg" alt="twiter" /></a></li>
+                                <li><a href="#" class="icon-wrap"><img src="~/assets/images/insta.svg" alt="insta" /></a></li>
+                                <li><a href="#" class="icon-wrap"><img src="~/assets/images/youtube.svg" alt="youtube" /></a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    @*<script src="~/assets/js/jquery.min.js"></script>*@
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/8.4.7/js/intlTelInput.js"></script>
+    <script src="https://bittersmann.de/lib/backlink/backlink.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
+    <script src="~/assets/js/owl.carousel.js"></script>
+    <script src="~/assets/js/wow.js"></script>
+    <script src="~/assets/js/custom.js"></script>
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/jquery-nice-select/1.1.0/js/jquery.nice-select.min.js'></script>
+    <script src="~/assets/js/nice.js"></script>
+    <script src="~/assets/js/custom.js"></script>
+    <audio id="incomingCallMp3" controls="controls" style="display:none;" loop>
+        <source src="~/assets/audio/incomingring.mp3" type="audio/mpeg" />
+    </audio>
+</body>
+
+<script type="text/javascript" src="https://unpkg.com/@@cometchat-pro/chat@3.0.11/CometChat.js"></script>
+<script src="~/js/cchat.js"></script>
+
+
+</html>
+
+<script type="text/javascript">
+
+    var element = document.querySelector('.skiptranslate.goog-te-gadget');
+    if (element) {
+        var textContent = element.textContent;
+        console.log(textContent);
+    } else {
+        console.log("Element with class 'skiptranslate goog-te-gadget' not found.");
+    }
+
+</script>
+
+<script>
+    var previousCount = 0;
+    //var readCount = 0;
+    //debugger;
+    $('#loading-overlay').fadeOut();
+    //$('#loading-overlay').html('<p>Data failed to load. Please try again later.</p>');
+
+    $("#closeModalBtn").click(function () {
+        $("#retainConsultant").hide(); // Close the currently open modal
+    });
+
+    toastr.options = {
+        positionClass: 'toast-top-right',
+        timeOut: 5000,
+        showMethod: 'fadeIn',
+        hideMethod: 'fadeOut',
+        closeButton: true
+    };
+
+    var AlertMsgSuccess = '@AlertMsgSuccess';
+    var AlertMsgFail = '@AlertMsgFail';
+
+    if (AlertMsgSuccess !== "") {
+        toastr.success('@Html.Raw(AlertMsgSuccess)');
+    }
+    if (AlertMsgFail !== "") {
+        toastr.error('@Html.Raw(AlertMsgFail)');
+    }
+
+
+    if ('@SessionFactory.CometChatUid' != "" && sessionStorage.getItem("isUserSessionLogin") == null) {
+
+        var UID = '@SessionFactory.CometChatUid';
+        var varSessionCommetChatConsultnatList = '@SessionFactory.SessionCommetChatConsultnatList';
+        sessionStorage.setItem("UID", UID);
+        sessionStorage.setItem("userChatCntList", varSessionCommetChatConsultnatList);
+        CometChatInitialization();
+    }
+
+    $('#btnNotification').click(function () {
+        UserNotificationList();
+    });
+    function UserNotificationList() {
+        $.ajax({
+            type: "GET",
+            url: '@Url.Action("UserNotificationList", "Home")',
+            //data: { "Email": param },
+            success: function (data) {
+                //debugger;
+                $('#ulnotificationlist').html('');
+                var options = '';
+                for (var i = 0; i < data.length; i++) {
+                    // options += '<li><a class="dropdown-item" title = "' + data[i].header + '" >"' + data[i].body + '"</a></li> ';
+                    // options += '<li><a class="dropdown-item" title="' + data[i].header + '">' + data[i].header + ' <br>' + data[i].body + '</a></li>';
+
+                    var parts = data[i].createdOn.split("T");
+                    if (parts.length === 2) {
+                        var timePart = parts[1];
+                        var timeParts = timePart.split(":");
+                        if (timeParts.length >= 1) {
+                            var hours = parseInt(timeParts[0]);
+                        }
+                    }
+
+
+                    //var dateObj = moment.utc(data[i].createdOn, 'YYYY/MM/DD, h:mm:ss.ss A Z');
+                    options += '<li><a class="dropdown-item" title="' + data[i].header + '">' +
+                        '<span class="notification-icon"><img src="/assets/images/Notification-2.svg" class="notification-icon-width" alt="Notification Icon"/></span>  ' + '<span class="header-bold">' + data[i].header + '</span>  ' + '<span style=" margin-left: 70px;">' + hours + '</span>  ' + 'h' + '<br>' + '<span style=" margin-left: 39px;">' + data[i].body + '</span>  ' + '</a></li>';
+                }
+                $('#ulnotificationlist').append(options);
+            },
+            error: function () {
+                alert("Error occured!!")
+            }
+        });
+    }
+
+    function updateNotificationCount() {
+        $.ajax({
+            url: '@Url.Action("GetNotificationCount", "Home")',
+            type: 'GET',
+            success: function (data) {
+                $('#btnNotification .btn__badge').text(data);
+                setTimeout(updateNotificationCount, 5000); // Call again after 5 seconds
+            },
+            error: function (xhr, status, error) {
+                console.log("AJAX Error:", error); // Log any AJAX errors for debugging
+            }
+        });
+    }
+
+    // Call updateNotificationCount directly since the layout is loaded when the page is ready
+    updateNotificationCount();
+    let userTimezone = '';
+    if ('@SessionFactory.TimeZone' != '') {
+        userTimezone = localStorage.getItem("timezone");
+    }
+
+
+    function getClientTimezone() {
+        //debugger;
+        console.log("Timezone", Intl.DateTimeFormat().resolvedOptions().timeZone);
+        return Intl.DateTimeFormat().resolvedOptions().timeZone;
+    }
+
+    if (!userTimezone) {
+        //debugger;
+
+        const timezone = getClientTimezone()
+        fetch('/settimezone', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ timezone: timezone }),
+        });
+
+        localStorage.setItem("timezone", timezone);
+    }
+
+
+                // Send the timezone to the server
+                //fetch('/settimezone', {
+                //    method: 'POST',
+                //    headers: {
+                //        'Content-Type': 'application/json',
+                //    },
+                //    body: JSON.stringify({ timezone: getClientTimezone() }),
+                //});
+
+    function updateRSSNotificationCount() {
+        //debugger;
+        let readCnt = '';
+        $.ajax({
+            url: '@Url.Action("GetRSSNotificationCount", "UserAccount")',
+            type: 'GET',
+            success: function (data) {
+                //debugger;
+                if (data > 0) {
+                    readCnt = localStorage.getItem("readCount");
+                    var newCount = data - readCnt;
+
+                    if (newCount > 0) {
+                        $('.totalRSSCount').text(newCount);
+                    } else {
+                        $('.totalRSSCount').text('0');
+                    }
+                    previousCount = data;                    
+                }             
+                setTimeout(updateRSSNotificationCount, 15000); // Call again after 5 seconds
+            },
+            error: function (xhr, status, error) {
+                console.log("AJAX Error:", error); // Log any AJAX errors for debugging
+            }
+        });
+    }
+    updateRSSNotificationCount();
+
+    // Add a click event handler to reset the count to 0 when the image link is clicked
+    $('#rssFeedLink').on('click', function () {
+        //debugger;
+        localStorage.setItem("readCount", previousCount)
+        //readCount = previousCount;
+        
+        previousCount = 0; // Reset the count to 0
+        $('.totalRSSCount').text(previousCount);
+        
+    });
+
+
+</script>

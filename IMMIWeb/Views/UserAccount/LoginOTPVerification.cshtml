@@ -1,0 +1,163 @@
+﻿@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@*
+<section class="signin-section mt-90">
+
+    <div>
+        @using (Html.BeginForm("LoginOTPVerification", "UserAccount", FormMethod.Post))
+        {
+            <table border="1">
+                <tr>
+                    <td>OTP</td>
+                    <td><input type="text" id="otp" name="otp"></td>
+                    <td> <input type="submit" value="Verify" id="btnVerify" /> </td>
+                </tr>
+            </table>
+        }
+
+    </div>
+    </section>*@
+
+
+
+<div>
+
+
+
+    @using (Html.BeginForm("LoginOTPVerification", "UserAccount", FormMethod.Post, new { id = "loginOTPform" }))
+    {
+
+        <input type="hidden" id="OTP" name="OTP">
+        <section class="signin-section mt-90">
+            <div class="container">
+                <div class="row align-items-center">
+                    <div class="col-xl-7 col-lg-6">
+                        <div class="signin-img veryfy-num-otp-img">
+                            <img src="~/assets/images/verify.svg" alt="verify" />
+                        </div>
+                    </div>
+                    <div class="col-xl-5 col-lg-6">
+                        <div class="signin-wrap text-center veryfy-num-otp">
+                            <h1>Verify OTP</h1>
+                            <p>OTP sent on your mobile  @Context.Session.GetString("MobileCountryCode") @Context.Session.GetString("Mobile").</p>
+
+                            <div class="input-group otp-verification-wrap">
+                                <input type="number" id="otpTxt1" maxlength="1" class="form-control">
+                                <input type="number" id="otpTxt2" maxlength="1" class="form-control" disabled>
+                                <input type="number" id="otpTxt3" maxlength="1" class="form-control" disabled>
+                                <input type="number" id="otpTxt4" maxlength="1" class="form-control" disabled>
+                                <!-- <span class="input-group-addon">Tel</span> -->
+                            </div>
+
+                            <button type="button" onclick="SendOTP()" class="g-btn">Verify</button>
+
+                            <div class="lost-mobile-wrap text-center">
+                                <p>Resend code in <span id="timer">02:00</span> </p>
+                            </div>
+
+
+                            @*<div class="sign-up-link-wrap">
+                        <p> <img src="~/assets/images/g-arrow.svg" alt="arrow left" /> Back to <a href="#">Mobile Number</a> </p>
+                        </div>*@
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    }
+
+</div>
+
+
+
+<script>
+
+    const inputs = document.querySelectorAll("input"),
+        button = document.querySelector("button");
+    inputs.forEach((input, index1) => {
+        input.addEventListener("keyup", (e) => {
+
+            const currentInput = input,
+                nextInput = input.nextElementSibling,
+                prevInput = input.previousElementSibling;
+
+
+            if (currentInput.value.length > 1) {
+                currentInput.value = "";
+                return;
+            }
+
+            if (nextInput && nextInput.hasAttribute("disabled") && currentInput.value !== "") {
+                nextInput.removeAttribute("disabled");
+                nextInput.focus();
+            }
+
+            if (e.key === "Backspace") {
+                inputs.forEach((input, index2) => {
+
+                    if (index1 <= index2 && prevInput) {
+                        input.setAttribute("disabled", true);
+                        input.value = "";
+                        prevInput.focus();
+                    }
+                });
+            }
+
+
+            if (!inputs[3].disabled && inputs[3].value !== "") {
+                button.classList.add("active");
+                return;
+            }
+            button.classList.remove("active");
+        });
+    });
+
+    window.addEventListener("load", () => inputs[0].focus());
+
+
+    function SendOTP() {
+
+
+        var val1 = $("#otpTxt1").val();
+        var val2 = $("#otpTxt2").val();
+        var val3 = $("#otpTxt3").val();
+        var val4 = $("#otpTxt4").val();
+
+        var otpVal = val1 + val2 + val3 + val4;
+
+        if (otpVal.length == 4) {
+            $("#OTP").val(otpVal);
+            $("#loginOTPform").submit();
+        }
+    }
+
+    $(document).ready(function () {
+        var interval;
+
+        clearInterval(interval);
+        interval = setInterval(function () {
+            var timer = $('#timer').html();
+            timer = timer.split(':');
+            var minutes = timer[0];
+            var seconds = timer[1];
+            seconds -= 1;
+            if (minutes < 0) return;
+            else if (seconds < 0 && minutes != 0) {
+                minutes -= 1;
+                seconds = 59;
+            }
+            else if (seconds < 10 && length.seconds != 2) seconds = '0' + seconds;
+
+            $('#timer').html(minutes + ':' + seconds);
+
+            if (minutes == 0 && seconds == 0) clearInterval(interval);
+        }, 1000);
+
+    });
+
+
+
+
+</script>

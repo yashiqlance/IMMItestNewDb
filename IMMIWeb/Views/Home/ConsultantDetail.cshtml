@@ -1,0 +1,513 @@
+﻿@model IMMIWeb.Service.Models.ConsultantDetailViewModel
+@using IMMIWeb.Infrastructure
+<script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment-timezone/0.5.34/moment-timezone-with-data.min.js"></script>
+
+@{
+    int rankVal = 0;
+    if (Model.lstGetConsultantReviewViewModel != null && Model.lstGetConsultantReviewViewModel.Count() > 0)
+    {
+        rankVal = Model.lstGetConsultantReviewViewModel.Count() + 1;
+    }
+}
+
+
+<div class="container">
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="title">
+                <h1>Available Consultants</h1>
+            </div>
+        </div>
+        <div class="col-lg-12">
+
+            <input type="hidden" value="@Model.ConsultantId" id="ConsultantIdHiddenVal" />
+
+            <div class="login-home-wrap consultant-details-main">
+                <div class="consultant-details-wrap">
+                    <div class="consultant-details-left">
+                        <div class="consultant-details-img-wrap" id="consultantProfilePic">
+                            @if (Model.GetConsultantDetail.ProfilePic != null && Model.GetConsultantDetail.ProfilePic != "")
+                            {
+                                <img src="@Model.GetConsultantDetail.ProfilePic" alt="profile">
+                            }
+                            else
+                            {
+                                <img src="~/assets/images/defaultProfile.png" alt="user" />
+                            }
+                        </div>
+                        <div class="consultant-details-inner-wrap">
+                            <p class="dark-text mb-0">Unique ID: @Model.GetConsultantDetail.UniqueId</p>
+                            <h2 class="mb-0" style="text-transform: capitalize;">@Model.GetConsultantDetail.FirstName &nbsp;&nbsp;@Model.GetConsultantDetail.LastName</h2>
+                        </div>
+                    </div>
+                    <div class="consultant-details-right">
+                        @if (Model.GetConsultantDetail.IsFavConsultantornot == true)
+                        {
+                            <img src="~/assets/images/Heart.svg" class="like-svg FavouriteConsultant clickable" data-model-value="@Model.GetConsultantDetail.ConsultantId" alt="Favourite" />
+                        }
+                        else
+                        {
+                            <img src="~/assets/images/NotFavourite.svg" class="like-svg NotFavouriteConsultant clickable" data-model-value="@Model.GetConsultantDetail.ConsultantId" alt="NotFavourite" />
+                        }
+
+                        @if (Model.SlotCount > 0)
+                        {
+                            <a href="BookConsultant?Id=@Model.GetConsultantDetail.ConsultantId" class="g-btn">Book Now</a>
+                        }
+                    </div>
+                </div>
+
+
+                <div class="consultant-review-wrap">
+                    <div class="consultant-review-left">
+
+                        @if (Model.lstGetConsultantReviewViewModel != null && Model.lstGetConsultantReviewViewModel.Count() > 0)
+                        {
+                            <div class="consultant-review-top">
+                                <div class="consultant-review">
+                                    <h3> <img src="~/assets/images/full-star.svg" alt="full-star">  <span>( @Model.lstGetConsultantReviewViewModel.Count() k Reviews)</span> </h3>
+                                </div>
+                                <div class="view-review">
+                                    <h4 class="clickable">Write Review <img src="~/assets/images/down-arrow-2.svg" alt="down-arrow"> </h4>
+                                </div>
+
+                            </div>
+
+                            @if (Model.lstGetConsultantReviewViewModel != null && Model.lstGetConsultantReviewViewModel.Count() > 0)
+                            {
+                                <div id="reviewList">
+                                    @foreach (var item in Model.lstGetConsultantReviewViewModel)
+                                    {
+                                        <div class="login-home-wrap-main">
+                                            <div class="login-home-wrap p-0 m-0 border-0">
+                                                <div class="login-img-wrap" id="userProfileImg">
+                                                    @if (@item.ProfilePic != null && item.ProfilePic != "")
+                                                    {
+                                                        <img src="@item.ProfilePic" alt="Profile">
+                                                    }
+                                                    else
+                                                    {
+                                                        <img src="~/assets/images/defaultProfile.png" alt="user" />
+                                                    }
+                                                </div>
+                                                <div class="login-conent-wrap">
+                                                    <h3 style="text-transform: capitalize;">
+                                                        @item.FirstName &nbsp;&nbsp;@item.LastName
+
+                                                        @if (item.Rating == 1)
+                                                        {
+                                                            <img src="~/assets/images/full-star.svg" alt="full-star">
+                                                        }
+                                                        else if (item.Rating == 2)
+                                                        {
+                                                            <img src="~/assets/images/full-star.svg" alt="full-star">
+                                                            <img src="~/assets/images/full-star.svg" alt="full-star">
+                                                        }
+                                                        else if (item.Rating == 3)
+                                                        {
+                                                            <img src="~/assets/images/full-star.svg" alt="full-star">
+                                                            <img src="~/assets/images/full-star.svg" alt="full-star">
+                                                            <img src="~/assets/images/full-star.svg" alt="full-star">
+                                                        }
+                                                        else if (item.Rating == 4)
+                                                        {
+                                                            <img src="~/assets/images/full-star.svg" alt="full-star">
+                                                            <img src="~/assets/images/full-star.svg" alt="full-star">
+                                                            <img src="~/assets/images/full-star.svg" alt="full-star">
+                                                            <img src="~/assets/images/full-star.svg" alt="full-star">
+                                                        }
+                                                        else
+                                                        {
+                                                            <img src="~/assets/images/full-star.svg" alt="full-star">
+                                                            <img src="~/assets/images/full-star.svg" alt="full-star">
+                                                            <img src="~/assets/images/full-star.svg" alt="full-star">
+                                                            <img src="~/assets/images/full-star.svg" alt="full-star">
+                                                            <img src="~/assets/images/full-star.svg" alt="full-star">
+                                                        }
+                                                    </h3>
+                                                    <p>
+
+                                                        @{
+                                                            var convertfromutctolocal = TimeZoneInfo.ConvertTimeFromUtc(@item.CreatedOn, TimeZoneInfo.Local);
+                                                            var LocalTime = TimeZoneInfo.ConvertTimeBySystemTimeZoneId(convertfromutctolocal, TimeZoneInfo.Local.Id, SessionFactory.TimeZone);
+                                                            var Date = LocalTime.Date;
+                                                        }
+
+
+                                                        @Date.ToString("dd MMM yyyy")
+                                                    </p>
+                                                </div>
+                                            </div>
+                                            <p>@item.Review</p>
+                                        </div>
+                                    }
+                                </div>
+
+                            }
+
+                            @if (rankVal > 0)
+                            {
+                                <div class="login-home-wrap-btn text-center" id="LoadMoreHeader">
+                                    <p onclick="btnLoadMore(@rankVal)" role="button" class="load-btn">Load More</p>
+                                </div>
+                            }
+
+                        }
+
+                    </div>
+                    <div class="consultant-review-right">
+                        <div class="login-home-wrap border-0 p-0">
+
+                            <div class="login-conent-wrap">
+                                <p class="dark-text mb-3">
+                                    @*<span>$@Model.GetConsultantDetail.AppointmentFees * @Model.GetConsultantDetail.exchangerate</span>*@
+                                    @{
+                                        var result = Model.GetConsultantDetail.AppointmentFees * Model.GetConsultantDetail.exchangerate;
+                                        var roundedResult = Math.Round(result, 2);
+                                    }
+
+                                    @roundedResult/Consultation
+                                </p>
+                                <p>Languages I Know </p>
+                                <p class="dark-text mb-3">  @Model.GetConsultantDetail.LanguageName</p>
+
+                                <p>Type of services</p>
+                                <p class="dark-text mb-3">@Model.GetConsultantDetail.ServiceName</p>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal" id="myReviewModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <button type="button" class="btn-close" onclick="reloadPage()" data-bs-dismiss="modal"><img src="./assets/images/close-gray.svg" alt=""></button>
+            <div class="modal-header">
+                <input type="hidden" value="@SessionFactory.CurrentUserId" name="UserId" />
+                <input type="hidden" value="@Model.ConsultantId" name="ConsultantId" />
+                <h2 class="modal-title">Write Review</h2>
+                <div class="ratting-main-wrap">
+                    <label class="star-label" data-rating="1">
+                        <img src="~/assets/images/Star.svg" alt="blank_star">
+                    </label>
+
+                    <label class="star-label" data-rating="2">
+                        <img src="~/assets/images/Star.svg" alt="blank_star">
+                    </label>
+
+                    <label class="star-label" data-rating="3">
+                        <img src="~/assets/images/Star.svg" alt="blank_star">
+                    </label>
+
+                    <label class="star-label" data-rating="4">
+                        <img src="~/assets/images/Star.svg" alt="blank_star">
+                    </label>
+
+                    <label class="star-label" data-rating="5">
+                        <img src="~/assets/images/Star.svg" alt="blank_star">
+                    </label>
+                </div>
+            </div>
+            <div class="modal-body signin-wrap ">
+                <div class="input-group">
+                    <textarea name="Review" id="Review" cols="30" rows="10" class="form-control" placeholder="Write your review here"></textarea>
+                    <label for="">Review</label>
+                </div>
+                <button type="button" id="btnSubmit" class="g-btn btnSubmit">Submit</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+
+    const ratingLabels = document.querySelectorAll('.star-label');
+    let selectedRating = 0;
+
+    ratingLabels.forEach(label => {
+        label.addEventListener('click', () => {
+            const rating = parseInt(label.getAttribute('data-rating'));
+            if (rating === selectedRating) {
+                selectedRating = 0;
+            } else {
+                selectedRating = rating;
+            }
+            toggleStars();
+        });
+    });
+
+    function toggleStars() {
+        ratingLabels.forEach(label => {
+            const rating = parseInt(label.getAttribute('data-rating'));
+            const img = label.querySelector('img');
+
+            if (rating <= selectedRating) {
+                img.setAttribute('src', '../assets/images/big-Star.svg');
+            } else {
+                img.setAttribute('src', '../assets/images/Star.svg');
+            }
+        });
+    }
+
+
+
+
+    // COMMENT START
+
+    //$(".FavouriteConsultant").on("click", handleFavouriteConsultantClick);
+    //function handleNotFavouriteConsultantClick(event) {
+    //    event.preventDefault();
+    //    var clickedElement = $(this);
+    //    var ConsultantId = clickedElement.data('model-value');
+    //    var currentImageSrc = clickedElement.attr("src");
+    //    clickedElement.off("click", handleNotFavouriteConsultantClick);
+    //    $.ajax({
+    //        type: "POST",
+    //        url: "/Home/AddFavouriteConsultant",
+    //        data: { "ConsultantId": ConsultantId },
+    //        success: function (response) {
+    //            debugger;
+    //            if (response != 0) {
+    //                if (currentImageSrc.includes("NotFavourite.svg")) {
+    //                    clickedElement.removeClass("NotFavouriteConsultant").addClass("FavouriteConsultant");
+    //                    clickedElement.attr("src", "/assets/images/Heart.svg");
+
+    //                    clickedElement.on("click", handleFavouriteConsultantClick);
+    //                }
+    //                //clickedElement.attr("src", "/assets/images/Heart.svg");
+    //            }
+    //        },
+    //        error: function () {
+    //            alert("Error occured!!")
+    //        }
+    //    });
+    //}
+    //function handleFavouriteConsultantClick(event) {
+    //    event.preventDefault();
+    //    var clickedElement = $(this);
+    //    var ConsultantId = clickedElement.data('model-value');
+    //    var currentImageSrc = clickedElement.attr("src");
+
+    //    clickedElement.off("click", handleFavouriteConsultantClick);
+    //    $.ajax({
+    //        type: "POST",
+    //        url: "/Home/RemoveFavouriteConsultant",
+    //        data: { "ConsultantId": ConsultantId },
+    //        success: function (response) {
+    //            debugger;
+    //            if (response != 0) {
+    //                if (currentImageSrc.includes("Heart.svg")) {
+    //                    clickedElement.removeClass("FavouriteConsultant").addClass("NotFavouriteConsultant");
+    //                    clickedElement.attr("src", "/assets/images/NotFavourite.svg");
+
+    //                    clickedElement.on("click", handleNotFavouriteConsultantClick);
+    //                }
+    //                //clickedElement.attr("src", "/assets/images/NotFavourite.svg");
+    //            }
+    //        },
+    //        error: function () {
+    //            alert("Error occured!!")
+    //        }
+    //    });
+    //}
+    //$(".NotFavouriteConsultant").on("click", handleNotFavouriteConsultantClick);
+
+    // COMMENT END
+
+
+    function btnLoadMore(sCntArg, IdArg) {
+        let sCntObj = {
+            sCnt: sCntArg,
+            id: $("#ConsultantIdHiddenVal").val()
+        }
+        console.log("sCntObj: " + sCntObj);
+
+        $.ajax({
+            type: "POST",
+            url: "/Home/ConsultantDetailLoadMore",
+            data: sCntObj,
+            success: function (data) {
+                //debugger;
+                if (data.length > 0) {
+                    var options = '';
+
+                    function getMonthName(monthIndex) {
+                        var monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+                        return monthNames[monthIndex];
+                    }
+
+                    for (var i = 0; i < data.length; i++) {
+                        var dateObj = moment.utc(data[i].createdOn, 'YYYY/MM/DD, h:mm:ss.ss A Z');
+                        var createdOnDate = dateObj._d;
+                        var day = createdOnDate.getDate();
+                        var month = getMonthName(createdOnDate.getMonth());
+                        var year = createdOnDate.getFullYear();
+
+                       
+
+                        var formattedDate = day + ' ' + month + ' ' + year;
+                        var pPic = data[i].profilePic;
+                        var avgRating = data[i].avgRating;
+                        var countRating = data[i].countRating;
+
+                        if (pPic == "") {
+                            pPic = "../assets/images/defaultProfile.png";
+                        } else {
+                            pPic = data[i].profilePic;
+                        }
+
+                        if (avgRating == "") {
+                            avgRating = "0";
+                        } else {
+                            avgRating = data[i].avgRating;
+                        }
+
+                        if (countRating == "") {
+                            countRating = "0";
+                        } else {
+                            countRating = data[i].countRating;
+                        }
+
+                        options += '<div class="login-home-wrap-main"><div class="login-home-wrap p-0 m-0 border-0"><div class="login-img-wrap" id="userProfileImg"><img src=' + pPic + ' alt="Profile" style="border-radius:50%;">  </div> <div class="login-conent-wrap"><h3 style="text-transform: capitalize;">   ' + data[i].firstName + ' &nbsp; ' + data[i].lastName + '   <img src="../assets/images/full-star.svg" alt="full-star"> </h3>    <p> ' + formattedDate + ' </p>     </div>  </div>   <p>  ' + data[i].review + '   </p>   </div> </div>';
+                    }
+                    $('#reviewList').append(options);
+
+                    $("#LoadMoreHeader").html("");
+
+                    var nextLoadCount = data[data.length - 1].rank + 1;
+
+                    var optionsCnt = '<p class="load-btn" role="button" onclick="btnLoadMore(' + nextLoadCount + ')">Load More</p>';
+                    $("#LoadMoreHeader").append(optionsCnt);
+                }
+                else {
+                    $("#LoadMoreHeader").html("");
+                    $("#LoadMoreHeader").hide();
+                }
+            },
+            error: function () {
+                alert("Error occured!!")
+            }
+        });
+    }
+
+    $('#btnSubmit').click(function (event) {
+
+        const userId = $('input[name="UserId"]').val();
+        const consultantId = $('input[name="ConsultantId"]').val();
+        const reviewText = $("#Review").val();
+        debugger;
+        if ((selectedRating > 0 || reviewText.trim() !== "") && userId && consultantId) {
+            $.ajax({
+                type: "POST",
+                url: "/Home/SubmitReview",
+                data: {
+                    userId: userId,
+                    consultantId: consultantId,
+                    rating: selectedRating,
+                    review: reviewText
+                },
+                success: function (response) {
+                    // Handle successful response if needed
+                    console.log("Review submitted successfully:", response);
+                    reloadPage()
+                    // Optionally close the modal
+                    $("#myReviewModal").modal('hide');
+                },
+                error: function (error) {
+                    console.error("Error:", error);
+                }
+            });
+        }
+
+    });
+
+    function openReviewModal() {
+        var myModal = new bootstrap.Modal(document.getElementById('myReviewModal'));
+        myModal.show();
+    }
+
+    $(document).ready(function () {
+        $('.view-review').click(function () {
+            openReviewModal();
+            checkUserReviewAndOpenModal();
+        });
+    });
+
+    //function checkUserReviewAndOpenModal() {
+    //    const userId = $('input[name="UserId"]').val();
+    //    const consultantId = $('input[name="ConsultantId"]').val();
+
+    //    // Make an AJAX call to check if the user has submitted a review
+    //    $.ajax({
+    //        type: "GET",
+    //        url: `/Home/FetchReviewOfUser?userId=${userId}&consultantId=${consultantId}`,
+    //        success: function (reviewId) {
+    //            if (reviewId > 0) {
+    //                populateReviewData(reviewId); // Populate review data in the modal
+    //                disableSubmitButton(); // Disable the submit button
+    //            } else {
+    //                enableSubmitButton(); // Enable the submit button
+    //            }
+
+    //            openReviewModal(); // Open the modal
+    //        },
+    //        error: function (error) {
+    //            console.error("Error checking user review:", error);
+    //        }
+    //    });
+    //}
+
+    //function populateReviewData(reviewId) {
+    //    $.ajax({
+    //        type: "Get",
+    //        url: `/Home/GetReviewDetails?reviewId=${reviewId}`,
+    //        success: function (reviewDetails) {
+    //            // Assuming reviewDetails is an object with properties like reviewText and rating
+    //            const reviewText = reviewDetails.review;
+    //            const rating = reviewDetails.rating;
+
+    //            // Set review text in the modal textarea
+    //            console.log("Review text fetched:", reviewText);
+    //            $("#Review").val(reviewText);
+
+    //            // Set the selected rating in the modal star labels
+    //            const starLabel = $(`.star-label[data-rating="${rating}"]`);
+    //            starLabel.find("img").attr("src", "../assets/images/big-Star.svg");
+    //            starLabel.prevAll().find("img").attr("src", "../assets/images/big-Star.svg");
+    //            starLabel.nextAll().find("img").attr("src", "../assets/images/Star.svg");
+
+    //            selectedRating = rating; // Update the selected rating
+
+    //            $("#Review").attr("disabled", "disabled");
+
+    //        },
+    //        error: function (error) {
+    //            console.error("Error fetching review details:", error);
+    //        }
+    //    });
+    //}
+
+    function disableSubmitButton() {
+        $('#btnSubmit').prop('disabled', true);
+        $('#btnSubmit').css('cursor', 'default'); // Change cursor to default
+        $('#btnSubmit').blur(); // Remove focus from the button
+    }
+
+    function enableSubmitButton() {
+        $('#btnSubmit').prop('disabled', false);
+        $('#btnSubmit').css('cursor', 'pointer'); // Change cursor back to pointer
+    }
+
+
+    function reloadPage() {
+        location.reload();
+    }
+
+</script> 

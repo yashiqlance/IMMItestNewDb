@@ -1,0 +1,223 @@
+﻿@model IMMIWeb.Service.Models.OTPVerificationViewModel
+@{
+    string GUID = @Context.Session.GetString("GUID");
+}
+
+<div>
+
+    @using (Html.BeginForm("OTPVerification", "UserAccount", FormMethod.Post, new { id = "signupform" }))
+    {
+        <input type="hidden" id="hdnOtpAttempt"  value="">
+         
+        <input type="hidden" id="OTP" name="OTP">
+        <section class="signin-section mt-90">
+            <div class="container">
+                <div class="row align-items-center">
+                    <div class="col-xl-7 col-lg-6">
+                        <div class="signin-img veryfy-num-otp-img">
+                            <img src="~/assets/images/verify.svg" alt="verify" />
+                        </div>
+                    </div>
+                    <div class="col-xl-5 col-lg-6">
+                        <div class="signin-wrap text-center veryfy-num-otp">
+                            <h1>Verify OTP</h1>
+                            <p>OTP sent on your mobile  @Context.Session.GetString("MobileCountryCode") @Context.Session.GetString("Mobile").</p>
+                            <div class="digit-group otp-verification-wrap" data-group-name="digits" data-autosubmit="false" autocomplete="off">
+                                <input class="form-control" type="text" onkeypress="return isNumber(event)" data-next="digit-2" id="digit-1" maxlength="1">&nbsp;&nbsp;
+                                <input class="form-control" type="text" onkeypress="return isNumber(event)" data-previous="digit-1" data-next="digit-3" id="digit-2" maxlength="1">&nbsp;&nbsp;
+                                <input class="form-control" type="text" onkeypress="return isNumber(event)" data-previous="digit-2" data-next="digit-4" id="digit-3" maxlength="1">&nbsp;&nbsp;
+                                <input class="form-control" type="text" onkeypress="return isNumber(event)" data-next="btnSendOtpVal" data-previous="digit-3"  id="digit-4" maxlength="1">                                
+                            </div>
+
+                            <button type="button" id="btnSendOtpVal" onclick="SendOTP()" class="g-btn">Verify</button>
+
+                            <div class="lost-mobile-wrap text-center">
+                                <br />
+                                <span id="timerText">OTP Validate In <span id="timer">00:20</span></span>
+                                
+                                @*<button id="resendOTPButton" style="display:none;" class="btn g-btn btnSubmit" type="button" onclick="GetOTP('@GUID')">
+                                    Resend OTP
+                                </button>*@
+
+
+                                
+                                        <p id="resendOTPButton" style="display:none;" class="mt-3" onclick="GetOTP('@GUID')">Resend OTP</p>
+                                        
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    }
+
+</div>
+
+<script>
+
+    var modelMessage = '@Model.Message';
+
+    if (modelMessage && modelMessage.length > 0) {
+        toastr.options.timeOut = 10000;
+        toastr.error('@Model.Message');
+        //$('#modelMessage').text(modelMessage);
+    }
+
+    $('.digit-group').find('input').each(function(e) {
+
+        $(this).attr('maxlength', 1);
+        $(this).on('keyup', function(e) {
+
+            var parent = $($(this).parent());
+
+            if (e.keyCode === 8 || e.keyCode === 37) {
+                var prev = parent.find('input#' + $(this).data('previous'));
+
+                if (prev.length) {
+                    $(prev).select();
+                }
+            } else if ((e.keyCode >= 48 && e.keyCode <= 57) || (e.keyCode >= 96 && e.keyCode <= 105)) {
+                var next = parent.find('input#' + $(this).data('next'));
+
+                if (next.length) {
+                    $(next).select();
+                } else {
+                    if (parent.data('autosubmit')) {
+                        parent.submit();
+                    }
+                }
+            }
+            else {
+                var idVal = $(this).attr('id');
+                $("#" + idVal).val("");
+                $("#timer").hide();
+            }
+
+        });
+    });
+
+    function SendOTP() {
+
+        var val1 = $("#digit-1").val();
+        var val2 = $("#digit-2").val();
+        var val3 = $("#digit-3").val();
+        var val4 = $("#digit-4").val();
+
+        var otpVal = val1 + val2 + val3 + val4;
+
+        if (otpVal.length == 4) {
+            $("#OTP").val(otpVal);
+            $("#signupform").submit();
+        } else {
+            toastr.options.timeOut = 5000;
+            toastr.error('Please enter the complete OTP.');
+        }
+    }
+
+    $(document).ready(function() {
+        CountDown();
+    });
+
+    function CountDown() {
+        var interval;
+
+        clearInterval(interval);
+        interval = setInterval(function() {
+            var timer = $('#timer').html();
+            timer = timer.split(':');
+            var minutes = timer[0];
+            var seconds = timer[1];
+            seconds -= 1;
+            if (minutes < 0) return;
+            else if (seconds < 0 && minutes != 0) {
+                minutes -= 1;
+                seconds = 59;
+            }
+            else if (seconds < 10 && length.seconds != 2) seconds = '0' + seconds;
+
+            $('#timer').html(minutes + ':' + seconds);
+
+            if (minutes == 0 && seconds == 0) {
+                clearInterval(interval);
+                //alert("Timeout");
+                $('#resendOTPButton').show(); // Show the "Resend OTP" button
+                $('#timer').html("");
+                $('#timerText').hide();
+                //$('#timer').show();
+            }
+        }, 1000);
+    }
+
+    function GetOTP(GUIDVal) {
+
+        $("#resendOTPButton").hide();
+        $('#timerText').show();
+
+        var otpAttemptVal = $("#hdnOtpAttempt").val();
+
+        if (otpAttemptVal == "3") {
+
+            toastr.options.timeOut = 7000;
+            toastr.error("Your attempt is over");
+
+        }
+        else {
+            let mobileNumberVar = {
+                GUID: GUIDVal,
+                processFor: "getUser",
+                processType: "mobile"
+            }
+            $.ajax({
+                type: "post",
+                url: "/UserAccount/ResendOtp",
+                data: mobileNumberVar,
+                success: function(response) {
+
+                    if(response=="3")
+                    {
+                        toastr.options.timeOut = 7000;
+                        toastr.error("Your otp attempt is over");
+                        $("#hdnOtpAttempt").val("3");
+                        $("#btnSendOtpVal").hide();
+                        $('#timerText').hide();
+                        
+                        return false;
+                    }
+                    
+                    if (response == "True") {
+                        toastr.options.timeOut = 5000;
+                        toastr.success('OTP sent on your mobile number');
+                        $("#timer").show();
+                        $("#timer").html("00:20");
+                        CountDown();
+                    }
+                    else {
+
+                        if (response == "")
+                            response = "Invalid process";
+
+                        toastr.options.timeOut = 7000;
+                        toastr.error(response);
+                    }
+                },
+                error: function() {
+                    alert("Error occured!!")
+                }
+            });
+        }
+
+
+    }
+
+    function isNumber(evt) {
+    evt = (evt) ? evt : window.event;
+    var charCode = (evt.which) ? evt.which : evt.keyCode;
+    if (charCode > 31 && (charCode < 48 || charCode > 57)) {
+        return false;
+    }
+    return true;
+}
+
+</script>
+

@@ -1,0 +1,132 @@
+﻿@model IMMIWeb.Service.Models.ConsultantDetailViewModel
+@using IMMIWeb.Infrastructure
+@{
+
+}
+
+<section class="mt-90 consultant-profile">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-sm-12 col-lg-5 col-md-5">
+                <div class="edit-profile-wrap text-center">
+
+                    <input type="hidden" value="@SessionFactory.CurrentUserId" name="Id" id="Id" />
+
+                    <div class="profile-pic" id="consultantProfilepage">
+                        @if (SessionFactory.CurrentUserProfilePic != null && SessionFactory.CurrentUserProfilePic != "")
+                        {
+                            <img src="@Model.GetConsultantDetail.ProfilePic" alt="user" />
+                        }
+                        else
+                        {
+                            <img src="~/assets/images/defaultProfile.png" alt="user" />
+                        }
+                    </div>
+                    @*<div class="like-icon text-center"><img src="/assets/images/Heart.svg" class="like-icon" alt="like"></div>*@
+                    <h2>@SessionFactory.CurrentUserName</h2>
+                    <h2>+@SessionFactory.CurrentUserMobileCountryCode @SessionFactory.CurrentUserMobile</h2>
+                    <h2><img src="/assets/images/full-star.svg" class="rating-icon" alt="full-star"> @Model.GetConsultantDetail.averageRating </h2>
+                    <p class="mb-0">License No. @Model.GetConsultantDetail.LicenceNumber </p>
+                    <p class="check-review"><a href="@Url.Action("RatingReviewList", "ConsultantHome", new{ area= "Consultant" })">Check Reviews <span><img class="gr-arrow" src="/assets/images/greater.svg"></span></a></p>
+                    <p>Unique ID: @Model.GetConsultantDetail.UniqueId</p>
+                    <hr class="hr">
+                    <p class="dark-text">   @Model.GetConsultantDetail.LanguageName</p>
+                    <p class="dark-text">@Model.GetConsultantDetail.ServiceName</p>
+                    <div class="box-withdraw">
+                        <p>Wallet Balance</p>
+                        <h3>
+                            @{
+                                var withdraw = Model.GetConsultantDetail.WithdrawAmount * Model.GetConsultantDetail.exchangerate;
+                                var roundedResultWithdraw = Math.Round(withdraw, 2);
+                            }
+
+                            @roundedResultWithdraw
+
+                        </h3>
+                        <div class="btn-wrap">
+                            <button class="back-home-btn" data-bs-toggle="modal" data-bs-target="#withDraw">Withdraw <img src="/assets/images/cross-ar.svg" class="sm-icon" alt="Right Arrow"></button>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+            <div class="col-sm-12 col-lg-5 col-md-5">
+                <div class="edit-profile-wrap">
+                    <ul class="edit-profile-wrap-list">
+
+                        <li>
+                            <a href="@Url.Action("RetentionFeeHike", "ConsultantHome", new{ area= "Consultant",RetentionCharge = Math.Round( Model.GetConsultantDetail.RetainAmount * Model.GetConsultantDetail.exchangerate,2), AppCharge = Math.Round(Model.GetConsultantDetail.ApplicationCharge * Model.GetConsultantDetail.exchangerate,2), TaxCharge = Math.Round( Model.GetConsultantDetail.TaxCharge * Model.GetConsultantDetail.exchangerate,2)})">
+                                Retention Charge <span>
+                                    @{
+                                        var result = Model.GetConsultantDetail.RetainAmount * Model.GetConsultantDetail.exchangerate;
+                                        var roundedResult = Math.Round(result, 2);
+                                    }
+
+                                    @roundedResult
+                                </span>
+                            </a>
+                        </li>
+                        <li><a href="@Url.Action("ManageSlot", "ConsultantSlot", new{ area= "Consultant" })">My Availability</a></li>
+                        <li><a href="@Url.Action("ChangeTypeOfService", "ConsultantHome", new{ area= "Consultant",typeofserviceName = Model.GetConsultantDetail.ServiceName })">Type of Services</a></li>                        
+                        <li><a href="@Url.Action("PaymentHistoryList", "ConsultantRetain", new{ area= "Consultant" })">Payment History</a></li>
+                       @* <li><a href="#">My Card</a></li>*@
+                        <li><a href="@Url.Action("ChangeCommunicationLanguage", "ConsultantHome", new{ area= "Consultant",languageName = Model.GetConsultantDetail.LanguageName })">Change Communication Languages</a></li>
+                        <li><a href="@Url.Action("CMSConfigurationConsultant", "ConsultantCMS", new{ area= "Consultant" })">Settings</a></li>
+                        @*<li><a href="#" class="deny">Logout</a></li>*@
+
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Withdraw Amount Modal -->
+<div class="modal retain-consultant reject-consultant modal-md" id="withDraw" tabindex="-1">
+    <div class="modal-dialog ">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="btn-close" data-bs-dismiss="modal"><img src="/assets/images/close-gray.svg" alt=""></button>
+                <div class="call-content text-center">
+                    <h3>Withdraw Money to Bank</h3>
+                </div>
+                <div class="modal-body signin-wrap text-center">
+                    <div class="input-group">
+                        <input type="text" id="txtwithdrawamount" class="form-control" placeholder="$ Enter Amount">
+                        <label for="">Enter Amount</label>
+                    </div>
+                    <a href="#"><button type="button" class="g-btn" id="btnwithdrawamount">Withdraw</button></a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div> 
+<script type="text/javascript">
+    $('#btnwithdrawamount').click(function () {
+        var withdrawamount = $("#txtwithdrawamount").val();
+        //WithDrawAmount(withdrawamount);
+    });
+    function WithDrawAmount(param) {
+        $.ajax({
+            type: "POST",
+            url: '@Url.Action("AddWithdrawAmount", "ConsultantHome")',  ///"/Home/VerifyEmail",
+            data: { "WithDrawAmount": withdrawamount },
+            success: function (response) {
+                if(response!=null && response!="" && response!="[]"){
+                    if(response == "200"){
+                        $("#withDraw").modal('hide');
+                    }
+                    else{
+                        toastr.error('Error occured!!');
+                    }
+                }
+                else{
+                    toastr.error('Amount not withdraw successfully.');
+                }
+            },
+            error: function () {
+                toastr.error('Error occured!!');
+            }
+        });
+    }
+</script>

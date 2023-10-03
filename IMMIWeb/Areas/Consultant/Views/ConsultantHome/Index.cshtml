@@ -1,0 +1,423 @@
+﻿@model List<IMMIWeb.Service.Models.AppointmentPendingViewModel>
+@using IMMIWeb.Infrastructure;
+@{
+    string bookingTime = "";
+    string bookingTimeNew = "";
+}
+
+<style>
+    .disable-scrolling {
+        overflow: hidden;
+    }
+</style>
+
+<input type="hidden" id="hdnAppId" />
+
+<section class="login-home fav-con-sec mt-90">
+    <div class="upcoming-app">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="title">
+                        <h2>Upcoming Appointments</h2>
+                    </div>
+                </div>
+                @if (Model != null && Model.Count() > 0)
+                {
+
+                    @foreach (var item in Model.Where(x => x.AppointmentStatusName == 2))
+                    {
+
+                        @*if (item.BookingTime == 0) { bookingTime = "00 AM - 01 AM"; }
+                else if (item.BookingTime == 1) { bookingTime = "01 AM - 02 AM"; }
+                else if (item.BookingTime == 2) { bookingTime = "02 AM - 03 AM"; }
+                else if (item.BookingTime == 3) { bookingTime = "03 AM - 04 AM"; }
+                else if (item.BookingTime == 4) { bookingTime = "04 AM - 05 AM"; }
+                else if (item.BookingTime == 5) { bookingTime = "05 AM - 06 AM"; }
+                else if (item.BookingTime == 6) { bookingTime = "06 AM - 07 AM"; }
+                else if (item.BookingTime == 7) { bookingTime = "07 AM - 08 AM"; }
+                else if (item.BookingTime == 8) { bookingTime = "08 AM - 09 AM"; }
+                else if (item.BookingTime == 9) { bookingTime = "09 AM - 10 AM"; }
+                else if (item.BookingTime == 10) { bookingTime = "10 AM - 11 AM"; }
+                else if (item.BookingTime == 11) { bookingTime = "11 AM - 00 PM"; }
+                else if (item.BookingTime == 12) { bookingTime = "00 PM - 01 PM"; }
+                else if (item.BookingTime == 13) { bookingTime = "01 PM - 02 PM"; }
+                else if (item.BookingTime == 14) { bookingTime = "02 PM - 03 PM"; }
+                else if (item.BookingTime == 15) { bookingTime = "03 PM - 04 PM"; }
+                else if (item.BookingTime == 16) { bookingTime = "04 PM - 05 PM"; }
+                else if (item.BookingTime == 17) { bookingTime = "05 PM - 06 PM"; }
+                else if (item.BookingTime == 18) { bookingTime = "06 PM - 07 PM"; }
+                else if (item.BookingTime == 19) { bookingTime = "07 PM - 08 PM"; }
+                else if (item.BookingTime == 20) { bookingTime = "08 PM - 09 PM"; }
+                else if (item.BookingTime == 21) { bookingTime = "09 PM - 10 PM"; }
+                else if (item.BookingTime == 22) { bookingTime = "10 PM - 11 PM"; }
+                else if (item.BookingTime == 23) { bookingTime = "11 PM - 12 PM"; }*@
+
+                        //var local = TimeZone.CurrentTimeZone.ToString();
+
+                        var convertfromutctolocal = TimeZoneInfo.ConvertTimeFromUtc(@item.BookingDate, TimeZoneInfo.Local);
+                        string testId = TimeZoneInfo.Local.Id;
+
+                        var LocalTime = TimeZoneInfo.ConvertTimeBySystemTimeZoneId(convertfromutctolocal, TimeZoneInfo.Local.Id, SessionFactory.TimeZone);
+                        var Date = LocalTime.Date;
+                        var Hour = LocalTime.Hour; //@TimeZone.CurrentTimeZone.ToLocalTime(@item.BookingDate).Hour;
+                        var Minute = LocalTime.Minute;
+                        item.BookingDate = Date;
+                        item.BookingTime = Hour;
+                        item.BookingMinutes = Minute;
+                        switch (item.BookingTime)
+                        {
+                            case int i when i >= 0 && i <= 23:
+                                string amPm = i < 12 ? "AM" : "PM";
+                                string startHour = (i % 12).ToString() ?? "12"; // Handle 12 AM and 12 PM
+                                string endHour = ((i + 1) % 12).ToString() ?? "12"; // Handle 12 AM and 12 PM
+
+                                string formattedMinutes = item.BookingMinutes.ToString().PadLeft(2, '0'); // Add leading zero if necessary
+
+
+                                bookingTime = $"{startHour}:{formattedMinutes} {amPm} - {endHour}:{formattedMinutes} {amPm}";
+                                break;
+                            default:
+                                bookingTime = "Invalid item.BookingTime";
+                                break;
+                        }
+
+
+                        <div class="col-lg-4 col-md-6">
+                            <div class="login-home-wrap">
+                                <div class="login-img-wrap" id="responsiveHeaderImg">
+                                    @if (item.ProfilePic != null && item.ProfilePic != "")
+                                    {
+                                        <img src="@item.ProfilePic" alt="Profile" />
+                                    }
+                                    else
+                                    {
+                                        <img src="~/assets/images/defaultProfile.png" alt="user" />
+                                    }
+                                </div>
+                                <div class="login-conent-wrap">
+                                    <h3 class="text-capitalize">@item.FirstName @item.LastName</h3>
+                                    <p class="dark-text">Slot: @item.BookingDate.ToString("dd MMM yyyy") at @bookingTime</p>
+                                    <p class="mb-0">Communication Mode : @item.SessionTitle </p>
+                                    <div class="btn-box">
+                                        @if (item.SessionTitle.ToLower() == "chat")
+                                        {
+                                            <button type="button" class="g-btn" onclick="ConsultantChatInit('@item.CometChatUserUID','@item.AppointmentId')">
+                                                <img src="~/assets/images/phone-white.svg"> Start Chat
+                                            </button>
+                                        }
+                                        else
+                                        {
+                                            <button type="button" class="g-btn" onclick="ConsultantCallInit(@item.AppointmentId,'@item.CometChatUserUID','@item.SessionTitle.ToLower()')">
+                                                <img src="~/assets/images/phone-white.svg"> Start Call
+                                            </button>
+                                        }
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                }
+                else
+                {
+                    <p>No data available</p>
+                }
+
+            </div>
+        </div>
+    </div>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="title">
+                    <h2>Recent Appointment Requests</h2>
+                </div>
+            </div>
+            @if (Model != null && Model.Count() > 0)
+            {
+                <div id="rowList" class="row">
+                    @foreach (var item in Model.Where(x => x.AppointmentStatusName == 1))
+                    {
+                        switch (item.BookingTime)
+                        {
+                            case int i when i >= 0 && i <= 23:
+                                string amPm = i < 12 ? "AM" : "PM";
+                                string startHour = (i % 12).ToString() ?? "12"; // Handle 12 AM and 12 PM
+                                string endHour = ((i + 1) % 12).ToString() ?? "12"; // Handle 12 AM and 12 PM
+
+                                string formattedMinutes = item.BookingMinutes.ToString().PadLeft(2, '0'); // Add leading zero if necessary
+
+
+                                bookingTimeNew = $"{startHour}:{formattedMinutes} {amPm} - {endHour}:{formattedMinutes} {amPm}";
+                                break;
+                            default:
+                                bookingTimeNew = "Invalid item.BookingTime";
+                                break;
+                        }
+
+                        <div class="col-lg-4 col-md-6">
+
+                            @*@if (item.BookingTime == 0) { bookingTimeNew = "00 AM - 01 AM"; }
+                    else if (item.BookingTime == 1) { bookingTimeNew = "01 AM - 02 AM"; }
+                    else if (item.BookingTime == 2) { bookingTimeNew = "02 AM - 03 AM"; }
+                    else if (item.BookingTime == 3) { bookingTimeNew = "03 AM - 04 AM"; }
+                    else if (item.BookingTime == 4) { bookingTimeNew = "04 AM - 05 AM"; }
+                    else if (item.BookingTime == 5) { bookingTimeNew = "05 AM - 06 AM"; }
+                    else if (item.BookingTime == 6) { bookingTimeNew = "06 AM - 07 AM"; }
+                    else if (item.BookingTime == 7) { bookingTimeNew = "07 AM - 08 AM"; }
+                    else if (item.BookingTime == 8) { bookingTimeNew = "08 AM - 09 AM"; }
+                    else if (item.BookingTime == 9) { bookingTimeNew = "09 AM - 10 AM"; }
+                    else if (item.BookingTime == 10) { bookingTimeNew = "10 AM - 11 AM"; }
+                    else if (item.BookingTime == 11) { bookingTimeNew = "11 AM - 00 PM"; }
+                    else if (item.BookingTime == 12) { bookingTimeNew = "00 PM - 01 PM"; }
+                    else if (item.BookingTime == 13) { bookingTimeNew = "01 PM - 02 PM"; }
+                    else if (item.BookingTime == 14) { bookingTimeNew = "02 PM - 03 PM"; }
+                    else if (item.BookingTime == 15) { bookingTimeNew = "03 PM - 04 PM"; }
+                    else if (item.BookingTime == 16) { bookingTimeNew = "04 PM - 05 PM"; }
+                    else if (item.BookingTime == 17) { bookingTimeNew = "05 PM - 06 PM"; }
+                    else if (item.BookingTime == 18) { bookingTimeNew = "06 PM - 07 PM"; }
+                    else if (item.BookingTime == 19) { bookingTimeNew = "07 PM - 08 PM"; }
+                    else if (item.BookingTime == 20) { bookingTimeNew = "08 PM - 09 PM"; }
+                    else if (item.BookingTime == 21) { bookingTimeNew = "09 PM - 10 PM"; }
+                    else if (item.BookingTime == 22) { bookingTimeNew = "10 PM - 11 PM"; }
+                    else if (item.BookingTime == 23) { bookingTimeNew = "11 PM - 12 PM"; }*@
+
+
+
+
+                            <div class="login-home-wrap">
+                                @*<img src="~/assets/images/heart.svg" class="like-svg" alt="like" />*@
+                                <div class="login-img-wrap" id="responsiveHeaderImg">
+                                    @if (item.ProfilePic != null && item.ProfilePic != "")
+                                    {
+                                        <img src="@item.ProfilePic" alt="Profile" />
+                                    }
+                                    else
+                                    {
+                                        <img src="~/assets/images/defaultProfile.png" alt="user" />
+                                    }
+                                </div>
+                                <div class="login-conent-wrap">
+                                    <h3 class="text-capitalize">
+                                        @item.FirstName @item.LastName <img src="~/assets/images/full-star.svg" alt="full-star" /> @item.rating
+
+                                        @if(item.reviewCount != null && item.reviewCount.Count() > 0)
+                                        {
+                                            <span>
+                                                (
+                                                @{
+                                                    var reviewCountAbbreviated = "";
+                                                    var reviewCount = @item.reviewCount.Count();
+
+                                                    var suffixes = new string[] { "", "k", "M", "B", "T" }; // Add more suffixes as needed
+
+                                                    for (var i = 0; i < suffixes.Length; i++)
+                                                    {
+                                                        if (reviewCount < 1000)
+                                                        {
+                                                            reviewCountAbbreviated = reviewCount + suffixes[i];
+                                                            break;
+                                                        }
+                                                        reviewCount /= 1000;
+                                                    }
+                                                }
+                                                @Html.Raw(reviewCountAbbreviated + " Reviews") )
+                                            </span>
+                                        }
+                                        
+                                    </h3>
+                                    <p class="dark-text">@item.LanguageName </p>
+                                    <p>Type of services</p>
+                                    <h4 class="mb-0">@item.TypeOfService </h4>
+                                    <p>Slot - @item.SessionTitle</p>
+                                    <h4> @item.BookingDate.ToString("dd MMM yyyy")  at  @bookingTimeNew</h4>
+                                    <div class="btn-box">
+                                        <button type="button" onclick="AcceptUserRequest(@item.AppointmentId)" class="g-btn mr-20"> Accept </button>
+                                        <button type="button" onclick="RejectUserRequest(@item.AppointmentId)" class="back-home-btn decline-btn"> Reject </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+            }
+            else
+            {
+                <p>No data available</p>
+            }
+        </div>
+        @*<div class="login-home-wrap-btn text-center">
+        <a href="#" class="load-btn">Load More</a>
+        </div>*@
+    </div>
+</section>
+
+<div class="modal cancel-appointment-modal show" id="r_u_sure_accept_Modal" aria-modal="true" role="dialog" style="display: none; padding-left: 0px;">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <button type="button" class="btn-close" data-bs-dismiss="modal" onclick="CloseAcceptModal()"><img src="~/assets/images/close-gray.svg" alt=""></button>
+            @*<button type="button" class="btn-close" style="color:#14ae5c; background-color:currentColor;" aria-label="Close" onclick="CloseAcceptModal()">X</button>*@
+            <div class="modal-header text-center">
+                <h2 class="modal-title">Are you sure want to accept this request?</h2>
+                <div class="btn-wrapper">
+                    <button type="button" onclick="ConfirmAccept()" class="g-btn mr-20"> Accept </button>
+                    <button type="button" class="g-btn mr-20" style="background-color:white;color:red;border:1px solid #EBE8F2 !important"> Reject </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal retain-consultant reject-consultant modal-md show" id="reason_for_reject_Modal" tabindex="-1" aria-modal="true" role="dialog" style="display: none; padding-left: 0px;">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="btn-close" data-bs-dismiss="modal" onclick="CloseReasonModal()"><img src="~/assets/images/close-gray.svg" alt=""></button>
+                <div class="call-content text-center">
+                    <h3>Reason for Rejection</h3>
+                </div>
+                <div class="modal-body signin-wrap text-center">
+                    <div class="input-group">
+                        @*<input type="text" id="reasonForReject" name="reasonForReject" multiple />*@
+                        <div class="input-group">
+                            <textarea name="reasonForReject" id="reasonForReject" cols="30" rows="10" class="form-control"></textarea>
+                            <label for="">Review</label>
+                        </div>
+                        <br />
+                        <span id="ErrorReasonForReject" class="text-danger"></span>
+                    </div>
+                    <p>You will be fined 20% of the Appointment fee.</p>
+                    <button type="button" onclick="ConfirmReject()" class="g-btn">Submit</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal extend-call-modal msg-submitted-modal show" id="acceptSuccessModal" aria-modal="true" role="dialog" style="display: none; padding-left: 0px;">
+    <div class="modal-dialog extend-call-wrap">
+        <div class="modal-content">
+            <div class="modal-body">
+                <img src="~/assets/images/done.svg" alt="done">
+                <h2 class="mb-0 mt-3">Appointment accepted successfully!</h2>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal extend-call-modal msg-submitted-modal show" id="rejectSuccessModal" aria-modal="true" role="dialog" style="display: none; padding-left: 0px;">
+    <div class="modal-dialog extend-call-wrap">
+        <div class="modal-content">
+            <div class="modal-body">
+                <img src="~/assets/images/done.svg" alt="done">
+                <h2 class="mb-0 mt-3">Appointment rejected successfully!</h2>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+
+    function AcceptUserRequest(AppointmentId) {
+        $("#hdnAppId").val(AppointmentId);
+        $("#r_u_sure_accept_Modal").show();
+    }
+
+    function ConfirmAccept() {
+        var appIdVal = $("#hdnAppId").val();
+        $("#r_u_sure_accept_Modal").hide();
+        var data = {
+            appId: appIdVal
+        };
+        $.ajax({
+            type: "POST",
+            url: "/Consultant/ConsultantHome/ConsultantAcceptRequest",
+            data: data,
+            success: function (response) {
+                if (response == "acceptTrue") {
+                    $("#acceptSuccessModal").show();
+                    setTimeout(function () {
+                        window.location.href = "/Consultant/ConsultantHome/Index";
+                    }, 5000);
+                }
+                else {
+                    alert('something weng wrong please try after sometime!');
+                }
+            },
+            error: function () {
+                alert('something weng wrong please try after sometime!');
+            }
+        });
+    }
+
+    function RejectUserRequest(AppointmentId) {
+        $("#hdnAppId").val(AppointmentId);
+        $("#reason_for_reject_Modal").show();
+    }
+
+    function ConfirmReject() {
+
+        var reasonForReject = $("#reasonForReject").val();
+
+        if (reasonForReject == "") {
+            $("#ErrorReasonForReject").text("Reason is required.");
+            return false;
+        }
+        else {
+            if (reasonForReject.trim() == "") {
+                $("#ErrorReasonForReject").text("Reason is required.");
+                return false;
+            }
+        }
+
+
+        var appIdVal = $("#hdnAppId").val();
+
+        $("#reason_for_reject_Modal").hide();
+        var data = {
+            appId: appIdVal,
+            reason: reasonForReject
+        };
+
+        $.ajax({
+            type: "POST",
+            url: "/Consultant/ConsultantHome/ConsultantRejectRequest",
+            data: data,
+            success: function (response) {
+                if (response == "rejectTrue") {
+                    $("#rejectSuccessModal").show();
+                    setTimeout(function () {
+                        window.location.href = "/Consultant/ConsultantHome/Index";
+                    }, 5000);
+                }
+                else if (response == "rejectTrueWithLogout") {
+                    $("#rejectSuccessModal").show();
+                    setTimeout(function () {
+                        window.location.href = "/Consultant/ConsultantAccount/Logout";
+                    }, 5000);
+                }
+                else {
+                    alert('something weng wrong please try after sometime!');
+                }
+            },
+            error: function () {
+                alert('something weng wrong please try after sometime!');
+            }
+        });
+
+
+    }
+
+    function CloseAcceptModal() {
+        var modal = document.getElementById('r_u_sure_accept_Modal');
+        modal.style.display = 'none';
+    }
+    function CloseRejectModal() {
+        document.getElementById('rejectedModal').style.display = 'none';
+    }
+
+    function CloseReasonModal() {
+        document.getElementById('reason_for_reject_Modal').style.display = 'none';
+    }
+
+</script>

@@ -1,0 +1,74 @@
+﻿@model IMMIWeb.Service.Models.UserViewModel
+@using IMMIWeb.Infrastructure;
+
+<section class="mt-90">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-xl-6 col-lg-7 col-md-7">
+                <div class="edit-profile-wrap">
+                    <div class="profile-top-side text-center">
+                        <div class="profile-wrap" id="userProfilepage">
+                            @if (SessionFactory.CurrentUserProfilePic != null && SessionFactory.CurrentUserProfilePic != "")
+                            {
+                                <img src="@Model.GetUserDetails.ProfilePic" alt="profile" />
+                            }
+                            else
+                            {
+                                <img src="~/assets/images/defaultProfile.png" alt="profile" />
+                            }
+                        </div>
+                        <h1 style="text-transform: capitalize;">@Model.GetUserDetails.FirstName @Model.GetUserDetails.LastName</h1>
+                        <p>@Model.GetUserDetails.Email @*<a href="#"> Verify</a>*@ </p>
+                        <p>@Model.GetUserDetails.MobileCountryCode @Model.GetUserDetails.Mobile</p>
+                        <a href="@Url.ActionLink("EditUserProfile", "Home")" class="edit-btn"><img src="~/assets/images/edit.svg" alt="edit" />  <img src="~/assets/images/arrow-up-2.svg" alt="Arrow" /> Edit Profile</a>
+                    </div>
+                    <ul class="edit-profile-wrap-list">
+                        <li>
+                            <a href="@Url.ActionLink("UpdateUserInfomation", "Home")" class="cursor-pointer" style="text-decoration:none">
+                                <p>Country for Immigration</p>
+                                <h2>@Model.ImmigrationCountryName</h2>
+                            </a>
+                        </li>
+                        <li>
+                            <p>Country of residence</p>
+                            <h2>@Model.BelongCountryName</h2>
+                            @* <option value="">Country you belong*</option>
+                            <select id="Country" name="Country" class="form-control">
+                            <option value="">Country you belong*</option>
+                            @foreach (var item in Model.lstCountry)
+                            {
+                            <option value="@item.Id">@item.Name</option>
+                            }
+                            </select>*@
+                        </li>
+                        <li>
+                            <a href="@Url.ActionLink("UpdateUserInfomation", "Home")" class="cursor-pointer" style="text-decoration:none">
+                                <p>Type of Services</p>
+                                <h2>@Model.GetUserDetails.TypeOfService</h2>
+                                @* <select id="TypeOfServiceName" name="TypeOfServiceName" class="form-control clsTos" style="display:none;">
+                                <option value="">Type of service</option>
+                                @foreach (var item in Model.lstTypeOfService)
+                                {
+                                <option value="@item.Id">@item.Name</option>
+                                }
+                                </select>*@
+                            </a>
+                        </li>
+                        <li>
+                            <a href="@Url.ActionLink("UpdateUserInfomation", "Home")" class="cursor-pointer" style="text-decoration:none">
+                                <p>Language to Communicate</p>
+                                <h2>@Model.GetUserDetails.LanguageName</h2>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="@Url.ActionLink("PaymentCardList", "UserSettings")" class="cursor-pointer" style="text-decoration:none">
+                                <p>My Cards</p>
+                                <h2>@TempData["CardsCount"]</h2>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

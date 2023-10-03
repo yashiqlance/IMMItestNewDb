@@ -1,0 +1,33 @@
+
+ADD SCRIPT 
+Scaffold-DbContext "server=DESKTOP-V94RDBF;user=sa;password=sa123;database=IMMI;TrustServerCertificate=True" Microsoft.EntityFrameworkCore.SqlServer -OutputDir F:\Krishtopher\GitRepo\IMMIWeb\IMMIWeb.Data\DataProvider
+
+UPDATE SCRIPT 
+Scaffold-DbContext "server=DESKTOP-V94RDBF;user=sa;password=sa123;database=IMMI;TrustServerCertificate=True" Microsoft.EntityFrameworkCore.SqlServer -OutputDir F:\Krishtopher\GitRepo\IMMIWeb\IMMIWeb.Data\DataProvider -force -DataAnnotations
+
+-----Live------
+Scaffold-DbContext "server=SQL8005.site4now.net;user=db_a976ee_immi_admin;password=IMMI@1111;database=db_a976ee_immi;TrustServerCertificate=True" Microsoft.EntityFrameworkCore.SqlServer -OutputDir F:\Krishtopher\GitRepo\IMMIWeb\IMMIWeb.Data\DataProvider -force -DataAnnotations
+
+
+List<UserRequestViewModel> lstUserRequest = new List<UserRequestViewModel>();
+
+        //    using (IDbConnection connection = new SqlConnection("server=SQL8005.site4now.net;user=db_a976ee_immidev_admin;password=Immi@123;database=db_a976ee_immidev;"))
+        //    {
+        //        var parameters = new
+        //        {
+        //            UserId = 1,
+        //        };
+
+        //        lstUserRequest = connection.Query<UserRequestViewModel>("GetUserList",parameters, commandType: CommandType.StoredProcedure).ToList();
+        //    }
+
+New ----
+
+Scaffold-DbContext "server=SQL8005.site4now.net;user=db_a976ee_immidev_admin;password=Immi@123;database=db_a976ee_immidev;TrustServerCertificate=True" Microsoft.EntityFrameworkCore.SqlServer -OutputDir F:\Krishtopher\GitRepo\IMMIWeb\IMMIWeb.Data\DataProvider -force -DataAnnotations
+
+new one done
+
+Scaffold-DbContext "server=SQL8005.site4now.net;user=db_a976ee_immidev_admin;password=Immi@123;database=db_a976ee_immidev;TrustServerCertificate=True" Microsoft.EntityFrameworkCore.SqlServer -OutputDir E:\CompanyGitRepo\Advenuss\ADVENUSS-Website\IMMIWeb.Data\DataProvider -force -DataAnnotations
+
+
+

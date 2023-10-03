@@ -1,0 +1,516 @@
+﻿@model IMMIWeb.Service.Models.BookConsultantViewModel
+@using IMMIWeb.Infrastructure;
+<script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment-timezone/0.5.34/moment-timezone-with-data.min.js"></script>
+
+
+
+<style>
+    .special-date {
+        background-color: #4CAF50;
+        color: purple;
+        text-decoration: none;
+    }
+
+    .m-r-8 {
+        margin-right: 8px;
+    }
+
+    .m-t-10 {
+        margin-top: 10px;
+    }
+
+    .sch-label {
+        display: table-cell;
+        vertical-align: middle;
+        text-align: center;
+        cursor: pointer;
+        background-color: transparent;
+        border: 2px solid #000;
+        color: 000000;
+        padding: 5px 10px;
+        border-radius: 7px;
+        transition: all 0.3s ease-out;
+    }
+
+    .blnLabel {
+        position: relative;
+        padding-left: 28px;
+        cursor: pointer;
+        line-height: 20px;
+        display: block;
+        color: white;
+        font-family: 'Rubik-Medium';
+        font-size: 16px;
+        padding: 15px 16px;
+        border: 1px solid white;
+        border-radius: 12px;
+    }
+</style>
+
+<input type="hidden" id="hdnChkVal" />
+<section class="login-home section-of-book-con mt-90">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="title">
+                    <h1>Available Consultants</h1>
+                </div>
+            </div>
+            <div class="col-lg-12">
+                <div class="login-home-wrap consultant-details-main">
+                    <div class="consultant-details-wrap">
+                        <div class="consultant-details-left">
+                            <div class="consultant-details-img-wrap" id="consultantProfilePic">
+                                @if (Model.GetConsultantDetail.ProfilePic != null && Model.GetConsultantDetail.ProfilePic != "")
+                                {
+                                    <img src="@Model.GetConsultantDetail.ProfilePic" alt="profile">
+                                }
+                                else
+                                {
+                                    <img src="~/assets/images/defaultProfile.png" alt="user" />
+                                }
+                            </div>
+                            <div class="consultant-details-inner-wrap">
+                                <p class="dark-text mb-0">Unique ID: @Model.GetConsultantDetail.UniqueId</p>
+                                <h2 class="mb-0">@Model.GetConsultantDetail.FirstName &nbsp; @Model.GetConsultantDetail.LastName </h2>
+                            </div>
+                        </div>
+                        <div class="consultant-details-right">
+                            @if (Model.GetConsultantDetail.IsFavConsultantornot == true)
+                            {
+                                <img src="~/assets/images/Heart.svg" class="like-svg FavouriteConsultant clickable" data-model-value="@Model.GetConsultantDetail.ConsultantId" alt="Favourite" />
+                            }
+                            else
+                            {
+                                <img src="~/assets/images/NotFavourite.svg" class="like-svg NotFavouriteConsultant clickable" data-model-value="@Model.GetConsultantDetail.ConsultantId" alt="NotFavourite" />
+                            }
+                            @*<img src="~/assets/images/heart.svg" alt="heart" />*@
+
+                            @*<a href="#" class="g-btn" data-bs-toggle="modal"  data-bs-target="#successApp">Book Consultation</a>*@
+
+                            <button onclick="BookAppoitment()" class="g-btn" type="button">Book Consultation</button>
+
+                            <span id="errorAddCard" class="text-danger clsErrorMsg"></span>
+                        </div>
+                    </div>
+                    <div class="consultant-review-wrap select-time-date signin-wrap">
+                        <div class="consultant-review-left">
+                            <div class="select-call-chat">
+                                <p>
+                                    <input type="radio" id="video" name="SessionModeType" checked="checked" value="1">
+                                    <label for="video">Video Call</label>
+                                </p>
+                                <p>
+                                    <input type="radio" id="audio" name="SessionModeType" checked="" value="2">
+                                    <label for="audio">Audio Call</label>
+                                </p>
+                                <p>
+                                    <input type="radio" id="Chat" name="SessionModeType" checked="" value="3">
+                                    <label for="Chat">Chat</label>
+                                </p>
+                            </div>
+
+                            <div class="input-group select-calendar">
+                                @*<input id="custom-input-date" type="text" name="upload-release" type="date" class="form-control calendar" placeholder="12 Mar 2023">*@
+
+                                <input class="form-control form-control-solid" value="@DateTime.Now.ToString("MM/dd/yyyy")" placeholder="Pick date rage" type="text" id="SlotDate" name="SlotDate" />
+
+                                <label for="">Select date</label>
+                            </div>
+                            <p class="text-danger h6"><small>Note: You cannot book a consultantion for the present day.</small></p>
+
+                        </div>
+                        <div class="consultant-review-center">
+                            <div class="login-home-wrap border-0 p-0">
+                                <div class="login-conent-wrap cancel-consultation-modal upload-wrap">
+                                    <p class="dark-text mb-3"> <span>Select Time</span> </p>
+                                    <span id="errorAddSlot" class="text-danger clsErrorMsg"></span>
+                                </div>
+                            </div>
+                            <div class="select-time-wrap" id="TimeSlotDiv">
+                            </div>
+                            <div class="upload-wrap">
+                                <p>Time is according to eastern time zone</p>
+                            </div>
+                        </div>
+                        <div class="consultant-review-right">
+                            <div class="login-home-wrap border-0 p-0">
+
+                                <div class="login-conent-wrap cancel-consultation-modal upload-wrap">
+                                    <p class="dark-text mb-3"> <span>Select Credit/Debit Card</span> </p>
+
+                                    <ul class="mt-3">
+                                        <li>
+                                            <span class="dark-text" style="font-weight: bold;">You can expand call duration by 5 mins max 2 time during the call.</span>
+                                        </li>
+                                        <li>
+                                            <span class="dark-text" style="font-weight: bold;">Be available at 11 AM to 11:10 AM.</span>
+                                        </li>
+                                        <li>
+                                            <span class="dark-text" style="font-weight: bold;">Waiting time is 10 mins max after that appointment will be cancelled automatically.</span>
+                                        </li>
+                                    </ul>
+
+                                </div>
+                            </div>
+
+                            @if (Model.UserCard != null)
+                            {
+                                <div class="card-wrap select-cards-wrap">
+                                    <div class="visa-icon-wrap">
+                                        <img src="~/assets/images/visa.png" alt="visa">
+                                    </div>
+                                    <div class="visa-text">
+                                        <h3>@Model.UserCard.CardName @*Cameron Williamson*@</h3>
+                                        <h4>**** **** **** @Model.UserCard.CardNumber.Substring(@Model.UserCard.CardNumber.Length - 4)</h4>
+                                    </div>
+                                </div>
+                            }
+                            else
+                            {
+                                <div>
+                                    <button type="button" class="g-btn" id="btnAddCard">Add method of payment</button> <br>
+                                </div>
+                            }
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<div class="modal cancel-appointment-modal show" id="successApp" aria-modal="true" role="dialog" style="display: none; padding-left: 0px;">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <button type="button" class="btn-close" style="color: #14ae5c; background-color:currentColor;" aria-label="Close" onclick="CloseModal()"></button>
+            <div class="modal-body signin-wrap">
+                <img src="../assets/images/done.svg" class="done-img" alt="done">
+            </div>
+            <div class="modal-header text-center">
+                <h2 class="modal-title">Appointment Book Successfully!</h2>
+                <a href="/Home/UserHomeIndex" class="back-home-btn">Back to Home</a>
+                @*<p class="mb-0">Payment will be refunded to the same payment method within 7 working days.</p>*@
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal cancel-appointment-modal show" id="failApp" aria-modal="true" role="dialog" style="display: none; padding-left: 0px;">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <button type="button" class="btn-close" style="color: #14ae5c; background-color:currentColor;" aria-label="Close" onclick="CloseModal()"></button>
+            <div class="modal-body signin-wrap">
+                <img src="../assets/images/close-gray.svg" class="done-img" alt="done">
+            </div>
+            <div class="modal-header text-center">
+                <h2 class="modal-title">Appointment Book Fail!</h2>
+                <a href="/Home/UserHomeIndex" class="back-home-btn">Back to Home</a>
+                <p class="mb-0" style="color:red" id="failMsg"></p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+
+    function CloseModal() {
+        document.getElementById('successApp').style.display = 'none';
+    }
+
+    function CloseModal() {
+        document.getElementById('failApp').style.display = 'none';
+    }
+
+    $(document).ready(function () {
+
+        debugger;
+        //$("#successApp").show();
+
+
+        var lstConsultantDate = '@Html.Raw(Json.Serialize(Model.lstConsultantDate.ToList()))';
+        var dateList = JSON.parse(lstConsultantDate);
+        var specialDates = [];
+
+        for (var i = 0; i < dateList.length; i++) {
+            var date = new Date(dateList[i]);
+            //var dateObj = moment.utc(dateList[i], 'YYYY/MM/DD, h:mm:ss.ss A Z');
+            //var date = dateObj.local()._d;
+
+            specialDates.push({ date: date, color: "green" });
+        }
+
+        $("#SlotDate").datepicker({
+            beforeShowDay: function (date) {
+                var dateToCheck = date.toDateString();
+
+                for (var i = 0; i < specialDates.length; i++) {
+                    var specialDate = specialDates[i].date.toDateString();
+                    if (dateToCheck === specialDate) {
+                        return [true, "special-date", "You can book appoitment!"];
+                    }
+                }
+                return [true, "", ""];
+            }
+            ,
+            onSelect: function (dateText, inst) {
+                var selectedDate = new Date(dateText);
+                for (var i = 0; i < specialDates.length; i++) {
+                    var specialDate = specialDates[i].date.toDateString();
+                    if (selectedDate.toDateString() === specialDate) {
+                        GetTime(selectedDate.toDateString());
+                    } else {
+                        $('#TimeSlotDiv').html("");
+                        $('#TimeSlotDiv').html("No Slot Found");
+                    }
+                }
+            }
+        });
+        GetTime('@DateTime.Now.ToString("MM/dd/yyyy")');
+
+    });
+
+    function GetTime(BookingDate) {
+
+        let BookSlot = {
+            ConsultantId: '@Model.GetConsultantDetail.ConsultantId',
+            Date: BookingDate
+        }
+
+        $.ajax({
+            type: "post",
+            url: "/Home/GetConsultantTimeByDate",
+            data: BookSlot,
+            success: function (response) {
+                //debugger;
+                if (response != "") {
+                    //---------- start
+                    $('#TimeSlotDiv').html("");
+                    var options = '';
+                    for (var i = 0; i < response.length; i++) {
+                        debugger;
+                        var dateTime = new Date(response[i].date);
+                        //var dateObj = moment.utc(response[i].date, 'YYYY/MM/DD, h:mm:ss.ss A Z');
+                        //var local = dateObj.format('YYYY/MM/DD, h:mm:ss.ss');
+
+                        //var formattedDateTime = formatDateTime(dateObj._d);
+                        var formattedDateTime = formatDateTime(dateTime);
+                        //var callTimeTextFunction = TimeConverter(response[i].hour, response[i].minutes);
+                        options += '<p><input type="radio" id="rdTime' + response[i].id + '" value="' + response[i].id + '" > <label class="blnLabel" onclick="MakeCheckboxCheckedUnchecked(' + response[i].id + ')" id="lblTime' + response[i].id + '"   >' + formattedDateTime + '</label></p>';
+                    }
+                    $('#TimeSlotDiv').append(options);
+
+                    //---------- end
+                }
+                else {
+                    $('#TimeSlotDiv').html("");
+                    $('#TimeSlotDiv').html("No Slot Found");
+                }
+            },
+            error: function () {
+                alert("Error occured!!")
+            }
+        });
+    }
+
+
+    //function TimeConverter(id) {
+    //    if (id == 0) { return "00:00 AM - 01:00 AM"; }
+    //    else if (id == 1) { return "01:00 AM - 02:00 AM"; }
+    //    else if (id == 2) { return "02:00 AM - 03:00 AM"; }
+    //    else if (id == 3) { return "03:00 AM - 04:00 AM"; }
+    //    else if (id == 4) { return "04:00 AM - 05:00 AM"; }
+    //    else if (id == 5) { return "05:00 AM - 06:00 AM"; }
+    //    else if (id == 6) { return "06:00 AM - 07:00 AM"; }
+    //    else if (id == 7) { return "07:00 AM - 08:00 AM"; }
+    //    else if (id == 8) { return "08:00 AM - 09:00 AM"; }
+    //    else if (id == 9) { return "09:00 AM - 10:00 AM"; }
+    //    else if (id == 10) { return "10:00 AM - 11:00 AM"; }
+    //    else if (id == 11) { return "11:00 AM - 00:00 PM"; }
+    //    else if (id == 12) { return "00:00 PM - 01:00 PM"; }
+    //    else if (id == 13) { return "01:00 PM - 02:00 PM"; }
+    //    else if (id == 14) { return "02:00 PM - 03:00 PM"; }
+    //    else if (id == 15) { return "03:00 PM - 04:00 PM"; }
+    //    else if (id == 16) { return "04:00 PM - 05:00 PM"; }
+    //    else if (id == 17) { return "05:00 PM - 06:00 PM"; }
+    //    else if (id == 18) { return "06:00 PM - 07:00 PM"; }
+    //    else if (id == 19) { return "07:00 PM - 08:00 PM"; }
+    //    else if (id == 20) { return "08:00 PM - 09:00 PM"; }
+    //    else if (id == 21) { return "09:00 PM - 10:00 PM"; }
+    //    else if (id == 22) { return "10:00 PM - 11:00 PM"; }
+    //    else if (id == 23) { return "11:00 PM - 12:00 PM"; }
+    //}
+
+    //function TimeConverter(id, Mins) {
+    //    if (id == 0) {
+    //        return "" + id + ":" + Mins + " AM - " + (id + 1) + ":" + Mins + " AM";
+    //    }
+    //    else if (id == 1) {
+    //        return id + ":" + Mins + " AM - " + (id + 1) + ":" + Mins + " AM";
+    //    }
+    //    else if (id == 1) {
+    //        return id + ":" + Mins + " AM - " + (id + 1) + ":" + Mins + " AM";
+    //    }
+    //    else if (id == 1) {
+    //        return id + ":" + Mins + " AM - " + (id + 1) + ":" + Mins + " AM";
+    //    }
+    //    else if (id == 1) {
+    //        return id + ":" + Mins + " AM - " + (id + 1) + ":" + Mins + " AM";
+    //    }
+    //    else if (id == 1) {
+    //        return id + ":" + Mins + " AM - " + (id + 1) + ":" + Mins + " AM";
+    //    }
+    //    else if (id == 1) {
+    //        return id + ":" + Mins + " AM - " + (id + 1) + ":" + Mins + " AM";
+    //    }
+    //    else if (id == 1) {
+    //        return id + ":" + Mins + " AM - " + (id + 1) + ":" + Mins + " AM";
+    //    }
+    //    else if (id == 1) {
+    //        return id + ":" + Mins + " AM - " + (id + 1) + ":" + Mins + " AM";
+    //    }
+    //    else {
+    //        // Handle other id values if needed
+    //        return "Invalid id";
+    //    }
+    //}
+
+    function TimeConverter(id, Mins) {
+        debugger;
+
+        if (id >= 0 && id <= 23) {
+            var amPm = id < 12 ? "AM" : "PM";
+            var startHour = id % 12 || 12; // Handle 12 AM and 12 PM
+            var endHour = (id + 1) % 12 || 12; // Handle 12 AM and 12 PM
+
+            //var formattedMins = Mins.toString().padStart(2, '0'); // Ensure minutes are two digits
+
+            var formattedMins = Mins.toString().length === 1 ? "0" + Mins : Mins; // Add leading zero if necessary
+
+            return `${startHour}:${formattedMins} ${amPm} - ${endHour}:${formattedMins} ${amPm}`;
+        } else {
+            return "Invalid id";
+        }
+    }
+
+    function formatDateTime(date) {
+        var hours = date.getHours();
+        var minutes = date.getMinutes();
+        var ampm = hours >= 12 ? 'PM' : 'AM';
+
+        // Convert to 12-hour format
+        hours = hours % 12;
+        hours = hours ? hours : 12; // "0" should be "12"
+        var endhours = (hours + 1) % 12;
+        endhours = endhours ? endhours : 12; // "0" should be "12"
+        // Add leading zeros to minutes if needed
+        minutes = minutes < 10 ? '0' + minutes : minutes;
+
+        // Construct the formatted date and time string
+        var formattedDateTime = `${hours}:${minutes} ${ampm} - ${endhours}:${minutes} ${ampm}`;
+
+
+        //var formattedDateTime = date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + date.getDate() +
+        //    ' ' + hours + ':' + minutes + ' ' + ampm;
+
+        return formattedDateTime;
+    }
+
+
+    function MakeCheckboxCheckedUnchecked(slotVal) {
+        var chkBox = $("#rdTime" + slotVal).is(':checked');
+        if (chkBox == true) {
+            $("#rdTime" + slotVal).removeAttr('checked', '');
+        }
+        else {
+            var hdnChkVal = $("#hdnChkVal").val();
+
+            if (hdnChkVal != "") {
+                $("#rdTime" + hdnChkVal).removeAttr('checked', '');
+            }
+            $("#rdTime" + slotVal).attr('checked', 'checked');
+            $("#hdnChkVal").val(slotVal);
+        }
+    }
+
+    $('#btnAddCard').click(function (event) {
+        var url = "/UserSettings/UserAddPaymentCard";
+        window.location.href = url;
+    });
+
+    $(function () {
+        $('#SlotDate').datepicker({
+            "setDate": new Date(),
+            "autoclose": true,
+            "nextText": "Next >",  // Custom text for next button
+            "prevText": "< Prev"  // Custom text for previous button
+        });
+    });
+
+    function BookAppoitment() {
+
+
+        var isValidProcess = true;
+
+        let BookSlot = {
+            ConsultantId: '@Model.GetConsultantDetail.ConsultantId',
+            ConsultantSlotId: $("#hdnChkVal").val(),
+            SessionModeType: $("input[name='SessionModeType']:checked").val()
+        }
+
+        if ('@Model.UserCard' === "") {
+            $("#errorAddCard").text("Please add your payment card");
+            isValidProcess = false;
+        } else {
+            $("#errorAddCard").text("");
+        }
+
+        if (BookSlot.ConsultantSlotId == "") {
+            $("#errorAddSlot").text("Please book slot");
+            isValidProcess = false;
+        } else {
+            $("#errorAddSlot").text("");
+        }
+
+        if (isValidProcess) {
+
+            $('#loading-overlay').show();
+
+            $.ajax({
+                type: "post",
+                url: "/Home/BookUserAppointment",
+                data: BookSlot,
+                success: function (response) {
+
+                    debugger
+
+                    $('#loading-overlay').hide();
+                    if (response == "True") {
+                        $("#successApp").show();
+                    }
+                    else {
+                        $("#failApp").show();
+                        $("#failMsg").html(response);
+                    }
+                },
+                error: function () {
+                    $('#loading-overlay').hide();
+                    $("#failApp").show();
+                    $("#failMsg").html("Something went wrong please try after sometime.");
+                }
+            });
+        }
+        else {
+            setTimeout(function () {
+                $(".clsErrorMsg").html("");
+            }, 5000);
+        }
+
+
+    }
+
+
+
+</script>

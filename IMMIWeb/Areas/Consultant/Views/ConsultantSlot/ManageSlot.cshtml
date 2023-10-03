@@ -1,0 +1,777 @@
+﻿@using IMMIWeb.Infrastructure
+
+@{
+    string[] myStrings = ViewBag.ListofHours;
+}
+<script type="text/javascript" src="https://cdn.jsdelivr.net/jquery/latest/jquery.min.js"></script>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment-timezone/0.5.34/moment-timezone-with-data.min.js"></script>
+<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
+
+
+<style>
+    #SlotDateParent {
+        position: relative;
+    }
+
+    #SlotDate {
+        position: inherit;
+        top: 0;
+        left: 0;
+        /* Add other styling properties as needed */
+    }
+    /* Define a CSS class for highlighted dates */
+    .highlighted-date {
+        background-color: yellow; /* Change this to your desired highlight color */
+    }
+</style>
+
+@*@using (Html.BeginForm("UpdateSlot", "ConsultantSlot", FormMethod.Post, new { id = "consultantSlotform", area = "Consultant" }))
+{
+
+
+}*@
+
+<input type="text" id="slotHrs" name="slotHrs">
+
+
+<section class="login-home section-of-book-con mt-90">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-10 col-sm-12 col-md-12">
+                <div class="title">
+                    <h1>My Availability</h1>
+                </div>
+            </div>
+            <div class="row justify-content-center">
+                <div class="col-lg-10 col-sm-12 col-md-12">
+                    <div class="box-wrapper signin-wrap time-slot">
+                        <div class="consultant-review-center p-0 mb-5">
+                            <div class="login-home-wrap border-0 p-0">
+                                <h3 id="currentDate"></h3>
+                            </div>
+                            <div class="row justify-content-between">
+                                <div class="col-lg-5 col-md-6 col-sm-12 line-after">
+                                    <div class="availability border-bottom">
+                                        <div class="status">
+                                            <p>Availability status</p>
+                                            <h3 id="statusText">Enable</h3>
+                                        </div>
+                                        <div class="status-update">
+                                            <div class="form-check form-switch">
+                                                <input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckChecked" checked="" onchange="updateStatus()">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="availability border-bottom">
+                                        <input type="checkbox" id="checkbox1" class="form-check-input mr-1">
+                                        <label for="checkbox1">Add Slots</label>
+
+                                        <input type="checkbox" id="checkbox2" class="form-check-input mr-1">
+                                        <label for="checkbox2">Update Slots</label>
+                                    </div>
+
+                                    <div class="availability day mb-0">
+                                        <div class="status">
+                                            <h3>Slot availability</h3>
+                                        </div>
+                                    </div>
+                                    <div class="availability day mb-0">
+                                        <input class="form-control form-control-solid" autocomplete="off" placeholder="Please select date" type="text" id="SlotDate" name="SlotDate" />
+                                    </div>
+                                    <div class="select-time-wrap">
+                                        <p><input type="radio" id="rdTime0" value="0"><label class="radioTimer" id="lblTime0">00:00 AM - 01:00 AM</label></p>
+                                        <p><input type="radio" id="rdTime1" value="1"><label class="radioTimer" id="lblTime1">01:00 AM - 02:00 AM</label></p>
+                                        <p><input type="radio" id="rdTime2" value="2"><label class="radioTimer" id="lblTime2">02:00 AM - 03:00 AM</label></p>
+                                        <p><input type="radio" id="rdTime3" value="3"><label class="radioTimer" id="lblTime3">03:00 AM - 04:00 AM</label></p>
+                                        <p><input type="radio" id="rdTime4" value="4"><label class="radioTimer" id="lblTime4">04:00 AM - 05:00 AM</label></p>
+                                        <p><input type="radio" id="rdTime5" value="5"><label class="radioTimer" id="lblTime5">05:00 AM - 06:00 AM</label></p>
+                                        <p><input type="radio" id="rdTime6" value="6"><label class="radioTimer" id="lblTime6">06:00 AM - 07:00 AM</label></p>
+                                        <p><input type="radio" id="rdTime7" value="7"><label class="radioTimer" id="lblTime7">07:00 AM - 08:00 AM</label></p>
+                                        <p><input type="radio" id="rdTime8" value="8"><label class="radioTimer" id="lblTime8">08:00 AM - 09:00 AM</label></p>
+                                        <p><input type="radio" id="rdTime9" value="9"><label class="radioTimer" id="lblTime9">09:00 AM - 10:00 AM</label></p>
+                                        <p><input type="radio" id="rdTime10" value="10"><label class="radioTimer" id="lblTime10">10:00 AM - 11:00 AM</label></p>
+                                        <p><input type="radio" id="rdTime11" value="11"><label class="radioTimer" id="lblTime11">11:00 AM - 00:00 PM</label></p>
+
+                                    </div>
+                                </div>
+                                <div class="col-lg-5 col-md-6 col-sm-12">
+
+                                    <div class="select-time-wrap">
+                                        <p><input type="radio" id="rdTime12" value="12"><label class="radioTimer" id="lblTime12">00:00 PM - 01:00 PM</label></p>
+                                        <p><input type="radio" id="rdTime13" value="13"><label class="radioTimer" id="lblTime13">01:00 PM - 02:00 PM</label></p>
+                                        <p><input type="radio" id="rdTime14" value="14"><label class="radioTimer" id="lblTime14">02:00 PM - 03:00 PM</label></p>
+                                        <p><input type="radio" id="rdTime15" value="15"><label class="radioTimer" id="lblTime15">03:00 PM - 04:00 PM</label></p>
+                                        <p><input type="radio" id="rdTime16" value="16"><label class="radioTimer" id="lblTime16">04:00 PM - 05:00 PM</label></p>
+                                        <p><input type="radio" id="rdTime17" value="17"><label class="radioTimer" id="lblTime17">05:00 PM - 06:00 PM</label></p>
+                                        <p><input type="radio" id="rdTime18" value="18"><label class="radioTimer" id="lblTime18">06:00 PM - 07:00 PM</label></p>
+                                        <p><input type="radio" id="rdTime19" value="19"><label class="radioTimer" id="lblTime19">07:00 PM - 08:00 PM</label></p>
+                                        <p><input type="radio" id="rdTime20" value="20"><label class="radioTimer" id="lblTime20">08:00 PM - 09:00 PM</label></p>
+                                        <p><input type="radio" id="rdTime21" value="21"><label class="radioTimer" id="lblTime21">09:00 PM - 10:00 PM</label></p>
+                                        <p><input type="radio" id="rdTime22" value="22"><label class="radioTimer" id="lblTime22">10:00 PM - 11:00 PM</label></p>
+                                        <p><input type="radio" id="rdTime23" value="23"><label class="radioTimer" id="lblTime23">11:00 PM - 12:00 PM</label></p>
+
+
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                        <div class="availability day mb-0">
+                            <button id="btnAddSlot" type="button" class="form-control form-control-solid" style="background-color:#14ae5c;color:white;" @*class="g-btn"*@>Add Slot</button>
+                            <button id="btnUpdateSlot" type="button" class="form-control form-control-solid d-none" style="background-color:#14ae5c;color:white;" @*class="g-btn"*@>Update Slot</button>
+                        </div>
+
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+<script type="text/javascript">
+    
+    var disabledDates = @Html.Raw(Json.Serialize(myStrings));
+    var parsedDates = [];
+    $(document).ready(function () {
+       debugger;
+        //var timezoneName = moment.tz.guess();
+        //console.log(timezoneName)
+        $("#checkbox1").prop("checked", true);
+
+        $("#SlotDate").daterangepicker({
+            //"autoApply": true,
+            isCustomDate: function (date) {
+                //debugger;
+                
+                $.each(disabledDates, function (index, dateString) {
+                    //debugger;      
+                    
+                    var dateObj = moment.utc(dateString, 'YYYY/MM/DD, h:mm:ss.ss A Z');
+                    var local = dateObj.local().format('YYYY-MM-DD');  
+                    
+
+                    //var dateObj = new Date(dateString + ' UTC');
+                    //var local = dateObj.toISOString().split('T')[0];
+                    //var local = dateObj.toLocaleDateString();
+                    parsedDates.push(local);
+                });
+                //console.log(parsedDates);
+                var formattedDate = date.format('YYYY-MM-DD');
+                if (parsedDates.includes(formattedDate)) {
+                    return 'highlighted-date'; // Return the class name directly
+                } else {
+                    return ''; // Return an empty string for other dates
+                }
+            },
+            isInvalidDate: function (date) {
+                // Return true to disable the current date
+                return date.isBefore(moment(), 'day') || date.isSame(moment(), 'day');
+            },
+            locale: {
+                cancelLabel: 'Clear'
+            },
+            autoUpdateInput: false,
+            opens: 'center'
+        });
+        $('#SlotDate').on('apply.daterangepicker', function (ev, picker) {
+            //debugger;
+            $(this).val(picker.startDate.format('MM/DD/YYYY') + ' - ' + picker.endDate.format('MM/DD/YYYY'));
+            $("input[type='radio']").prop('checked', false);
+            $("#btnUpdateSlot").addClass("d-none");
+            $("#btnAddSlot").removeClass("d-none");
+        });
+        $('#SlotDate').on('cancel.daterangepicker', function (ev, picker) {
+            $(this).val('');
+            $("input[type='radio']").prop('checked', false);
+        });
+
+
+
+    });
+
+
+    $("#checkbox1").click(function () {
+
+        // Toggle the checked state of checkbox2 based on checkbox1's state
+        $("#checkbox2").prop("checked", !$(this).prop("checked"));
+        $('#SlotDate').val('')
+        $("input[type='radio']").prop('checked', false);
+        $("#btnUpdateSlot").addClass("d-none");
+        $("#btnAddSlot").removeClass("d-none");
+        //var disabledDates = @Html.Raw(Json.Serialize(myStrings));
+        $("#SlotDate").daterangepicker({
+            //"autoApply": true,
+            isCustomDate: function (date) {
+                //debugger;
+                $.each(disabledDates, function (index, dateString) {
+                    //debugger;
+                    var dateObj = moment.utc(dateString, 'YYYY/MM/DD, h:mm:ss.ss A Z');
+                    var local = dateObj.local().format('YYYY-MM-DD');
+                    parsedDates.push(local);
+                });
+
+                var formattedDate = date.format('YYYY-MM-DD');
+                if (parsedDates.includes(formattedDate)) {
+                    return 'highlighted-date'; // Return the class name directly
+                } else {
+                    return ''; // Return an empty string for other dates
+                }
+            },
+            isInvalidDate: function (date) {
+                // Return true to disable the current date
+                return date.isBefore(moment(), 'day') || date.isSame(moment(), 'day');
+            },
+            locale: {
+                cancelLabel: 'Clear'
+            },
+            autoUpdateInput: false,
+            opens: 'center'
+        });
+        $('#SlotDate').on('apply.daterangepicker', function (ev, picker) {
+            //debugger;
+            $(this).val(picker.startDate.format('MM/DD/YYYY') + ' - ' + picker.endDate.format('MM/DD/YYYY'));
+        });
+        $('#SlotDate').on('cancel.daterangepicker', function (ev, picker) {
+            $(this).val('');
+            $("input[type='radio']").prop('checked', false);
+        });
+    });
+
+    // Attach a click event handler to checkbox2
+    $("#checkbox2").click(function () {
+        // Toggle the checked state of checkbox1 based on checkbox2's state
+        $("#checkbox1").prop("checked", !$(this).prop("checked"));
+        $('#SlotDate').val('')
+        $("input[type='radio']").prop('checked', false);
+        $("#btnUpdateSlot").removeClass("d-none");
+        $("#btnAddSlot").addClass("d-none");
+        //var disabledDates = @Html.Raw(Json.Serialize(myStrings));
+        $("#SlotDate").daterangepicker({
+            //"autoApply": true,
+            "singleDatePicker": true,
+            isCustomDate: function (date) {
+                //debugger;
+                $.each(disabledDates, function (index, dateString) {
+                    //debugger;
+                    var dateObj = moment.utc(dateString, 'YYYY/MM/DD, h:mm:ss.ss A Z');
+                    var local = dateObj.local().format('YYYY-MM-DD');
+                    parsedDates.push(local);
+                });
+                var formattedDate = date.format('YYYY-MM-DD');
+                if (parsedDates.includes(formattedDate)) {
+                    return 'highlighted-date'; // Return the class name directly
+                } else {
+                    return ''; // Return an empty string for other dates
+                }
+            },
+            isInvalidDate: function (date) {
+                //debugger;
+                // Return true to disable the current date
+                $.each(disabledDates, function (index, dateString) {
+                    //debugger;
+                    var dateObj = moment.utc(dateString, 'YYYY/MM/DD, h:mm:ss.ss A Z');
+                    var local = dateObj.local().format('YYYY-MM-DD');
+                    parsedDates.push(local);
+                });
+
+                var formattedDate = date.format('YYYY-MM-DD');
+                if (parsedDates.includes(formattedDate)) {
+                    if (date.isBefore(moment(), 'day')) {
+                        return date.isBefore(moment(), 'day');
+                    }
+                    else if (date.isSame(moment(), 'day')) {
+                        return date.isSame(moment(), 'day');
+                    }
+                    else if (date.isAfter(moment(), 'day')) {
+                        if (!parsedDates.includes(formattedDate)) {
+                            return date.isAfter(moment(), 'day');
+                        }
+                    }
+
+                } else {
+                    return date.isBefore(moment(), 'day') || date.isSame(moment(), 'day') || date.isAfter(moment(), 'day');
+                }
+                //return date.isBefore(moment(), 'day') || date.isSame(moment(), 'day') || date.isAfter(moment(), 'day');
+                //if (disabledDates.includes(date.isBefore(moment(), 'day'))) {
+                //    return date.isBefore(moment(), 'day');
+                //} else if (disabledDates.includes(date.isSame(moment(), 'day'))) {
+                //        return  date.isSame(moment(), 'day')
+                //    //return false; // Dates in disabledDates are valid
+                //}
+                //if (!disabledDates.includes(formattedDate)) {
+                //    return date.isBefore(moment(), 'day') || date.isSame(moment(), 'day');
+                //} else {
+                //    var afterDate = date.clone().add(1, 'day');
+                //    var formattedAfterDate = afterDate.format('YYYY-MM-DD');
+                //    if (!disabledDates.includes(formattedAfterDate)) {
+                //        return true; // Disable after dates that are not in disabledDates
+                //    }
+                //    return false; // Dates in disabledDates are valid
+                //}
+
+            },
+            locale: {
+                cancelLabel: 'Clear'
+            },
+            autoUpdateInput: false,
+            opens: 'center'
+        });
+        $('#SlotDate').on('show.daterangepicker', function (ev, picker) {
+            //debugger;
+            // Get the calendar
+            picker.container.find('.active.disabled').removeClass('active')
+        });
+        $('#SlotDate').on('apply.daterangepicker', function (ev, picker) {
+            //debugger;
+            if (picker.startDate.toDate().getDate() != new Date().getDate()) {
+                //var localdate = new moment(picker.startDate).toISOString().split('T')[0];
+                var localdate = new moment(picker.startDate).format('YYYY-MM-DD');
+                // Parse the ISO string using Moment.js
+                //var momentDate = moment(localdate);
+               
+
+                // Format the momentDate as 'YYYY-MM-DD'
+                //var formattedDate = momentDate.format('YYYY-MM-DD');
+
+                $(this).val(picker.startDate.format('MM/DD/YYYY'));
+               // $(this).val(localdate);
+                $.ajax({
+                    type: "POST",
+                    url: '@Url.Action("ListofBusinessHoursConsultant", "ConsultantSlot")',
+                    data: { "SlotDate": localdate },
+                    success: function (response) {
+                        //debugger;
+                        $("input[type='radio']").prop('checked', false);
+                        if (response != null) {
+                            if (response.length > 0) {
+                               
+                                for (var i = 0; i < response.length; i++) {
+                                    //var currentItem = response[i];
+                                    //var chkBox = $("#rdTime" + currentItem.startHour);
+                                     var dateTime = new Date(response[i].date);
+                                    var formattedDateTime = formatDateTime(dateTime);
+                                    var chkBox = $("#rdTime" + new Date(formattedDateTime + ' UTC').getHours());                                    
+                                    chkBox.prop('checked', true)
+                                }
+
+                            }
+                        }
+                    },
+                    error: function () {
+                        //alert("Error occured!!")
+                        toastr.error('Error occured!!');
+                    }
+                });
+            }
+            //else{
+            //    alert("Their is no slot in this date to update.Please select another date.")
+            //}
+            //var selectedDate = picker.startDate.toDate();
+            //var disabledElements = document.querySelectorAll('.disabled');
+            //var isDateDisabled = false;
+
+            //disabledElements.forEach(element => {
+            //    var td = element;
+            //    if (tdElement.hasClass('available')){
+
+            //    }
+            //    var dateInCell = parseInt(element.textContent); // Get the date from the cell
+
+            //    if (!isNaN(dateInCell) && dateInCell === selectedDate.getDate()) {
+            //        isDateDisabled = true;
+            //    }
+            //});
+
+
+
+
+        });
+        $('#SlotDate').on('cancel.daterangepicker', function (ev, picker) {
+            $(this).val('');
+            $("input[type='radio']").prop('checked', false);
+        });
+    });
+
+    function updateStatus() {
+        var statusText = document.getElementById("statusText");
+        var switchInput = document.getElementById("flexSwitchCheckChecked");
+
+        if (switchInput.checked) {
+            statusText.textContent = "Enable";
+        } else {
+            statusText.textContent = "Disable";
+        }
+    }
+
+
+    $('#flexSwitchCheckChecked').change(function () {
+        var statusText = $("#statusText");
+        var switchInput = $(this);
+
+        if (switchInput.prop("checked")) {
+            statusText.text("Enable");
+        } else {
+            statusText.text("Disable");
+        }
+
+        var data = {
+            userId: @SessionFactory.CurrentUserId,
+            isAvailable: switchInput.prop("checked")
+        };
+
+        //debugger;
+        $.ajax({
+            type: "POST",
+            url: "/Consultant/ConsultantSlot/UpdateAvailableStatus",
+            data: data,
+            success: function (response) {
+
+            },
+            error: function () {
+                //alert("Error occurred!!");
+                toastr.error('Error occured!!');
+
+            }
+        });
+    });
+
+
+
+
+
+
+    $(".radioTimer").click(function () {
+        //debugger;
+        var currentChkVal = $(this).attr("id");
+        var selectedChkboxVal = currentChkVal.substring(7);
+
+        var chkBox = $("#rdTime" + selectedChkboxVal);
+
+        if (chkBox.is(':checked')) {
+            chkBox.prop('checked', false);
+        } else {
+            chkBox.prop('checked', true);
+        }
+
+    });
+
+
+    var text = [];
+
+    $('#btnAddSlot').click(function (event) {
+        //debugger;
+        for (let i = 0; i <= 23; i++) {
+
+            var chkBox = $("#rdTime" + i).is(':checked');
+
+            if (chkBox == true) {
+                text.push(i);
+            }
+        }
+
+        $("#slotHrs").val(text);
+        if ($("#SlotDate").val() != "" && $("#slotHrs").val() != "") {
+            var formattedDatesArray = [];
+            // Input date and time values
+            var dateRange = $("#SlotDate").val();
+            var hours = $("#slotHrs").val(); // Add more hours if needed
+
+            // Split the date range into start and end dates
+            var dateParts = dateRange.split(' - ');
+            var startDate = new Date(dateParts[0]);
+            var endDate = new Date(dateParts[1]);
+            hours = hours.split(',');
+            // Create a loop to iterate through dates
+            var currentDate = new Date(startDate);
+            while (currentDate <= endDate) {
+                // Loop through hours
+                for (var i = 0; i < hours.length; i++) {
+                    // Create a new Date object with the current date and hour
+                    var dateTime = new Date(currentDate);
+                    dateTime.setHours(hours[i]);
+
+                    //var local = new Date(dateTime);
+                    //var offset = local.getTimezoneOffset();
+                    //var utc = new Date(local.getTime() - offset * 60000);
+
+
+                    // Convert to ISO
+                   //var ISODatetime = dateTime.toISOString();
+                    //console.log(abc.toUTCString());
+                    // Convert to UTC
+                    var utcDateTime = dateTime.toUTCString();
+
+                    // Display the UTC date and time
+                    //console.log("UTC Date and Time: " + utcDateTime);
+
+                    //// Extract the time portion from the UTC string
+                    //var timePortion = utcDateTime.split(' ')[4];
+
+                    //// Split the time portion into hours, minutes, and seconds
+                    //var [hours, minutes, seconds] = timePortion.split(':');
+
+                    //// Create the "HH:mm:ss" string
+                    //var formattedTime = hours + ':' + minutes + ':' + seconds;
+
+                    //console.log(formattedTime);
+
+                    // Extract the date and time components
+                    var dateComponents = utcDateTime.match(/\d{2} \w{3} (\d{4}) (\d{2}):(\d{2}):(\d{2})/);
+
+                    // Create the formatted date string
+                    var formattedDate = dateComponents[1] + '-' +
+                        ('0' + (dateTime.getUTCMonth() + 1)).slice(-2) + '-' +
+                        ('0' + dateTime.getUTCDate()).slice(-2) + ' ' +
+                        ('0' + dateComponents[2]).slice(-2) + ':' +
+                        ('0' + dateComponents[3]).slice(-2) + ':' +
+                        ('0' + dateComponents[4]).slice(-2) + '.000';
+
+                    //console.log(formattedDate);
+
+                    //var dateTimeObject = new Date(formattedDate);
+                    //console.log(dateTimeObject);
+                    formattedDatesArray.push(formattedDate);
+                }
+
+                // Increment the current date by one day
+                currentDate.setDate(currentDate.getDate() + 1);
+            }
+            //var slotDates = formattedDatesArray.split(',');
+            //$("#SlotDate").val(formattedDatesArray);
+            //console.log($("#SlotDate").val());
+            //var formattedDates = formattedDatesArray.map(function (dateString) {
+            //    // Use Moment.js to format the date
+            //    return moment(dateString).format('YYYY-MM-DD HH:mm:ss.SSS');
+            //});
+            //console.log(formattedDates);
+          //var formattedDatess = "2023-09-15 20:00:00.000";
+
+
+
+            $.ajax({
+                type: "POST",
+                url: '@Url.Action("ManageSlot", "ConsultantSlot")',
+                data: { "SlotDate": formattedDatesArray },
+                success: function (response) {
+                    //debugger;
+                    if (response.redirect) {
+                        formattedDatesArray = [];
+                        window.location.href = response.redirect; // Redirect the user
+                    } else {
+                        // Handle other response data if needed
+                    }
+
+                },
+                error: function () {
+                    // alert("Error occured!!")
+                    toastr.error('Error occured!!');
+                }
+            });
+        }
+        else {
+            if ($("#SlotDate").val() === "") {
+                // alert("Please Select Date");
+                toastr.error('Please Select Date');
+            }
+            else if ($("#slotHrs").val() === "") {
+                // alert("Please Select Slot");
+                toastr.error('Please Select Slot');
+            }
+        }
+
+
+        //$("#consultantSlotform").submit();
+
+    });
+
+    $('#btnUpdateSlot').click(function (event) {
+        //debugger;
+        var UpdatedformattedDatesArray = [];
+        for (let i = 0; i <= 23; i++) {
+
+            var chkBox = $("#rdTime" + i).is(':checked');
+
+            if (chkBox == true) {
+                text.push(i);
+            }
+        }
+
+        $("#slotHrs").val(text);
+        if ($("#SlotDate").val() != "" && $("#slotHrs").val() != "") {
+
+            // Input date and time values
+            var dateRange = $("#SlotDate").val();
+            var hours = $("#slotHrs").val(); // Add more hours if needed
+            hours = hours.split(',');
+            var currentDate = new Date(dateRange);
+            for (var i = 0; i < hours.length; i++) {
+                // Create a new Date object with the current date and hour
+                var dateTime = new Date(currentDate);
+                dateTime.setHours(hours[i]);
+
+                //var local = new Date(dateTime);
+                //var offset = local.getTimezoneOffset();
+                //var utc = new Date(local.getTime() - offset * 60000);
+
+
+                // Convert to ISO
+                //var ISODatetime = dateTime.toISOString();
+                //console.log(abc.toUTCString());
+                // Convert to UTC
+                var utcDateTime = dateTime.toUTCString();
+
+                // Display the UTC date and time
+                //console.log("UTC Date and Time: " + utcDateTime);
+
+                //// Extract the time portion from the UTC string
+                //var timePortion = utcDateTime.split(' ')[4];
+
+                //// Split the time portion into hours, minutes, and seconds
+                //var [hours, minutes, seconds] = timePortion.split(':');
+
+                //// Create the "HH:mm:ss" string
+                //var formattedTime = hours + ':' + minutes + ':' + seconds;
+
+                //console.log(formattedTime);
+
+                // Extract the date and time components
+                var dateComponents = utcDateTime.match(/\d{2} \w{3} (\d{4}) (\d{2}):(\d{2}):(\d{2})/);
+
+                // Create the formatted date string
+                var formattedDate = dateComponents[1] + '-' +
+                    ('0' + (dateTime.getUTCMonth() + 1)).slice(-2) + '-' +
+                    ('0' + dateTime.getUTCDate()).slice(-2) + ' ' +
+                    ('0' + dateComponents[2]).slice(-2) + ':' +
+                    ('0' + dateComponents[3]).slice(-2) + ':' +
+                    ('0' + dateComponents[4]).slice(-2) + '.000';
+
+                //console.log(formattedDate);
+
+                //var dateTimeObject = new Date(formattedDate);
+                //console.log(dateTimeObject);
+                UpdatedformattedDatesArray.push(formattedDate);
+            }
+
+
+
+
+            $.ajax({
+                type: "POST",
+                url: '@Url.Action("UpdateSlot", "ConsultantSlot")',
+                data: { "SlotDate": UpdatedformattedDatesArray, },
+                success: function (response) {
+                    //debugger;
+                    //alert("hi");
+                    if (response.redirect) {
+                        UpdatedformattedDatesArray = []
+                        window.location.href = response.redirect; // Redirect the user
+                    } else {
+                        // Handle other response data if needed
+                    }
+                },
+                error: function () {
+                    //alert("Error occured!!")
+                    toastr.error('Error occured!!');
+                }
+            });
+        }
+        else {
+            if ($("#SlotDate").val() === "") {
+                //alert("Please Select Date");
+                toastr.error('Please Select Date');
+
+            }
+            else if ($("#slotHrs").val() === "") {
+                //alert("Please Select Slot");
+                toastr.error('Please Select Slot');
+            }
+        }
+
+
+
+
+    });
+    //Commented Code
+    //$('#SlotDate').on('apply.daterangepicker', function (ev, picker) {
+    //    debugger;
+    //    if ($("#checkbox1").prop("checked")) {
+    //        $(this).val(picker.startDate.format('MM/DD/YYYY') + ' - ' + picker.endDate.format('MM/DD/YYYY'));
+    //        $("input[type='radio']").prop('checked', false);
+    //        $("#btnUpdateSlot").addClass("d-none");
+    //        $("#btnAddSlot").removeClass("d-none");
+    //    }
+    //    else if ($("#checkbox2").prop("checked")) {
+    //        $(this).val(picker.startDate.format('MM/DD/YYYY'));
+    //        $("input[type='radio']").prop('checked', false);
+    //        $("#btnUpdateSlot").removeClass("d-none");
+    //        $("#btnAddSlot").addClass("d-none");
+    //        $.ajax({
+    //            type: "POST",
+    //            url: '@Url.Action("ListofBusinessHoursConsultant", "ConsultantSlot")',
+    //            data: { "SlotDate": startdate },
+    //            success: function (response) {
+    //                debugger;
+
+    //                if (response != null) {
+    //                    if (response.length > 0) {
+
+    //                        for (var i = 0; i < response.length; i++) {
+    //                            var currentItem = response[i];
+    //                            var chkBox = $("#rdTime" + currentItem.startHour);
+    //                            chkBox.prop('checked', true)
+    //                        }
+
+    //                    }
+    //                }
+    //            },
+    //            error: function () {
+    //                alert("Error occured!!")
+    //            }
+    //        });
+    //    }
+
+
+    //});
+
+    //$('#SlotDate').on('cancel.daterangepicker', function (ev, picker) {
+    //    $(this).val('');
+    //    $("input[type='radio']").prop('checked', false);
+    //});
+
+    //Formate current date
+    function formatDate(date) {
+        const day = date.getDate();
+        const month = date.toLocaleDateString('en-US', { month: 'long' });
+        const year = date.getFullYear();
+        return day + ' ' + month + ', ' + year;
+    }
+    const currentDateElement = document.getElementById("currentDate");
+    const currentDate = new Date();
+    currentDateElement.textContent = formatDate(currentDate);
+
+
+    // Create a function to format the date and time
+    function formatDateTime(date) {
+        var hours = date.getHours();
+        var minutes = date.getMinutes();
+        var ampm = hours >= 12 ? 'PM' : 'AM';
+
+        // Convert to 12-hour format
+        hours = hours % 12;
+        hours = hours ? hours : 12; // "0" should be "12"
+
+        // Add leading zeros to minutes if needed
+        minutes = minutes < 10 ? '0' + minutes : minutes;
+
+        // Construct the formatted date and time string
+        var formattedDateTime = date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + date.getDate() +
+            ' ' + hours + ':' + minutes + ' ' + ampm;
+
+        return formattedDateTime;
+    }
+
+</script>

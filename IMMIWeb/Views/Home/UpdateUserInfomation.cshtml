@@ -1,0 +1,218 @@
+﻿@model IMMIWeb.Service.Models.UserInformationUpdateViewModel
+@using IMMIWeb.Infrastructure
+
+<section class="signin-section mt-90">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-xl-8">
+
+                @using (Html.BeginForm("UpdateUserInfomation", "Home", FormMethod.Post, new { id = "UserInformationUpdateForm", enctype = "multipart/form-data" }))
+                {
+                    <div class="signin-wrap edit-lang-main-wrap text-center edit-lang-wrap signup-wrap">
+                        <h1>Choose Your Preferred Languages</h1>
+                        <p>Choose language for app and communication.</p>
+
+                        <input type="hidden" value="@SessionFactory.CurrentUserId" name="UserId" id="UserId" />
+                        <div class="row">
+                            <div class="col-lg-6 col-md-6">
+                                <div class="input-group select-lang">
+                                    <select name="ApplicationLanguage" id="ApplicationLanguage" class="form-control">
+                                        <option value="">Application Language</option>
+                                        @foreach (var item in Model.lstAppLanguage)
+                                        {
+                                            <option value="@item.Id" data-value="@Model.ApplicationLanguage">@item.Name</option>
+                                        }
+                                    </select>
+                                    <label for="">Select app language</label>
+                                    <span id="ErrorAppLanguage" class="text-danger"></span>
+                                </div>
+                            </div>
+
+                            <div class="col-lg-6 col-md-6">
+                                <div class="input-group select-lang">
+                                    <select id="CommunicationLanguage" name="CommunicationLanguage" class="form-control">
+                                        <option value="">Communication Language</option>
+                                        @foreach (var item in Model.lstLanguage)
+                                        {
+                                            <option value="@item.Id" data-value="@Model.CommunicationLanguage">@item.Name</option>
+                                        }
+                                    </select>
+                                    <label for="">Communication Language</label>
+                                    <span id="ErrorCommunicationLanguage" class="text-danger"></span>
+                                </div>
+                            </div>
+
+
+
+                            <div class="col-lg-12">
+                                <h2>Select Country for Immigration Service</h2>
+                                <p>Where you want to get Immigrated?</p>
+
+                                <div class="col-lg-6 col-md-6">
+                                    <div class="input-group select-lang">
+                                        <select name="ImmigrationCountry" id="ImmigrationCountry" class="form-control">
+                                            <option value="">Immigration Country</option>
+                                            @foreach (var item in Model.lstCountryByTypeOfService)
+                                            {
+                                                <option value="@item.Id" data-value="@item.Name">@item.Name</option>
+                                            }
+                                        </select>
+                                        <label for="">Immigration Country</label>
+                                        <span id="ErrorImmigrationCountry" class="text-danger"></span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-lg-12">
+                                <h2>Choose Type of Service You are Looking for</h2>
+                                <p>Where you want to get Immigrated?</p>
+
+                                <div class="col-lg-6 col-md-6">
+                                    <div class="input-group select-lang">
+                                        <select name="TypeOfServiceName" id="TypeOfServiceName" class="form-control">
+                                            <option value="">Type of immigration stream</option>
+                                        </select>
+                                        <label for="">Type of immigration stream</label>
+                                        <span id="ErrorTypeOfServiceName" class="text-danger"></span>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+
+                        <button type="submit" class="g-btn" id="btnSubmit">Update</button>
+                        <a href="@Url.ActionLink("UserProfile", "Home")" class="back-btn"><img src="~/assets/images/green-left-arrow.svg" alt="arrow">Back</a>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</section>
+
+<script>
+    $(document).ready(function () {
+
+        var communicationLanguage = "@Model.CommunicationLanguage";
+        $("#CommunicationLanguage").val(communicationLanguage);
+
+        var immigrationCountry = "@Model.ImmigrationCountry";
+        $("#ImmigrationCountry").val(immigrationCountry);
+
+        var typeofservice = "@Model.TypeOfServiceName";
+        $("#TypeOfServiceName").val(typeofservice);
+
+        var applanguage = "@Model.ApplicationLanguage";
+        $("#ApplicationLanguage").val(applanguage);
+
+        $('#ImmigrationCountry').change(function () {
+            var getCurrentVal = $("#ImmigrationCountry").val();
+            if (getCurrentVal != "0") {
+                let countryObj = {
+                    countryId: $('#ImmigrationCountry').val()
+                }
+
+                if (countryObj.countryId != "") {
+                    $.ajax({
+                        type: "POST",
+                        url: "/Home/GetServiceByCountry",
+                        data: countryObj,
+                        success: function (data) {
+                            $('#TypeOfServiceName').html('');
+                            var options = '';
+                            options += '<option value="">Type Of Immigration Stream</option>';
+                            for (var i = 0; i < data.length; i++) {
+                                options += '<option value="' + data[i].id + '">' + data[i].name + '</option>';
+                            }
+                            $('#TypeOfServiceName').append(options);
+                            var getService = '@Model.TypeOfServiceName';
+                            $("#TypeOfServiceName").val(getService);
+                            $('.clsTos').show();
+                        },
+                        error: function () {
+                            alert("Error occured!!")
+                        }
+                    });
+                }
+            }
+            else {
+                $('.clsTos').hide();
+            }
+        });
+
+
+
+        if ('@Model.lstCountryByTypeOfServiceVal' != "0") {
+            $("#ImmigrationCountry").val('@Model.lstCountryByTypeOfServiceVal');
+
+            var getCurrentVal = $("#ImmigrationCountry").val();
+
+            if (getCurrentVal != "0") {
+                let countryObj = {
+                    countryId: $('#ImmigrationCountry').val()
+                }
+
+                if (countryObj.countryId != "") {
+                    $.ajax({
+                        type: "POST",
+                        url: "/Home/GetServiceByCountry",
+                        data: countryObj,
+                        success: function (data) {
+                            $('#TypeOfServiceName').html('');
+                            var options = '';
+                            options += '<option value="">Type Of Immigration Stream</option>';
+                            for (var i = 0; i < data.length; i++) {
+                                options += '<option value="' + data[i].id + '">' + data[i].name + '</option>';
+                            }
+                            $('#TypeOfServiceName').append(options);
+                            var getService = '@Model.TypeOfServiceName';
+                            $("#TypeOfServiceName").val(getService);
+                        },
+                        error: function () {
+                            alert("Error occured!!")
+                        }
+                    });
+                }
+            }
+            else {
+                $('.clsTos').hide();
+            }
+        }
+
+        $('#btnSubmit').click(function (event) {
+
+            var isValidForm = true;
+
+            var immigrationCountry = $("#ImmigrationCountry").val();
+            var typeofservice = $("#TypeOfServiceName").val();
+            var applanguage = $("#ApplicationLanguage").val();
+
+            if (immigrationCountry === "") {
+                $("#ErrorImmigrationCountry").text("Please select an immigration country.");
+                isValidForm = false;
+            } else {
+                $("#ErrorImmigrationCountry").text("");
+            }
+
+            if (typeofservice === "") {
+                $("#ErrorTypeOfServiceName").text("Please select an type of service.");
+                isValidForm = false;
+            } else {
+                $("#ErrorTypeOfServiceName").text("");
+            }
+
+            if (applanguage === "") {
+                $("#ErrorAppLanguage").text("Please select an application language.");
+                isValidForm = false;
+            } else {
+                $("#ErrorAppLanguage").text("");
+            }
+
+            if (isValidForm) {
+                $("#UserInformationUpdateForm").submit();
+            }
+
+        });
+
+
+    });
+</script>

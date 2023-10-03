@@ -1,0 +1,25 @@
+﻿@model IMMIWeb.Service.Models.LoginViewModel
+
+<div>
+
+    @using (Html.BeginForm("SubmitMobileNumber", "UserAccount", FormMethod.Post, new { id = "ChgMobNo" }))
+    {
+        <table border="1">
+            <tr>
+                <td>Change Mobile Number</td>
+                <td>
+                    <select id="MobileCountryCode" name="MobileCountryCode">
+                        @foreach (var item in Model.lstMobile)
+                        {
+                            <option value="@item.Name">@item.Name</option>
+                        }
+                    </select>
+                </td>
+                <td><input type="text" id="Mobile" name="Mobile" placeholder="Enter Old Mobile Number"></td>
+                <td><input type="text" id="Email" name="Email"></td>
+                <td> <input type="submit" id="btnChngmobno" /></td>
+            </tr>
+        </table>
+    }
+
+</div>

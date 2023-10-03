@@ -1,0 +1,372 @@
+﻿@model IMMIWeb.Service.Models.RetainUploadDocumentViewModel
+
+<section class="mt-90 login-home">
+    <div class="container">
+        @using (Html.BeginForm("RetainUser", "Retain", FormMethod.Post, new { id = "submitForm", enctype = "multipart/form-data" }))
+        {
+            <input type="hidden" id="userDoc" name="userDoc">
+            <input type="hidden" id="cId" name="cId">
+            <input type="hidden" id="emiDates" name="emiDates">
+            <div class="row justify-content-center">
+                <div class="col-lg-12">
+                    <div class="title text-center">
+                        <h1>Document &amp; Payment</h1>
+                    </div>
+                </div>
+                <div class="col-lg-9">
+                    <div class="doc-pay">
+                        <ul class="nav nav-tabs border-0 justify-content-center" id="myTab" role="tablist">
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link active" id="home-tab" data-bs-toggle="tab" data-bs-target="#home" type="button" role="tab" aria-controls="home" aria-selected="true">1</button>
+                            </li>
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link" id="profile-tab" data-bs-toggle="tab" data-bs-target="#profile" type="button" role="tab" aria-controls="profile" aria-selected="false" tabindex="-1">2</button>
+                            </li>
+                        </ul>
+                        <div class="tab-content border-0" id="myTabContent">
+                            <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
+                                <div class="main-doc-pay-main">
+                                    <div class="doc-inner-wrap">
+                                        <div class="doc-inner">
+                                            <p class="reg-14-light">Consultant Details</p>
+                                            <p class="reg-14-dark">Unique ID: <span id="cUniqueId"></span></p>
+                                            <div class="login-home-wrap border-0 p-0">
+                                                <div class="login-img-wrap">
+                                                    <img id="cProfilePic" alt="Profile">
+                                                </div>
+                                                <div class="login-conent-wrap">
+                                                    <h3 id="cName"> </h3>
+                                                    <p class="dark-text" id="cLanguageName"></p>
+                                                    <p>Type of services</p>
+                                                    <h4 class="mb-0" id="cServiceName"></h4>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="doc-inner">
+                                            <p class="reg-14-light">Your Details</p>
+                                            <p class="reg-14-dark">Unique ID: @Model.UniqueId</p>
+                                            <div class="login-home-wrap border-0 p-0">
+                                                <div class="login-img-wrap">
+                                                    <img src="@Model.UserProfilePic" alt="Profile">
+                                                </div>
+                                                <div class="login-conent-wrap">
+                                                    <h3>@Model.UserName </h3>
+                                                    <a href="@Model.UserMobile"><h3> @Model.UserMobile </h3></a>
+                                                    <a href="mailto:@@Model.UserEmail"><h3>@Model.UserEmail</h3></a>
+                                                    <p class="dark-text">@Model.UserLanguage</p>
+                                                    <p>Type of services</p>
+                                                    <p class="dark-text">@Model.UserTypeOfService</p>
+                                                    <div class="d-lg-flex">
+                                                        <div>
+                                                            <p>Belonging Country</p>
+                                                            <p class="dark-text">@Model.UserResidenceCountry</p>
+                                                        </div>
+                                                        <div>
+                                                            <p>Belonging Country</p>
+                                                            <p class="dark-text">@Model.UserImmigrationCountry</p>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="upload-doc-wrap">
+                                        <div class="doc-inner-wrap">
+                                            <div class="doc-inner">
+                                                @*<a href="#" class="back-home-btn d-inline-block mt-3 mb-1">Upload Document</a>*@
+                                                <input type="file" class="back-home-btn d-inline-block mt-3 mb-1" id="RetainFilesUpload" name="RetainFilesUpload" multiple />
+                                                <div class="login-conent-wrap upload-wrap cancel-consultation-modal mt-3">
+                                                    <h3>Upload Document </h3>
+                                                    <p>(Photo ID, National ID, Voter ID, Passport)</p>
+                                                    <p>Notes:</p>
+                                                    <ul class="mt-2">
+                                                        <li>Document should be in JPEG, PNG, PDF or Docx</li>
+                                                        <li>Size should be less then 1MB.</li>
+                                                    </ul>
+                                                </div>
+                                            </div>
+                                            <div class="doc-inner">
+                                                <div class="login-home-wrap flex-column border-0 p-0">
+                                                    <div class="download-pdf-wrap p-0 m-0 border-0 id=" id="dvDocList">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="text-center">
+                                        <a href="#" id="next_payment" class="d-inline-block g-btn text-center">Next</a>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">
+                                <div class="text-center select-pay-type-emi-wrap">
+                                    <h3>Amount to Pay for Retention: <span>$ <p class="cssFullPaymment"></p></span> </h3>
+                                    <div class="payment-method">
+                                        <p>Select Payment Method</p>
+                                        <div class="select-call-chat pay-wrapper justify-content-between mx-auto">
+                                            <p>
+                                                <input type="radio" id="video" name="PaymentType" checked="checked" onclick="hideInputDiv();" value="1">
+                                                <label for="video">Full Payment</label>
+                                            </p>
+                                            <p>
+                                                <input type="radio" id="audio" name="PaymentType" onchange="addmentor();" value="2">
+                                                <label for="audio">3 EMI</label>
+                                            </p>
+                                        </div>
+                                    </div>
+                                    @*<div class="text-center"><a href="favorite-consultants.php" class="d-inline-block g-btn">Yes, Pay $<p class="cssFullPaymment"></p></a></div>*@
+                                </div>
+                                <div class="text-center select-pay-type-emi-wrap hidden" id="monthlyEMI">
+                                    <div class="login-home-wrap p-0 m-0 border-0 text-start emi-list-wrap">
+                                        <div class="login-conent-wrap upload-wrap cancel-consultation-modal">
+                                            <p>You have to pay only 20% of the total amount by selecting EMI option.</p>
+                                            <ul class="mt-2">
+                                                <li id="fEmi"></li>
+                                                <li id="sEmi"></li>
+                                                <li id="tEmi"></li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                    @*<div class="text-center"><a href="favorite-consultants.php" class="d-inline-block g-btn">Yes, Pay $<p class="cssEmPaymment"></p></a></div>*@
+                                </div>
+                                <div class="text-center">
+                                    <input type="button" onclick="MakePaymentFun()" id="MakePayment" class="d-inline-block g-btn">
+                                    @*                                    //<button onclick="MakePayment()" class="d-inline-block g-btn"> Yes, Pay $ <p id="amountNeedToPay"></p>  </button>*@
+                                    @*<a href="favorite-consultants.php" class="d-inline-block g-btn">Yes, Pay $ <p id="amountNeedToPay"></p> </a></div>*@
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</section>
+
+<script>
+    $(document).ready(function () {
+
+        if ('@Model.ErrorMessage'  != "" )
+        {
+            alert('@Model.ErrorMessage');
+        }
+
+        $("#RetainFilesUpload").val("");
+
+        var cId = sessionStorage.getItem("retainCid");
+
+        if(cId != ""){
+            let objPara = {
+                id: cId
+            }
+            $.ajax({
+                type: "post",
+                url: "/Home/GetConsultantDetailById",
+                data: objPara,
+                success: function (response) {
+                    var stringArray = response.split(',');
+
+                    var strId = stringArray[0];
+                    var strName = stringArray[1] + " " + stringArray[2];
+                    var strProfilePic = stringArray[3];
+                    var strLanguageName = stringArray[4];
+                    var strServiceName = stringArray[5];
+                    var strRetainAmount = stringArray[6];
+                    var strUniqueId = stringArray[7]
+
+                    $("#cName").html(strName);
+                    $("#cLanguageName").html(strLanguageName);
+                    $("#cServiceName").html(strServiceName);
+                    $('#cProfilePic').attr('src', strProfilePic);
+                    $('#cUniqueId').html(strUniqueId);
+
+                    
+
+                    ///--- ADD NEXT MONTH EMI START
+
+                    var currentDate = new Date();
+
+                    // Get the current month and year as integers
+                    var currentMonth = currentDate.getMonth()+1;
+                    var currentYear = currentDate.getFullYear();
+
+                    // Array of month names
+                    var monthNames = ["JAN", "FEB", "MAR", "APR", "MAY", "JUN", "JUL", "AUG", "SEP", "OCT", "NOV", "DEC"];
+
+                    var dateContainer = $("#dateContainer");
+                    var emiDates = "";
+
+                    // Loop to display dates for the next three months
+                    for (var i = 0; i < 3; i++) {
+                        // Format the date as "dd MON yyyy"
+                        var formattedDate = currentDate.getDate() + " " + monthNames[currentMonth] + " " + currentYear;
+
+                        // Create a new div for each date and append it to the container
+                        var dateDiv = $("<div>").text(formattedDate);
+                        dateContainer.append(dateDiv);
+
+                        if(i==0)
+                        {
+                            $("#fEmi").html(formattedDate);
+                            emiDates += formattedDate+",";
+                        }
+                        else if(i==1)
+                        {
+                            $("#sEmi").html(formattedDate);
+                            emiDates += formattedDate + ",";
+                        }
+                        else
+                        {
+                            $("#tEmi").html(formattedDate);
+                            emiDates += formattedDate;
+                        }
+
+                        // Increment the current month and adjust the year if needed
+                        currentMonth++;
+                        if (currentMonth > 11) {
+                            currentMonth = 0;
+                            currentYear++;
+                        }
+
+                        // Set the new month and year in the date object
+                        currentDate.setMonth(currentMonth);
+                        currentDate.setFullYear(currentYear);
+                    }
+
+                    sessionStorage.setItem("emiDates",emiDates);
+
+                    ///--- ADD NEXT MONTH EMI END
+
+
+                    
+
+                    $('.cssFullPaymment').text(strRetainAmount);
+                    var yourAmount = strRetainAmount;
+                    var twentyPercent = (yourAmount * 20) / 100;
+                    
+
+                    sessionStorage.setItem("FullPaymment", strRetainAmount);
+                    sessionStorage.setItem("EMIPaymment", twentyPercent.toFixed(2));
+
+
+
+                    $("#MakePayment").val("Yes, Pay $"+sessionStorage.getItem("FullPaymment"));
+
+                    $("#retainCidDiv").append('<button type="button" class="g-btn mr-20" onclick="RetainConsultant("' + strId + '")">Yes, Retain Consultant</button>');
+
+                },
+                error: function () {
+                    alert("Error occured!!")
+                }
+            });
+        }
+        else
+        {
+            var url = "/Home/UserHomeIndex";
+            window.location.href = url;
+        }
+
+        $("#RetainFilesUpload").change(function () {
+
+            const fileInput = document.getElementById("RetainFilesUpload");
+            const selectedFilesDiv = document.getElementById("selectedFiles");
+
+            var subList = '';
+
+            var validExtensions = ['jpeg', 'jpg', 'png', 'pdf', 'docx'];
+            var maxFileSize = 1024 * 1024; // 1MB in bytes
+
+            for (const file of fileInput.files) {
+
+                var fileName = file.name  //files[i].name;
+                var fileSize = file.size //files[i].size;
+                var fileExtension = fileName.split('.').pop().toLowerCase();
+
+                if ($.inArray(fileExtension, validExtensions) === -1) {
+                    toastr.warning('Invalid file type: ' + fileName);
+                    //alert('Invalid file type: ' + fileName);
+                    this.value = ''; // Clear the file input
+                    return;
+                }
+
+                if (fileSize > maxFileSize) {
+                    toastr.warning('File size too large for ' + fileName);
+                    //alert('File size too large for ' + fileName);
+                    this.value = ''; // Clear the file input
+                    return;
+                }
+
+                var formData = new FormData();
+                formData.append("file", file);
+
+
+                $.ajax({
+                    type: "post",
+                    url: "/Retain/UploadFileForRetain",
+                    data: formData,
+                    contentType: false,
+                    processData: false,
+                    success: function (response) {
+
+                        if(response != "")
+                        {
+                            subList = '<a class="myDocCss" href=' + response + ' target="_blank"><img src="../assets/images/pdf.svg">' + file.name + '<img src="../assets/images/close-gray.svg" class="cancel-btn" alt=""></a>';
+                            $("#dvDocList").append(subList);
+                            subList="";
+                        }                                               
+                    },
+                    error: function () {
+                        alert("Error occured!!")
+                    }
+                });
+
+                subList = '';
+
+                
+            }
+
+        });
+
+        $("#dvDocList").on("click", ".cancel-btn", function () {
+            //debugger;
+            $(this).closest("a").remove();
+        });
+
+        
+
+        function formatDate(date) {
+            var day = date.getDate();
+            var month = date.toLocaleString('default', { month: 'short' });
+            var year = date.getFullYear();
+
+            return day + ' ' + month + ' ' + year;
+        }
+
+    });
+
+    function MakePaymentFun() {
+        
+        var allHrefs = "";
+        $(".myDocCss").each(function () {
+            var href = $(this).attr("href");
+            allHrefs += href + ",";
+        });
+
+        var cId = sessionStorage.getItem("retainCid");
+
+        $("#userDoc").val(allHrefs);
+        $("#cId").val(cId);
+
+        var emiDatesVal = sessionStorage.getItem("emiDates");
+        $("#emiDates").val(emiDatesVal);
+
+        //alert(emiDatesVal);
+        
+        $("#submitForm").submit();
+    }
+
+
+
+
+</script>                                            

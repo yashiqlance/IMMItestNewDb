@@ -1,0 +1,415 @@
+﻿@model IMMIWeb.Service.Models.ConsultantRetainViewModel
+@using IMMIWeb.Infrastructure;
+<script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment-timezone/0.5.34/moment-timezone-with-data.min.js"></script>
+@{
+    int rankVal = 0;
+    if (Model.lstGetConsultantReviewViewModel != null && Model.lstGetConsultantReviewViewModel.Count() > 0)
+    {
+        rankVal = Model.lstGetConsultantReviewViewModel.Count() + 1;
+    }
+}
+
+<section class="login-home main-retail-section mt-90">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="title">
+                    <h1>Retain Details</h1>
+                </div>
+            </div>
+            <div class="col-lg-12">
+                <div class="login-home-wrap consultant-details-main">
+                    <div class="consultant-details-wrap">
+                        <div class="consultant-details-left">
+                            <div class="consultant-details-img-wrap">
+                                @if (Model.lstRetainDetailsAppoitment.ProfilePic != "")
+                                {
+                                    <img src="@Model.lstRetainDetailsAppoitment.ProfilePic" alt="Profile" />
+                                }
+                                else
+                                {
+                                    <img src="~/assets/images/defaultProfile.png" alt="Profile" />
+                                }
+                            </div>
+                            <div class="consultant-details-inner-wrap">
+                                <p class="dark-text mb-0">Unique ID: @Model.lstRetainDetailsAppoitment.UniqueId</p>
+                                <h2 class="mb-0">@Model.lstRetainDetailsAppoitment.FirstName  @Model.lstRetainDetailsAppoitment.LastName</h2>
+                            </div>
+                        </div>
+                        <div class="consultant-details-right d-flex wrap-main-btns">
+                            @if (Model.lstRetainDetailsAppoitment.IsFavouriteConsultant == true)
+                            {
+                                <img src="../assets/images/heart.svg" alt="heart" />
+                            }
+                            else
+                            {
+                                <img src="../assets/images/NotFavourite.svg" alt="heart" />
+                            }
+
+                            <div class="main-call-wrap">
+                                @* class="inline-icon-text"*@
+                                @if (Model.lstRetainDetailsAppoitment.CommunicationMode == "Video")
+                                {
+                                    <span class="back-home-btn d-inline-block"><img src="../assets/images/video.svg" alt="Video Call">Video</span>
+                                }
+                                else if (Model.lstRetainDetailsAppoitment.CommunicationMode == "Audio")
+                                {
+                                    <span class="back-home-btn d-inline-block"><img src="../assets/images/call.svg" alt="Audio">Audio</span>
+                                    @*<div class="back-home-btn d-inline-block"><span><img src="../assets/images/call.svg" alt="Audio Call"></span> Audio</div>*@
+                                }
+                                else
+                                {
+                                    <span class="back-home-btn d-inline-block"><img src="../assets/images/messages-2.svg" alt="chat">Chat</span>
+                                    @*<div class="back-home-btn d-inline-block"><span><img src="../assets/images/messages-2.svg" alt="Chat"></span> Chat</div>*@
+                                }
+
+                            </div>
+                        </div>
+                    </div>
+                    <div class="consultant-review-wrap">
+                        <div class="consultant-review-left">
+                            <div class="consultant-review-top">
+                                <div class="consultant-review">
+                                    <h3>
+                                        <img src="../assets/images/full-star.svg" alt="full-star"> @Model.lstRetainDetailsAppoitment.AverageRating <span>
+
+                                            @{
+                                                var reviewCountAbbreviated = "";
+                                                var reviewCount = Model.lstRetainDetailsAppoitment.ReviewCount;
+
+                                                var suffixes = new string[] { "", "k", "M", "B", "T" }; // Add more suffixes as needed
+
+                                                for (var i = 0; i < suffixes.Length; i++)
+                                                {
+                                                    if (reviewCount < 1000)
+                                                    {
+                                                        reviewCountAbbreviated = reviewCount + suffixes[i];
+                                                        break;
+                                                    }
+                                                    reviewCount /= 1000;
+                                                }
+                                            }
+                                            @Html.Raw(reviewCountAbbreviated + " Reviews")
+
+
+                                        </span>
+                                    </h3>
+                                </div>
+                                <div class="view-review">
+                                    <a href="#"><h4>Write Reviews <img src="../assets/images/down-arrow-2.svg" alt="down-arrow" /> </h4> </a>
+                                </div>
+                            </div>
+
+                            @if (Model.lstGetConsultantReviewViewModel != null && Model.lstGetConsultantReviewViewModel.Count() > 0)
+                            {
+                                <div id="reviewList">
+                                    @foreach (var item in Model.lstGetConsultantReviewViewModel)
+                                    {
+                                        <div class="login-home-wrap-main">
+                                            <div class="login-home-wrap p-0 m-0 border-0">
+                                                <div class="login-img-wrap" id="userProfileImg">
+                                                    @if (@item.ProfilePic != null && item.ProfilePic != "")
+                                                    {
+                                                        <img src="@item.ProfilePic" alt="Profile">
+                                                    }
+                                                    else
+                                                    {
+                                                        <img src="../assets/images/defaultProfile.png" alt="user" />
+                                                    }
+                                                </div>
+                                                <div class="login-conent-wrap">
+                                                    <h3>
+                                                        @item.FirstName @item.LastName
+                                                        @for (int i = 0; i < item.Rating; i++)
+                                                        {
+                                                            <img src="../assets/images/full-star.svg" alt="full-star">
+                                                        }
+                                                        @for (int i = item.Rating; i < 5; i++)
+                                                        {
+                                                            <img src="../assets/images/null-star.svg" alt="null-star">
+                                                        }
+                                                    </h3>
+                                                    <p>
+                                                        @{
+                                                            var convertfromutctolocal = TimeZoneInfo.ConvertTimeFromUtc(@item.CreatedOn, TimeZoneInfo.Local);
+                                                            var LocalTime = TimeZoneInfo.ConvertTimeBySystemTimeZoneId(convertfromutctolocal, TimeZoneInfo.Local.Id, SessionFactory.TimeZone);
+                                                            var Date = LocalTime.Date;
+                                                        }
+                                                        
+                                                        @Date.ToString("dd MMM yyyy")</p>
+                                                </div>
+                                            </div>
+                                            <p>@item.Review</p>
+                                        </div>
+                                    }
+                                </div>
+                            }
+
+                            @if (rankVal > 0)
+                            {
+                                <div class="login-home-wrap-btn text-center" id="LoadMoreHeader">
+                                    <a href="#" class="load-btn" onclick="btnLoadMore(@rankVal,@Model.lstRetainDetailsAppoitment.ConsultantId)" role="button">Load More</a>
+                                </div>
+                            }
+
+
+                        </div>
+                        <div class="consultant-review-right">
+                            <div class="login-home-wrap flex-column border-0 p-0">
+                                <div class="login-conent-wrap">
+                                    <p>Retain Duration </p>
+                                    <p class="dark-text mb-3">@Model.lstRetainDetailsAppoitment.RetainDate.ToString("dd MMM yyyy") - @Model.lstRetainDetailsAppoitment.RetainDate.AddMonths(3).ToString("dd MMM yyyy")</p>
+                                    <p>Type of services</p>
+                                    <p class="dark-text mb-3">@Model.lstRetainDetailsAppoitment.TypeofService</p>
+                                </div>
+                                <div class="download-pdf-wrap">
+                                    <p class="main-doc-title"><span>Document Status</span>Pending</p>
+                                    @if (Model.lstUserDocuments != null && Model.lstUserDocuments.Count() > 0)
+                                    {
+                                        foreach (var item in Model.lstUserDocuments)
+                                        {
+                                            <a href="#">
+                                                <img src="../assets/images/pdf.svg" alt="pdf" />@item.Filename
+                                                <img src="../assets/images/close-gray.svg" filename="@item.Filename" extension="@item.Extensions" class="cancel-btn LoadRemoveDoc" alt="">
+                                            </a>
+                                        }
+                                    }
+                                    <div id="dvDocList"></div>
+                                    <input type="file" class="back-home-btn d-inline-block mt-3 mb-1" id="RetainFilesUpload" name="RetainFilesUpload" multiple />
+                                    <div class="login-conent-wrap upload-wrap cancel-consultation-modal mt-3">
+                                        <h3>Upload Document </h3>
+                                        <p>(Photo ID, National ID, Voter ID, Passport)</p>
+                                        <p>Notes:</p>
+                                        <ul class="mt-2">
+                                            <li>Document should be in JPEG, PNG, PDF or Docx</li>
+                                            <li>Size should be less then 1MB.</li>
+                                        </ul>
+                                    </div>
+                                    @*<a href="#"><img src="./assets/images/edit.svg" class="edit-img" alt="pdf" />Edit Document</a>*@
+                                </div>
+                                @*<div class="upload-doc-wrap">
+                                <div class="doc-inner-wrap">
+                                <div class="doc-inner">
+                                <input type="file" class="back-home-btn d-inline-block mt-3 mb-1" id="RetainFilesUpload" name="RetainFilesUpload" multiple />
+                                <div class="login-conent-wrap upload-wrap cancel-consultation-modal mt-3">
+                                <h3>Upload Document </h3>
+                                <p>(Photo ID, National ID, Voter ID, Passport)</p>
+                                <p>Notes:</p>
+                                <ul class="mt-2">
+                                <li>Document should be in JPEG, PNG, PDF or Docx</li>
+                                <li>Size should be less then 1MB.</li>
+                                </ul>
+                                </div>
+                                </div>
+                                <div class="doc-inner">
+                                <div class="login-home-wrap flex-column border-0 p-0">
+                                <div class="download-pdf-wrap p-0 m-0 border-0 id=" id="dvDocList">
+                                </div>
+                                </div>
+                                </div>
+                                </div>
+                                </div>*@
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<script type="text/javascript">
+    function btnLoadMore(sCntArg, IdArg) {
+        let sCntObj = {
+            sCnt: sCntArg,
+            id: IdArg
+        }
+        console.log("sCntObj: " + sCntObj);
+
+        $.ajax({
+            type: "POST",
+            url: "/Home/ConsultantDetailLoadMore",
+            data: sCntObj,
+            success: function (data) {
+                if (data.length > 0) {
+                    var options = '';
+
+                    function getMonthName(monthIndex) {
+                        var monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+                        return monthNames[monthIndex];
+                    }
+
+                    for (var i = 0; i < data.length; i++) {
+                        var dateObj = moment.utc(data[i].createdOn, 'YYYY/MM/DD, h:mm:ss.ss A Z');
+                        var createdOnDate = dateObj._d;
+                        //var createdOnDate = new Date(data[i].createdOn);
+                        var day = createdOnDate.getDate();
+                        var month = getMonthName(createdOnDate.getMonth());
+                        var year = createdOnDate.getFullYear();
+
+                        var formattedDate = day + ' ' + month + ' ' + year;
+                        var pPic = data[i].profilePic;
+                        var avgRating = data[i].avgRating;
+                        var countRating = data[i].countRating;
+
+                        if (pPic == "") {
+                            pPic = "../assets/images/defaultProfile.png";
+                        } else {
+                            pPic = data[i].profilePic;
+                        }
+
+                        if (avgRating == "") {
+                            avgRating = "0";
+                        } else {
+                            avgRating = data[i].avgRating;
+                        }
+
+                        if (countRating == "") {
+                            countRating = "0";
+                        } else {
+                            countRating = data[i].countRating;
+                        }
+
+                        options += '<div class="login-home-wrap-main"><div class="login-home-wrap p-0 m-0 border-0"><div class="login-img-wrap" id="userProfileImg"><img src=' + pPic + ' alt="Profile" style="border-radius:50%;">  </div> <div class="login-conent-wrap"><h3 style="text-transform: capitalize;">   ' + data[i].firstName + ' &nbsp; ' + data[i].lastName + '   <img src="../assets/images/full-star.svg" alt="full-star"> </h3>    <p> ' + formattedDate + ' </p>     </div>  </div>   <p>  ' + data[i].review + '   </p>   </div> </div>';
+                    }
+                    $('#reviewList').append(options);
+
+                    $("#LoadMoreHeader").html("");
+
+                    var nextLoadCount = data[data.length - 1].rank + 1;
+
+                    var optionsCnt = '<p class="load-btn" role="button" onclick="btnLoadMore(' + nextLoadCount + ')">Load More</p>';
+                    $("#LoadMoreHeader").append(optionsCnt);
+                }
+                else {
+                    $("#LoadMoreHeader").html("");
+                    $("#LoadMoreHeader").hide();
+                }
+            },
+            error: function () {
+                alert("Error occured!!")
+            }
+        });
+    }
+
+    $("#RetainFilesUpload").change(function () {
+
+        const fileInput = document.getElementById("RetainFilesUpload");
+        const selectedFilesDiv = document.getElementById("selectedFiles");
+
+        var subList = '';
+
+        var validExtensions = ['jpeg', 'jpg', 'png', 'pdf', 'docx'];
+        var maxFileSize = 1024 * 1024; // 1MB in bytes
+
+        for (const file of fileInput.files) {
+
+
+            var fileName = file.name  //files[i].name;
+            var fileSize = file.size //files[i].size;
+            var fileExtension = fileName.split('.').pop().toLowerCase();
+
+            if ($.inArray(fileExtension, validExtensions) === -1) {
+                toastr.warning('Invalid file type: ' + fileName);
+                //alert('Invalid file type: ' + fileName);
+                this.value = ''; // Clear the file input
+                return;
+            }
+
+            if (fileSize > maxFileSize) {
+                toastr.warning('File size too large for ' + fileName);
+                //alert('File size too large for ' + fileName);
+                this.value = ''; // Clear the file input
+                return;
+            }
+
+
+            var formData = new FormData();
+            formData.append("file", file);
+
+
+            $.ajax({
+                type: "post",
+                url: "/Retain/UploadFileForRetain",
+                data: formData,
+                contentType: false,
+                processData: false,
+                success: function (response) {
+
+                    if (response != "") {
+                        //subList = '<a class="myDocCss" href=' + response + ' target="_blank"><img src="../assets/images/pdf.svg">' + file.name + '<img src="../assets/images/close-gray.svg" class="cancel-btn" alt=""></a>';
+                        subList = '<a href=' + response + '><img src="../assets/images/pdf.svg">' + file.name + '<img src = "../assets/images/close-gray.svg" filename =' + fileName + ' extension = ' + fileExtension + ' class="cancel-btn LoadRemoveDoc" alt = "" ></a>';
+
+                        $("#dvDocList").append(subList);
+                        subList = "";
+                    }
+                },
+                error: function () {
+                    alert("Error occured!!")
+                }
+            });
+
+            subList = '';
+
+
+        }
+
+    });
+
+    $("#dvDocList").on("click", ".LoadRemoveDoc", function () {
+        //debugger;
+        $(this).closest("a").remove();
+
+        //var fileName = $(this).attr("filename");  //files[i].name;
+        //var fileExtension = $(this).attr("extension");
+
+
+        //$.ajax({
+        //    type: "POST",
+        //    url: "/Retain/RemoveUserDocument",
+        //    data: { "FileName": fileName, "FileExtension": fileExtension },
+        //    success: function (response) {
+
+        //        if (response != "" && (response == true || response == "true")) {
+        //            $(this).closest("a").remove();
+        //        }
+        //    },
+        //    error: function () {
+        //        alert("Error occured!!")
+        //    }
+        //});
+
+
+
+    });
+
+    $(".LoadRemoveDoc").click(function () {
+        debugger;
+
+        var $linkToRemove = $(this).closest("a");
+        var fileName = $(this).attr("filename");  //files[i].name;
+        var fileExtension = $(this).attr("extension");
+
+
+        $.ajax({
+            type: "POST",
+            url: "/Retain/RemoveUserDocument",
+            data: { "FileName": fileName, "FileExtension": fileExtension },
+            success: function (response) {
+
+                if (response != "" && (response == true || response == "true")) {
+                    $linkToRemove.remove();
+                }
+                else {
+                    alert("Error occured!!");
+                }
+            },
+            error: function () {
+                alert("Error occured!!")
+            }
+        });
+
+        //$(this).closest("a").remove();
+    })
+
+</script>

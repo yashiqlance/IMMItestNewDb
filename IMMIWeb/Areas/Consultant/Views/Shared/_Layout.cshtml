@@ -1,0 +1,637 @@
+﻿@using IMMIWeb.Infrastructure;
+
+@{
+
+    //toastr Msg
+    string AlertMsgSuccess = string.Empty;
+    string AlertMsgFail = string.Empty;
+
+    AlertMsgSuccess = Convert.ToString(TempData["AlertMessageSuccess"]);
+    if (!string.IsNullOrEmpty(AlertMsgSuccess))
+    {
+        TempData.Remove("AlertMessageSuccess");
+    }
+
+    AlertMsgFail = Convert.ToString(TempData["AlertMessageFail"]);
+    if (!string.IsNullOrEmpty(AlertMsgFail))
+    {
+        TempData.Remove("AlertMessageFail");
+    }
+
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Advenuss.com</title>
+    <meta charset="utf-8">
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/jquery/dist/jquery.js"></script>
+    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+    <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="icon" type="image/x-icon" href="~/assets/images/favicon.ico">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/8.4.6/css/intlTelInput.css">
+    <link rel="stylesheet" href="~/assets/css/animate.css">
+    <link rel="stylesheet" href="~/assets/css/owl.carousel.css">
+    <link rel="stylesheet" href="~/assets/css/owl.theme.css">
+    <link rel="stylesheet" href="~/assets/css/bootstrap.min.css">
+    <link rel="stylesheet" href="~/assets/css/style.css">
+    <link rel="stylesheet" href="~/assets/css/responsive.css">
+    <link rel='stylesheet' href='~/assets/css/nice-select.css'>
+    <link rel="stylesheet" href="~/assets/css/nice.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
+
+    <script>
+        function googleTranslateElementInit() {
+            new google.translate.TranslateElement({
+                pageLanguage: 'en',
+                //autoDisplay: 'true',
+                includedLanguages: "en,es,ru,fr,pt",
+                layout: google.translate.TranslateElement.InlineLayout.HORIZONTAL
+            }, 'google_translate_element');
+        }
+    </script>
+    <script src='//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit'></script>
+
+
+    <style>
+        #responsiveHeaderImg img {
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            object-fit: cover;
+        }
+
+        #consultantProfilepage img {
+            border-radius: 50%;
+            width: 60px;
+            height: 60px;
+            object-fit: cover;
+        }
+
+        .header-bold {
+            font-weight: bold; /* Make the header text bold */
+        }
+
+        .notification-icon {
+            margin-right: 5px; /* Add some spacing between the icon and the header */
+            /*width: 20px !important;*/
+        }
+
+        .notification-icon-width {
+            width: 15px !important;
+        }
+
+        #userProfileImg img {
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            object-fit: cover;
+        }
+
+        #appointmentDetail img {
+            border-radius: 50%;
+            width: 90px;
+            height: 90px;
+            object-fit: cover;
+        }
+
+        #clientDetail img {
+            border-radius: 50%;
+            width: 70px;
+            height: 70px;
+            object-fit: cover;
+        }
+
+
+        #loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.8);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+        }
+
+        .spinner {
+            border: 4px solid rgba(255, 255, 255, 0.3);
+            border-top: 4px solid #14AE5C; /* Change the color to your desired loading color */
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+        }
+
+        @@keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+
+        .fixed-con {
+            z-index: 9724790009779558 !important;
+            background-color: #f7f8fc;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            overflow-y: auto;
+        }
+
+        .VIpgJd-ZVi9od-aZ2wEe-wOHMyf {
+            z-index: 9724790009779 !important;
+            top: 0;
+            left: unset;
+            right: -5px;
+            display: none !important;
+            border-radius: 50%;
+            border: 2px solid gold;
+        }
+
+        .VIpgJd-ZVi9od-aZ2wEe-OiiCO {
+            width: 80px;
+            height: 80px;
+        }
+        /*hide google translate link | logo | banner-frame */
+        .goog-logo-link, .gskiptranslate, .goog-te-gadget span, .goog-te-banner-frame, #goog-gt-tt, .goog-te-balloon-frame, div#goog-gt- {
+            display: none !important;
+        }
+
+        .goog-te-gadget {
+            color: transparent !important;
+            font-size: 0px;
+        }
+
+        .goog-text-highlight {
+            background: none !important;
+            box-shadow: none !important;
+        }
+
+        /*google translate Dropdown */
+
+        #google_translate_element select {
+            background: #fff;
+            color: #14ae5c;
+            border: none;
+            border-radius: 3px;
+            padding: 6px 8px
+        }
+
+
+        .VIpgJd-ZVi9od-l4eHX-hSRGPd {
+            display: none;
+        }
+
+        .VIpgJd-ZVi9od-ORHb-OEVmcd {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    @*Consultant*@
+    <div id="loading-overlay">
+        <div class="spinner"></div>
+    </div>
+
+    <header class="nav-down">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+                    <nav class="navbar navbar-expand-lg">
+                        @if (SessionFactory.CurrentUserId == 0)
+                        {
+                            <a class="navbar-brand" href="@Url.Action("Index", "Home", new {area = "User"})">
+                                <img src="~/assets/images/logo.svg" alt="logo" />
+                            </a>
+                        }
+                        else
+                        {
+                            <a class="navbar-brand" href="@Url.Action("Index", "ConsultantHome", new {area = "Consultant"})">
+                                <img src="~/assets/images/logo.svg" alt="logo" />
+                            </a>
+                        }
+                        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#collapsibleNavbar">
+                            <span class="navbar-toggler-icon"></span>
+                        </button>
+                        <div class="collapse navbar-collapse" id="collapsibleNavbar">
+                            <ul class="navbar-nav">
+                                <li class="nav-item">
+                                    @if (SessionFactory.CurrentUserId == 0)
+                                    {
+                                        <a class="nav-link" href="@Url.Action("Index", "Home", new {area = "User"})">Home</a>
+                                    }
+                                    else
+                                    {
+                                        <a class="nav-link" href="@Url.Action("Index", "ConsultantHome", new {area = "Consultant"})">Home</a>
+                                    }
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" href="#">Contact</a>
+                                </li>
+                                <li>
+                                    <div id="google_translate_element"></div>
+                                </li>
+                            </ul>
+                        </div>
+
+                        @if (SessionFactory.CurrentUserId != 0)
+                        {
+                            <div class="message-wrap mr-5">
+                                <a id="rssFeedLink" href="@Url.Action("GetRssFeed", "ConsultantAccount", new { Area = "Consultant" }) ">
+                                    <img src="~/assets/images/ic_newslatter.png" alt="messages" />
+                                    <span class="btn__badge pulse-button totalRSSCount">0</span>
+                                </a>
+                            </div>
+                        }
+
+                        @if (SessionFactory.CurrentUserId == 0)
+                        {
+                            <div class="dropdown-wrap">
+                                <div class="dropdown signup-dropdown">
+                                    <button class="dropdown-toggle g-btn" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+                                        <img src="~/assets/images/user.svg" alt="user" /> Sign in / up
+                                    </button>
+                                    <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                                        <li>
+                                            <a class="dropdown-item" href="@Url.Action("Login", "UserAccount", new { Area = "User" }) ">
+                                                Continue as a User
+                                                <svg width="7" height="10" viewBox="0 0 7 10" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                    <path fill-rule="evenodd" clip-rule="evenodd" d="M6.50001 4.99975C6.50001 5.25575 6.40201 5.51175 6.20701 5.70675L2.20701 9.70675C1.81601 10.0977 1.18401 10.0977 0.793006 9.70675C0.402006 9.31575 0.402006 8.68375 0.793006 8.29275L4.09801 4.98775L0.918005 1.69475C0.535005 1.29575 0.546005 0.664753 0.943005 0.280753C1.34001 -0.103247 1.97401 -0.0922471 2.35701 0.304753L6.21901 4.30475C6.40701 4.49975 6.50001 4.74975 6.50001 4.99975Z" fill="#0C3261" />
+                                                </svg>
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a class="dropdown-item" href="@Url.Action("ConsultantLogin", "ConsultantAccount", new { Area = "Consultant" })">
+                                                Continue as a Consultant
+                                                <svg width="7" height="10" viewBox="0 0 7 10" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                    <path fill-rule="evenodd" clip-rule="evenodd" d="M6.50001 4.99975C6.50001 5.25575 6.40201 5.51175 6.20701 5.70675L2.20701 9.70675C1.81601 10.0977 1.18401 10.0977 0.793006 9.70675C0.402006 9.31575 0.402006 8.68375 0.793006 8.29275L4.09801 4.98775L0.918005 1.69475C0.535005 1.29575 0.546005 0.664753 0.943005 0.280753C1.34001 -0.103247 1.97401 -0.0922471 2.35701 0.304753L6.21901 4.30475C6.40701 4.49975 6.50001 4.74975 6.50001 4.99975Z" fill="#0C3261" />
+                                                </svg>
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        }
+                        <div class="login-header">
+                            @* <select name="" id="" class="form-control">
+            <option value="">English</option>
+            <option value="">French</option>
+            <option value="">Hindi</option>
+            </select>*@
+
+                            @if (SessionFactory.CurrentUserId != 0)
+                            {
+                                <div class="message-wrap">
+                                    <a href="@Url.Action("RetainUserChat", "ConsultantChat", new { Area = "Consultant" }) ">
+                                        <img src="~/assets/images/messages.svg" alt="messages" />
+                                        <span b-3u502hqrmv="" class="btn__badge pulse-button totalUserMsgCountCls" id="totalUserMsgCount">0</span>
+                                    </a>
+                                </div>
+                                @* <div class="dropdown notification-dropdown">
+                <button class="dropdown-toggle position-relative" type="button" id="dropdownMenuButton2" data-bs-toggle="dropdown" aria-expanded="false">
+                <img src="~/assets/images/Notification.svg" alt="user" />
+                <span class="btn__badge pulse-button ">4</span>
+                </button>
+                <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton2">
+                <li><a class="dropdown-item" href="@Url.Action("ProfileDetails", "ConsultantHome", new {area = "Consultant"})">Profile</a></li>
+                <li><a class="dropdown-item" href="@Url.Action("LogOut", "UserAccount")">Logout</a></li>
+                </ul>
+                </div>*@
+                                <div class="dropdown notification-dropdown">
+                                    <button class="dropdown-toggle position-relative" type="button" id="btnConsultantNotification" data-bs-toggle="dropdown" aria-expanded="false">
+                                        <img src="~/assets/images/Notification.svg" alt="user" />
+                                        <span class="btn__badge pulse-button "></span>
+                                    </button>
+                                    <ul class="dropdown-menu" id="ulconsultantnotificationlist" aria-labelledby="dropdownMenuButton2">
+                                    </ul>
+                                </div>
+                                <div class="profile-wrap">
+                                    <button class="dropdown-toggle" type="button" id="dropdownMenuButton3" data-bs-toggle="dropdown" aria-expanded="false">
+                                        <p class="text-capitalize">@SessionFactory.CurrentUserName</p>
+                                        <div class="profile-image" id="responsiveHeaderImg">
+                                            @if (SessionFactory.CurrentUserProfilePic != null && SessionFactory.CurrentUserProfilePic != "")
+                                            {
+                                                <img src="@SessionFactory.CurrentUserProfilePic" alt="user" />
+                                            }
+                                            else
+                                            {
+                                                <img src="~/assets/images/defaultProfile.png" alt="user" />
+                                            }
+                                        </div>
+                                    </button>
+                                    <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton3">
+                                        @*<li><a class="dropdown-item" href="@Url.Action("UserProfile", "Home")">Edit Profile</a></li>*@
+                                        <li><a class="dropdown-item" href="@Url.Action("ProfileDetails", "ConsultantHome", new {area = "Consultant"})">Profile</a></li>
+                                        <li><a class="dropdown-item" href="@Url.Action("LogOut", "ConsultantAccount", new { Area = "Consultant" })">Logout</a></li>
+                                        <li><a class="dropdown-item" href="@Url.Action("AppointmentPendingList", "ConsultantAppointment", new { Area = "Consultant" })">Appointment List</a></li>
+                                        <li><a class="dropdown-item" href="@Url.Action("Clientlist", "ConsultantRetain", new { Area = "Consultant" })">Client List</a></li>
+                                        @*<li><a class="dropdown-item" href="@Url.Action("PaymentHistoryList", "ConsultantRetain", new { Area = "Consultant" })">Payment History</a></li>*@
+                                    </ul>
+                                </div>
+                            }
+
+                        </div>
+                    </nav>
+                </div>
+            </div>
+        </div>
+    </header>
+
+
+    @RenderBody()
+    @if (SessionFactory.CurrentUserId != 0)
+    {
+
+
+        <div id="videoCallModal" class="modalCall" style="display:none">
+            <div class="modal-contentCall" id="callScreen">
+                <span id="runningTimer"></span>
+            </div>
+        </div>
+
+    }
+
+    <footer>
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="footer-wrap">
+                        <div class="footer-logo text-center">
+                            <a href="index.php"><img src="~/assets/images/logo.svg" alt="logo" /></a>
+                        </div>
+                    </div>
+                    <div class="footer-menu-wrap text-center">
+                        <ul>
+                            <li>
+                                @if (SessionFactory.CurrentUserId == 0)
+                                {
+                                    <a href="@Url.Action("Index", "Home", new {area = "User"})">Home</a>
+                                }
+                                else
+                                {
+                                    <a href="@Url.Action("Index", "ConsultantHome", new {area = "Consultant"})">Home</a>
+                                }
+                            </li>
+                            <li><a href="#">Features</a></li>
+                            <li><a href="#">Overview</a></li>
+                            <li><a href="#">Contact</a></li>
+                        </ul>
+                    </div>
+                    <div class="banner-stores-wrap justify-content-center">
+                        <a href="#" class="store-img"><img src="~/assets/images/fappstore.svg" alt="appstore"></a>
+                        <a href="#" class="store-img"><img src="~/assets/images/fgoogleplay.svg" alt="googleplay"></a>
+                    </div>
+                    @if (SessionFactory.CurrentUserId != 0)
+                    {
+                        <div class="footer-menu-wrap text-center">
+                            <ul>
+                                <li><a href="@Url.ActionLink("PrivacyPolicy", "ConsultantCMS", new { Area = "Consultant" })">Privacy Policy</a></li>
+                                <li><a href="@Url.ActionLink("TermsAndCondition", "ConsultantCMS", new { Area = "Consultant" })">Terms & Conditions</a></li>
+                            </ul>
+                        </div>
+                    }
+                    <div class="copyright">
+                        <p>Copyright © Advenuss <script type="text/javascript">document.write(new Date().getFullYear());</script> | All rights reserved</p>
+                        <div class="social-wrap text-center">
+                            <ul>
+                                <li><a href="#" class="icon-wrap"><img src="~/assets/images/fb.svg" alt="fb" /></a></li>
+                                <li><a href="#" class="icon-wrap"><img src="~/assets/images/twiter.svg" alt="twiter" /></a></li>
+                                <li><a href="#" class="icon-wrap"><img src="~/assets/images/insta.svg" alt="insta" /></a></li>
+                                <li><a href="#" class="icon-wrap"><img src="~/assets/images/youtube.svg" alt="youtube" /></a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+
+    @*<script src="~/assets/js/jquery.min.js"></script>*@
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/8.4.7/js/intlTelInput.js"></script>
+    <script src="https://bittersmann.de/lib/backlink/backlink.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
+    <script src="~/assets/js/owl.carousel.js"></script>
+    <script src="~/assets/js/wow.js"></script>
+    <script src="~/assets/js/custom.js"></script>
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/jquery-nice-select/1.1.0/js/jquery.nice-select.min.js'></script>
+    <script src="~/assets/js/nice.js"></script>
+    <script src="~/assets/js/custom.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootbox.js/5.5.2/bootbox.min.js"></script>
+
+
+    <script type="text/javascript" src="https://unpkg.com/@@cometchat-pro/chat@3.0.11/CometChat.js"></script>
+    <script src="~/js/cchat.js"></script>
+
+
+</body>
+</html>
+
+<script>
+
+    var element = document.querySelector('.skiptranslate.goog-te-gadget');
+    if (element) {
+        var textContent = element.textContent;
+        console.log(textContent);
+    } else {
+        console.log("Element with class 'skiptranslate goog-te-gadget' not found.");
+    }
+
+</script>
+
+<script>
+    var previousCount = 0;
+
+    $('#loading-overlay').fadeOut();
+
+    toastr.options = {
+        positionClass: 'toast-top-right',
+        timeOut: 5000,
+        showMethod: 'fadeIn',
+        hideMethod: 'fadeOut',
+        closeButton: true
+    };
+
+    // Toastr Msg
+    var AlertMsgSuccess = '@AlertMsgSuccess';
+    var AlertMsgFail = '@AlertMsgFail';
+
+    if (AlertMsgSuccess !== "") {
+        toastr.success('@Html.Raw(AlertMsgSuccess)');
+    }
+    if (AlertMsgFail !== "") {
+        toastr.error('@Html.Raw(AlertMsgFail)');
+    }
+
+    if ('@SessionFactory.CometChatUid' != "" && sessionStorage.getItem("isUserSessionLogin") == null) {
+
+        //let APP_ID = '@Convert.ToString(new ConfigurationBuilder().AddJsonFile("appsettings.json").Build().GetSection("CometChatSettings")["AppId"])';
+        //var AUTH_KEY = '@Convert.ToString(new ConfigurationBuilder().AddJsonFile("appsettings.json").Build().GetSection("CometChatSettings")["AppToken"])';
+
+        var UID = '@SessionFactory.CometChatUid';
+        var varSessionCommetChatUserList = '@SessionFactory.SessionCommetChatUserList';
+        sessionStorage.setItem("UID", UID);
+        sessionStorage.setItem("userChatCntList", varSessionCommetChatUserList);
+
+        CometChatInitialization();
+    }
+
+    $('#btnConsultantNotification').click(function () {
+        // debugger;
+        ConsultantNotificationList();
+    });
+
+    function ConsultantNotificationList() {
+        // debugger;
+        $.ajax({
+            type: "GET",
+            url: '@Url.Action("ConsultantNotificationList", "ConsultantHome")',
+            //data: { "Email": param },
+            success: function (data) {
+                //debugger;
+                if (data.length != 0) {
+                    // $("#btnConsultantNotification").attr("data-bs-toggle", "dropdown");
+                    $('#ulconsultantnotificationlist').html('');
+                    var options = '';
+                    for (var i = 0; i < data.length; i++) {
+                        // options += '<li><a class="dropdown-item" title = "' + data[i].header + '" >"' + data[i].body + '"</a></li> ';
+
+                        var parts = data[i].createdOn.split("T");
+                        if (parts.length === 2) {
+                            var timePart = parts[1];
+                            var timeParts = timePart.split(":");
+                            if (timeParts.length >= 1) {
+                                var hours = parseInt(timeParts[0]);
+                            }
+                        }
+
+
+                        // var dateObj =  moment.utc(data[i].createdOn, 'YYYY/MM/DD, h:mm:ss.ss A Z');
+                        if (data[i].notificationTypeName === 4) {
+                            options += '<li><a class="dropdown-item" title="' + data[i].header + '">' +
+                                '<span class="notification-icon"><img src="/assets/images/Notification-2.svg" class="notification-icon-width" alt="Notification Icon"/></span>  ' + '<span class="header-bold">' + data[i].header + '</span>  ' + '<span style=" margin-left: 70px;">' + hours + '</span>  ' + 'h' + '<br>' + '<span style=" margin-left: 39px;">' + data[i].body + '</span>  ' + '<br>' + '<button style="margin-left:39px;" type="button" notificationid =' + data[i].id + ' userid =' + data[i].senderId + ' consultantid =' + data[i].receiverId + ' class="btnLikeUser">Accept</button>' + '</a></li>';
+                        }
+                        else {
+                            options += '<li><a class="dropdown-item" title="' + data[i].header + '">' +
+                                '<span class="notification-icon"><img src="/assets/images/Notification-2.svg" class="notification-icon-width" alt="Notification Icon"/></span>  ' + '<span class="header-bold">' + data[i].header + '</span>  ' + '<span style=" margin-left: 70px;">' + hours + '</span>  ' + 'h' + '<br>' + '<span style=" margin-left: 39px;">' + data[i].body + '</span>  ' + '</a></li>';
+                        }
+
+                    }
+                    $('#ulconsultantnotificationlist').append(options);
+                }
+                else {
+                    $('#ulconsultantnotificationlist').html('');
+                }
+
+            },
+            error: function () {
+                toastr.error('Error occured!!');
+            }
+        });
+    }
+
+    function updateConsultantNotificationCount() {
+        //debugger;
+        $.ajax({
+            url: '@Url.Action("GetNotificationCount", "ConsultantHome")',
+            type: 'GET',
+            success: function (data) {
+                $('#btnConsultantNotification .btn__badge').text(data);
+                setTimeout(updateConsultantNotificationCount, 5000); // Call again after 5 seconds
+            },
+            error: function (xhr, status, error) {
+                console.log("AJAX Error:", error); // Log any AJAX errors for debugging
+            }
+        });
+    }
+    updateConsultantNotificationCount();
+
+    $('#ulconsultantnotificationlist').on('click', '.btnLikeUser', function (event) {
+        debugger;
+        // Your event handling code here
+        //alert("hi");
+        alert("call");
+
+        var userid = event.currentTarget.getAttribute('userid');
+        var notificationid = event.currentTarget.getAttribute('notificationid');
+        var consultantid = event.currentTarget.getAttribute('consultantid');
+
+        $.ajax({
+            type: "POST",
+            url: '@Url.Action("SocialSendNotificationtoUser", "ConsultantHome")',
+            data: { "UserId": userid, "ConsultantId": consultantid, "NotificationId": notificationid },
+            success: function (response) {
+                debugger;
+                if (response == true || response == "true") {
+                    toastr.success('Notification Send Successfully to User');
+                }
+                else {
+                    toastr.error('Notification not send Successfully to User');
+                }
+            },
+            error: function () {
+                toastr.error('Error occured!!');
+            }
+        });
+
+
+
+    });
+
+
+    function updateRSSNotificationCount() {
+        //debugger;
+        let readCnt = '';
+        $.ajax({
+            url: '@Url.Action("GetRSSNotificationCount", "ConsultantAccount")',
+            type: 'GET',
+            success: function (data) {
+                //debugger;
+                if (data > 0) {
+                    readCnt = localStorage.getItem("readCount");
+                    var newCount = data - readCnt;
+
+                    if (newCount > 0) {
+                        $('.totalRSSCount').text(newCount);
+                    } else {
+                        $('.totalRSSCount').text('0');
+                    }
+                    previousCount = data;
+                }
+                setTimeout(updateRSSNotificationCount, 15000); // Call again after 5 seconds
+            },
+            error: function (xhr, status, error) {
+                console.log("AJAX Error:", error); // Log any AJAX errors for debugging
+            }
+        });
+    }
+    updateRSSNotificationCount();
+
+    // Add a click event handler to reset the count to 0 when the image link is clicked
+    $('#rssFeedLink').on('click', function () {
+        //debugger;
+        localStorage.setItem("readCount", previousCount)
+        //readCount = previousCount;
+
+        previousCount = 0; // Reset the count to 0
+        $('.totalRSSCount').text(previousCount);
+
+    });
+
+
+</script>

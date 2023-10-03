@@ -1,0 +1,925 @@
+@media only screen and (max-width:1469px) {
+    .signin-section {
+        padding: 45px 0 70px;
+    }
+    h1 {
+        font-size: 50px; 
+    }
+    .discover-wrap {
+        top: 50px;
+    }
+    .banner {
+        padding: 150px 0 0;
+    }
+    .signin-section .signin-wrap {
+        padding: 40px 30px;
+    }
+    .lost-mobile-wrap {
+        margin: 0px 0 25px;
+    }
+    .otp-verification-wrap input {
+        margin: 0 8px;
+    }
+
+    .main-retail-section .consultant-details-right {
+        width: 35%;
+    }
+    .btn-box .g-btn, .btn-box .decline-btn{
+        min-width: 120px;
+    }
+}
+/*@media only screen and (max-width: 1399px) {
+    .signin-section .signin-wrap {
+        padding: 70px 55px 45px;
+    }
+}*/
+@media only screen and (max-width:1199px) {
+   
+    .section-of-book-con .consultant-review-wrap {
+        flex-wrap: wrap;
+        max-width: 100%;
+    }
+    .doc-inner {
+        width: 100%;
+    }
+    .doc-pay {
+        padding: 25px 20px;
+    }
+    .section-of-book-con .select-time-date > div {
+        width: 50%;
+    }
+    .section-of-book-con .select-time-date > div:last-child {
+        width: 100%;
+    }
+    .main-retail-section .consultant-details-right {
+        width: 35%;
+    }
+    .add-new-card-main {
+        padding-left: 20px;
+    }
+    .navbar-nav {
+        margin-left: 25px;
+    }
+    h1 {
+        font-size: 45px;
+    }
+    .banner-content p {
+        margin: 15px 0 30px;
+    }
+    .banner {
+        padding: 140px 0 0;
+    }
+    .store-img img {
+        max-width: 155px;
+    }
+    .discover-wrap {
+        top: 20px;
+    }
+    .discover-wrap img {
+        max-width: 55px;
+        margin-right: 5px;
+    }
+    .discover-wrap p {
+        font-size: 14px;
+    }
+    p{
+        font-size: 16px;
+    }
+    .logo-image-wrap {
+        padding: 13px 16px;
+        margin: 60px 0 10px;
+        height: 80px;
+    }
+    .features-section {
+        padding: 55px 0 40px;
+    }
+    h2 {
+        font-size: 35px;
+    }
+    .feature-content > p {
+        margin-bottom: 35px;
+    }
+    .feature-content h2 {
+        margin-bottom: 15px;
+    }
+    .features-inner {
+        width: 48%;
+        flex-direction: column;
+        margin-bottom: 5px;
+    }
+    .features-list-content {
+        margin-left: 0;
+        margin-top: 15px;
+    }
+    .feature-image img {
+        max-width: 335px;
+    }
+    .app-lang-wrap {
+        padding: 60px 70px 75px;
+    }
+    #nav-mobile-number .signin-wrap {
+        max-width: 500px;
+    }
+    .main-tab-section .title {
+        margin-bottom: 20px;
+    }
+    .about-inner {
+        padding: 40px 46px 35px;
+    }
+    .contact-wrap {
+        padding: 40px 47px 47px;
+    }
+    .privacy-num-wrap {
+        padding: 30px 36px;
+    }
+     .veryfy-num-otp{
+        padding: 40px 30px !important;
+    }
+    .calendar-select ul li{
+        padding: 0 6px;
+    }
+    .btn-box .g-btn, .btn-box .decline-btn{
+        min-width: 95px;
+    }
+    .consultant-profile .edit-profile-wrap {
+        padding: 20px;
+    }
+}
+@media only screen and (max-width:991px) {
+    .edit-doccumnet-section .consultant-review-right {
+        width: 47%;
+    }
+    .main-retail-section .consultant-details-right a {
+        font-size: 0;
+    }
+    .main-retail-section .consultant-details-right a img {
+        margin: 0;
+    }
+    .main-retail-section .consultant-review-left {
+        width:100%;
+    }
+    .main-retail-section .consultant-review-right {
+        width:100%;
+    }
+    
+    .app-lang-wrap {
+        padding: 50px 100px 45px;
+    }
+    .profile-wrap .dropdown-toggle p {
+        display: none;
+    }
+    .title {
+        margin-bottom: 37px;
+    }
+    .easy-use-wrap {
+        margin-top: 35px;
+    }
+    .faq-section {
+        padding: 60px 0;
+    }
+    .faq-content {
+        margin-bottom: 50px;
+    }
+    .faq-content p {
+        margin: 15px 0 25px;
+    }
+    .how-work-slider-section {
+        padding: 65px 0 70px;
+    }
+    .easy-use-section .row {
+        flex-direction: column-reverse;
+    }
+    .easy-use-wrap {
+        margin-bottom: 50px;
+    }
+    .signup-dropdown button {
+        border: none;
+        padding: 7px 14px;
+    }
+    
+    .feature-image {
+        text-align: center;
+        margin-bottom: 30px;
+    }
+    h2 {
+        font-size: 28px;
+    }
+    .feature-content h2 {
+        margin-bottom: 10px;
+    }
+    .feature-content > p {
+        margin-bottom: 25px;
+    }
+    .features-list-content h3 {
+        font-size: 18px;
+    }
+    h1 {
+        font-size: 33px;
+    }
+    .banner-content p {
+        margin: 12px 0 20px;
+    }
+    .banner-content {
+        top: 0;
+    }
+    .store-img img {
+        max-width: 130px;
+    }
+    .store-img {
+        margin-right: 15px;
+    }
+    .logo-image-wrap {
+        height: 70px;
+    }
+    .features-icon {
+        width: 50px;
+        height: 50px;
+        padding: 11px;
+    }
+    .features-list-content p {
+        max-width: 100%;
+    }
+    .features-list-content {
+        width: 100%;
+    }
+   
+    .signin-section {
+        padding: 45px 0 45px;
+    }
+    .navbar-toggler {
+        position: absolute;
+        right: 0;
+        border: none;
+        padding: 0;
+        top: 27px;
+    }
+    .write-review-modal .signin-wrap {
+        max-width: 100%;
+        margin: 0;
+    }
+    .cancel-appointment-modal .modal-content {
+        padding: 40px 30px 30px;
+    }
+    .modal-content h2 {
+        font-size: 21px;
+    }
+    header .dropdown-wrap {
+        position: absolute;
+        right: 30px;
+        top: 20px;
+    }
+    .login-header {
+        position: absolute;
+        right: 31px;
+        top: 20px;
+    }
+    .profile-wrap img {
+        margin: 0 5px 0 0px
+    }
+    .container {
+        max-width: 100% !important;
+    }
+
+    .main-tab-section {
+        padding: 50px 0;
+    }
+
+    .tabs-container {
+        position: relative;
+        height: 4em;
+      }
+      
+      .tabs-container nav {
+        position: absolute;
+        width: 100%;
+        top: 0;
+        z-index: 99;
+      }
+      
+      .tabs-container nav .mobile-tabs {
+        display: flex;
+        flex-direction: column;
+        padding: 0 20px;
+      }
+      
+      .tabs-container nav .mobile-tabs .nav-link {
+        order: 1;
+        padding: 15px 0;
+      }
+      
+      .tabs-container nav .mobile-tabs .nav-link.active {
+        order: 0;
+      }
+      
+      .tabs-container nav .mobile-tabs .nav-link.active:after {
+        width: 1px;
+        height: 1px;
+        border: 5px solid transparent;
+        border-top: 5px solid #555;
+        content: "";
+        position: absolute;
+        top: 50%;
+        z-index: 9999;
+        transform: translateY(-50%);
+        right: 0;
+      }
+      
+      .tabs-container nav .mobile-tabs .nav-link:not(.active) {
+        position: absolute;
+        top: -999em;
+      }
+      
+      .tabs-container nav .mobile-tabs.expanded .nav-link.active:after {
+        border-top-color: transparent;
+        border-bottom-color: #555;
+        top: 50%;
+        transform: translateY(-50%);
+      }
+      
+      .tabs-container nav .mobile-tabs.expanded .nav-link:not(.active) {
+        position: relative;
+        top: auto;
+      }
+      .edit-lang-main-wrap {
+        max-width: 100%;
+      }
+      .section-of-book-con .select-call-chat p {
+        width: 100%;
+      }
+      .section-of-book-con .select-call-chat {
+        flex-direction: column;
+      }
+      .section-of-book-con .consultant-details-left {
+        width: 100%;
+      }
+      .section-of-book-con .consultant-details-right {
+            width: 100%;
+            text-align: left;
+      }
+      .mt-90 {
+        margin-top: 47px;
+    }
+    .message-section .nav .nav-link{
+        padding: 15px 15px;
+    }
+    .right-side-area.line-after::after{
+        display: none;
+    }
+    .calendar {
+      max-width: 300px;
+      margin: 15px auto;
+    }
+    .type-services, .time-slot {
+        padding: 30px;
+    }
+    .time-slot .line-after::after{
+        display: none;
+    }
+    .btn-box .g-btn, .btn-box .decline-btn{
+    width: auto;
+   }
+
+}
+
+@media only screen and (max-width: 767px) {
+    .doc-inner-wrap {
+        flex-direction: column;
+    }
+    .select-pay-type-emi-wrap h3 {
+        font-size: 20px;
+    }
+    .section-of-book-con .select-time-date > div {
+        width: 100%;
+    }
+    .section-of-book-con .consultant-details-wrap {
+        flex-direction: column;
+    }
+    ..section-of-book-con .consultant-review-left ,
+    ..section-of-book-con .consultant-review-right {
+        width: 100%;
+    }
+    .consultant-details-section-main-wrap .consultant-review-wrap {
+        flex-direction: column;
+    }
+    .consultant-details-section-main-wrap .consultant-review-left ,
+    .consultant-details-section-main-wrap .consultant-review-right {
+        width: 100%;
+    }
+    .consultant-details-wrap {
+        padding: 20px !important;
+    }
+    .consultant-details-section-main-wrap  .consultant-details-wrap {
+        flex-direction: column;
+    }
+    .consultant-details-section-main-wrap .consultant-details-left,
+    .consultant-details-section-main-wrap .consultant-details-right {
+        width: 100%;
+        text-align: left;
+        margin-bottom: 5px;
+    }
+    .main-retail-section .consultant-review-wrap {
+        flex-direction: column;
+    }
+    .edit-doccumnet-section .consultant-review-wrap {
+        flex-direction: column;
+    }
+    .edit-doccumnet-section .consultant-review-left {
+        width: 100%;
+    }
+    .edit-doccumnet-section .consultant-review-right {
+        width: 100%;
+    }
+    .veryfy-num-otp {
+        padding: 50px 80px !important;
+    }
+    .my-card-add-card .signin-wrap {
+        max-width: 100%;
+        border: none;
+        margin-top: 30px;
+        padding-left: 0;
+    }
+    .my-card-add-card .my-card-wrap {
+        padding: 35px 30px;
+    }
+    .veryfy-num-otp p {
+        margin-bottom: 0px;
+    } 
+    .veryfy-num-otp .otp-verification-wrap {
+        margin: 32px 0 !important;
+    }
+    .easy-use-section {
+        padding: 70px 0 15px;
+    }
+    .copyright {
+        flex-direction: column-reverse;
+    }
+    .copyright p {
+        margin-bottom: 8px !important;
+        font-size: 14px;
+        text-align: center;
+    }
+    .navbar-nav {
+        margin-left: 0;
+    }
+    .navbar-nav {
+        border-top: 1px solid #ccc;
+        padding:15px 0;
+        margin-top: 8px;
+    }
+    .navbar-nav.menu li{
+        padding: 5px 0;
+    }
+    .signup-dropdown .dropdown-menu{
+        width: 260px;
+    }
+    .signup-dropdown .dropdown-menu.show{
+        padding: 15px 18px;
+    }
+    .banner {
+        padding: 120px 0 0;
+    }
+    .v-call-wrap .modal-content {
+        padding: 35px 28px 36px;
+    }
+    .extend-call-wrap .modal-content {
+        padding: 42px 34px 40px;
+    }
+    .book-appointment-modal .modal-content {
+        padding: 30px 15px 25px;
+    }
+    .app-lang-wrap {
+        padding: 50px 50px 45px;
+    }
+    .help-wrap {
+        padding: 30px;
+    }
+    ol, ul {
+        padding-left: 0;
+    }
+    #nav-mobile-number {padding: 30px;}
+    .edit-lang-main-wrap h2 {margin-top: 20px;}
+    .edit-lang-main-wrap {padding: 36px 24px 41px;}
+    .edit-lang-main-wrap .select-country p {
+        width: 100%;
+    }
+    .dropdown.notification-dropdown .dropdown-menu.show{
+        left: auto;
+        width: 300px;
+        margin: 0 auto;
+        padding: 10px 0;
+        right: -70px;
+    }
+    .incoming-call-modal .modal-content, .retain-consultant .modal-content{
+        padding: 25px;
+    }
+    .incoming-call-modal .signin-wrap .g-btn{
+        min-width: 125px;
+    }
+    .video-call .video-action ul li{
+        margin-right: 15px;
+    }
+    .video-call .video-conversarion-person{
+        right: 30px;
+        max-width: 200px;
+    }
+    .video-call .call-duration{
+        left: 30px;
+    }
+    .audio-call .audio-conversation img {
+            max-width: 170px;
+    }
+    .audio-call .audio-conversation h3{
+        font-size: 25px;
+        line-height: 28px;
+    }
+    .message-section .nav{
+        margin-bottom: 20px;
+    }
+    .signin-img {
+        display: none;
+    }
+    .box-wrapper .select-country p {
+      width: 100%;
+    }
+    .line-after::after{
+        display: none;
+    }
+    .box-wrapper {
+      padding: 20px;
+    }
+     .document-list {
+      margin: 25px 0;
+      border-top: 1px solid #EBE9F5;
+      border-bottom: 1px solid #EBE9F5;
+    }
+
+
+}
+@media only screen and (max-width: 576px) {
+    .main-retail-section .consultant-details-wrap{
+        flex-direction: column;
+    }
+    .main-retail-section .consultant-details-left {
+        width: 100%;
+    }
+    .main-retail-section .consultant-details-right {
+        width: 100%;
+        margin-top: 20px;
+    }
+    .consultation-booked-section-main .login-home-wrapper-main {
+        flex-direction: column;
+    }
+    .consultation-booked-section-main .login-home-wrap {
+        width: 100% !important;
+        margin-bottom: 0 !important;
+        flex-direction: column;
+        padding: 0;
+    }
+    .consultation-booked-section-main .login-conent-wrap {
+        width: 100%;
+        margin-top: 20px;
+    }
+    .consultation-booked-section-main  .right-side-review-content {
+        width: 100%;
+        margin-bottom: 0;
+    }
+    .consultation-booked-section-main .rating-wrapper {
+        justify-content: flex-start;
+    }
+    .banner-image {
+        margin-top: 20px;
+    }
+    .logo-image-wrap {
+        margin: 50px 0 10px;
+    }
+    .signin-section .signin-wrap {
+        padding: 50px 48px 30px;
+    }
+    .signin-section {
+        padding: 45px 0 50px;
+    }
+    .signup-dropdown button {
+        font-size: 0;
+        padding: 10px 15px;
+    }
+    .signup-dropdown button img {
+        margin-right: 0;
+    }
+    .how-work-image-wrap {
+        text-align: center;
+    }
+    .how-work-image-wrap > img {
+        max-width: 320px;
+        margin: 0 auto;
+    }
+    .easy-use-section {
+        padding: 50px 0 0px;
+    }
+    .features-section {
+        padding: 40px 0 25px;
+    }
+    .how-work-slider-section {
+        padding: 45px 0 50px;
+    }
+    .faq-content p {
+        margin: 10px 0 15px;
+    }
+    .faq-section {
+        padding: 36px 0 50px;
+    }
+    #accordionExample {
+        margin-top: 30px;
+    }
+    #accordionExample .accordion-button {
+        padding: 10px 20px;
+    }
+    .client-slider .owl-dots {
+        margin-top: 25px !important;
+    }
+    .client-wrap {
+        margin: 35px 5px 24px;
+    }
+    .title {
+        margin-bottom: 30px;
+    }
+    .easy-use-wrap h2 {
+        margin-bottom: 15px;
+    }
+    .easy-use-wrap {
+        margin-top: 24px;
+    }
+    .easy-use-wrap .g-btn {
+        margin-top: 10px;
+    }
+    .footer-menu-wrap ul li a {
+        margin: 0 10px;
+    }
+    footer {
+        padding: 40px 0 0;
+    }
+    .footer-menu-wrap {
+        margin: 15px 0 25px;
+    }
+    .social-wrap {
+        margin: 25px 0 30px;
+    }
+    .easy-use-video button {
+        width: 45px;
+        height: 45px;
+    }
+    .signin-wrap .input-group {
+        margin-bottom: 10px;
+    }
+    .lost-mobile-wrap {
+        margin: 0 0 25px;
+    }
+    .main-tab-section .title h2 {
+        font-size: 20px;
+    }
+    .change-num-wrap .g-btn {
+        margin-top: 20px;
+    }
+    #accordionExample .accordion-button {
+        padding: 10px;
+        font-size: 13px;
+    }
+    #nav-help .accordion-body {
+        padding: 14px;
+    }
+    .accordion-body p {
+        font-size: 12px;
+    }
+    #accordionExample {
+        margin-top: 20px;
+    }
+    .help-wrap {
+        padding: 20px;
+    }
+    .change-num-wrap h1 {
+        margin-bottom: 20px;
+    }
+    .contact-wrap {
+        padding: 20px;
+    }
+
+    .msg-submitted-modal img {
+        max-width: 100px;
+    }
+    .extend-call-wrap h2 {
+        font-size: 18px;
+    }
+    .btn-close {
+        width: 20px;
+        height: 20px;
+    }
+
+    .edit-btn {
+        padding: 12px 30px;
+    }
+
+    .edit-profile-wrap{
+        padding: 30px 45px 25px;
+    }
+    .edit-profile-wrap-list li {
+        padding: 10px 0;
+    }
+    .profile-edit {
+        padding: 25px 30px 40px;
+    }
+    .form-control {
+        padding: 9px 10px;
+        font-size: 14px;
+    }
+    .fgd.form-control {
+         padding: 12px 22px 12px 18px;
+        
+    }
+    .edit-image {
+        right: 11px;
+        max-width: 15px;
+    }
+    .check-your-main-modal p {
+        font-size: 14px;
+    }
+    .signin-wrap .g-btn {
+        padding: 9px 20px;
+    }
+    .profile-section {
+        padding: 30px 0;
+    }
+    .signin-section .signin-wrap {
+        padding: 40px 25px;
+        max-width: 400px;
+        margin: 0 auto;
+    }
+    .continuewith-main > p::before,
+    .continuewith-main > p::after{
+        width: 55px;
+    }
+    .signin-wrap h1 {
+        font-size: 22px;
+    }
+    .yes-no-btn-wrap a {
+        padding: 6px 20px;
+    }
+    .yes-no-btn-wrap {
+        margin-top: 20px;
+    }
+    .consultation-booked-section .nav-item {
+        width: 100%;
+    }
+    .consultation-booked-section .nav-item .nav-link {
+        width: 100%;
+        text-align: center;
+    }
+
+    .ui-widget.ui-widget-content {
+        left: 30px !important;
+    }
+    .doc-inner .login-home-wrap{
+        flex-direction: column;
+    }
+    .consultation-booked-section .nav-link{
+        padding: 12px !important;
+    }
+    .appointment-detail .login-conent-wrap .c-item,
+    .appointment-detail .login-conent-wrap{
+        width: 100%;
+        display: block;
+    }
+    .calendar-select ul li{
+        padding: 0 4px;
+    }
+}
+
+@media only screen and (max-width: 479px) {
+    .my-card-wrap h2 {
+        margin-bottom: 25px;
+    }
+    .features-inner {
+        width: 100%;
+    }
+    .footer-menu-wrap ul li a {
+        margin: 0 4px;
+        font-size: 15px;
+    }
+    .signup-dropdown button {
+        padding: 7px 10px;
+    }
+    .how-work-image-wrap > img {
+        max-width: 180px;
+    }
+    .app-lang-wrap {
+        padding: 20px 20px 5px;
+    }
+    [type="radio"]:checked + label, [type="radio"]:not(:checked) + label {
+        padding: 11px 12px;
+        font-size: 14px;
+    }
+    .tab-pane h1 {
+        font-size: 21px;
+    }
+    /*.nav.nav-tabs {
+        padding: 0 20px;
+    }*/
+    .nav.nav-tabs .nav-link {
+        padding: 13px 15px;
+    }
+    .message-wrap {
+        width: 20px;
+        height: 20px;
+    }
+    .login-header .form-control {
+        padding: 5px 8px;
+        font-size: 12px;
+    }
+    .dropdown.notification-dropdown button {
+        width: 20px;
+        height: 20px;
+    }
+    .btn__badge {
+        top: 1px;
+        right: 11px;
+        height: 17px;
+        padding: 1px 4px;
+        font-size: 10px;
+    }
+    .navbar-brand img {
+        max-width: 45px;
+    }
+    .header-lag-select::after {
+        width: 9px;
+        height: 9px;
+    }
+    .profile-wrap img {
+        max-width: 29px;
+    }
+    .dropdown.notification-dropdown {
+        margin: 0 0px 0 12px;
+    }
+    .navbar-toggler-icon {
+        width: 1em;
+        height: 1em;
+    }
+    .navbar-toggler {
+        top: 23px;
+    }
+    .profile-wrap .dropdown-toggle::after {
+        width: 8px;
+        font-size: 0;
+        height: 7px;
+    }
+    .login-header {
+        right: 21px;
+        top: 18px;
+    }
+    .profile-wrap .dropdown-menu li a {
+        padding: 8px 0 !important;
+    }
+    .profile-wrap .dropdown-menu li {
+        padding: 0 11px;
+    }
+    .profile-wrap .dropdown-menu li a {
+        font-size: 13px;
+    }
+    .header-lag-select {
+        margin-right: 10px;
+    }
+    .main-tab-section {
+        padding: 30px 0;
+    }
+    .about-inner {
+        padding: 25px 26px 25px;
+    }
+    .about-inner p {
+        margin-bottom: 20px;
+    }
+    .edit-profile-wrap {
+        padding: 20px 25px 15px;
+    }
+    .profile-edit {
+        padding: 15px 15px 20px;
+    }
+    .veryfy-num-otp {
+        padding: 40px 25px !important;
+    }
+    .veryfy-num-otp .otp-verification-wrap {
+        margin: 25px 0 !important;
+    }
+    .change-num-wrap .g-btn {
+        margin: 10px 0 21px !important;
+    }
+    .fav-con-sec .login-home-wrap {
+        flex-direction: column;
+    }
+    .fav-con-sec .login-conent-wrap {
+        width: 100%;
+        margin-top: 10px;
+    }
+    .yes-no-btn-wrap {
+        flex-direction: column;
+    }
+    .yes-no-btn-wrap a {
+        margin-bottom: 5px;
+    }
+}

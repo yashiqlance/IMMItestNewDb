@@ -1,0 +1,381 @@
+﻿@model IMMIWeb.Service.Models.UserHomeViewModel
+@using IMMIWeb.Infrastructure;
+@{
+    int rankVal = 0;
+    if (Model != null && Model.lstModelConsultant.Count() > 0)
+    {
+        rankVal = Model.lstModelConsultant.Count() + 1;
+    }
+}
+
+
+<section class="login-home fav-con-sec mt-90">
+    <div class="upcoming-app">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="title">
+                        <h2>Upcoming Appointments</h2>
+                    </div>
+                </div>
+                @if (Model.lstModelAppoitment != null && Model.lstModelAppoitment.Count() > 0)
+                {
+                    foreach (var item in Model.lstModelAppoitment)
+                    {
+
+                        string bookingTime = "";
+                        @*if (item.BookingTime == 0) { bookingTime = "00 AM - 01 AM"; }
+                else if (item.BookingTime == 1) { bookingTime = "01 AM - 02 AM"; }
+                else if (item.BookingTime == 2) { bookingTime = "02 AM - 03 AM"; }
+                else if (item.BookingTime == 3) { bookingTime = "03 AM - 04 AM"; }
+                else if (item.BookingTime == 4) { bookingTime = "04 AM - 05 AM"; }
+                else if (item.BookingTime == 5) { bookingTime = "05 AM - 06 AM"; }
+                else if (item.BookingTime == 6) { bookingTime = "06 AM - 07 AM"; }
+                else if (item.BookingTime == 7) { bookingTime = "07 AM - 08 AM"; }
+                else if (item.BookingTime == 8) { bookingTime = "08 AM - 09 AM"; }
+                else if (item.BookingTime == 9) { bookingTime = "09 AM - 10 AM"; }
+                else if (item.BookingTime == 10) { bookingTime = "10 AM - 11 AM"; }
+                else if (item.BookingTime == 11) { bookingTime = "11 AM - 00 PM"; }
+                else if (item.BookingTime == 12) { bookingTime = "00 PM - 01 PM"; }
+                else if (item.BookingTime == 13) { bookingTime = "01 PM - 02 PM"; }
+                else if (item.BookingTime == 14) { bookingTime = "02 PM - 03 PM"; }
+                else if (item.BookingTime == 15) { bookingTime = "03 PM - 04 PM"; }
+                else if (item.BookingTime == 16) { bookingTime = "04 PM - 05 PM"; }
+                else if (item.BookingTime == 17) { bookingTime = "05 PM - 06 PM"; }
+                else if (item.BookingTime == 18) { bookingTime = "06 PM - 07 PM"; }
+                else if (item.BookingTime == 19) { bookingTime = "07 PM - 08 PM"; }
+                else if (item.BookingTime == 20) { bookingTime = "08 PM - 09 PM"; }
+                else if (item.BookingTime == 21) { bookingTime = "09 PM - 10 PM"; }
+                else if (item.BookingTime == 22) { bookingTime = "10 PM - 11 PM"; }
+                else if (item.BookingTime == 23) { bookingTime = "11 PM - 12 PM"; }*@
+
+                        @*switch (item.BookingTime)
+                {
+                case 0:
+                case 1:
+                case 2:
+                case 3:
+                case 4:
+                case 5:
+                case 6:
+                case 7:
+                case 8:
+                case 9:
+                case 10:
+                case 11:
+                bookingTime = $"{item.BookingTime}:{item.BookingMinutes} AM - {item.BookingTime + 1}:{item.BookingMinutes} AM";
+                break;
+                case 12:
+                case 13:
+                case 14:
+                case 15:
+                case 16:
+                case 17:
+                case 18:
+                case 19:
+                case 20:
+                case 21:
+                case 22:
+                case 23:
+                bookingTime = $"{item.BookingTime}:{item.BookingMinutes} PM - {item.BookingTime + 1}:{item.BookingMinutes} PM";
+                break;
+                default:
+                bookingTime = "Invalid item.BookingTime";
+                break;
+                }*@
+
+                        var convertfromutctolocal = TimeZoneInfo.ConvertTimeFromUtc(@item.BookingDate, TimeZoneInfo.Local);
+                        var LocalTime = TimeZoneInfo.ConvertTimeBySystemTimeZoneId(convertfromutctolocal, TimeZoneInfo.Local.Id, SessionFactory.TimeZone);
+                        var Date = LocalTime.Date;
+                        var Hour = LocalTime.Hour; //@TimeZone.CurrentTimeZone.ToLocalTime(@item.BookingDate).Hour;
+                        var Minute = LocalTime.Minute;
+                        item.BookingDate = Date;
+                        item.BookingTime = Hour;
+                        item.BookingMinutes = Minute;
+
+                        switch (item.BookingTime)
+                        {
+                            case int i when i >= 0 && i <= 23:
+                                string amPm = i < 12 ? "AM" : "PM";
+                                string startHour = (i % 12).ToString() ?? "12"; // Handle 12 AM and 12 PM
+                                string endHour = ((i + 1) % 12).ToString() ?? "12"; // Handle 12 AM and 12 PM
+
+                                string formattedMinutes = item.BookingMinutes.ToString().PadLeft(2, '0'); // Add leading zero if necessary
+
+
+                                bookingTime = $"{startHour}:{formattedMinutes} {amPm} - {endHour}:{formattedMinutes} {amPm}";
+                                break;
+                            default:
+                                bookingTime = "Invalid item.BookingTime";
+                                break;
+                        }
+
+
+
+                        <div class="col-lg-4 col-md-6">
+                            <div class="login-home-wrap">
+                                <div class="login-img-wrap" id="userProfileImg">
+                                    @if (item.ConsultantProfilePic == "")
+                                    {
+                                        <img src="~/assets/images/profile-pic-2.png" alt="Profile" />
+                                    }
+                                    else
+                                    {
+                                        <img src="@item.ConsultantProfilePic" alt="Profile">
+                                    }
+                                </div>
+                                <div class="login-conent-wrap">
+                                    <h3 style="text-transform: capitalize;">@item.ConsultantName</h3>
+                                    <p class="dark-text">Slot: @item.BookingDate.ToString("dd MMM yyyy") at @bookingTime</p>
+                                    <p class="mb-0">Communication Mode  </p>
+
+
+                                    @if (item.SessionTitle.ToLower() == "video")
+                                    {
+                                        <div class="inline-icon-text"><span><img src="../assets/images/video.svg" alt="Video Call"></span> Video Call</div>
+                                        <p><span><img src="../assets/images/ZKZg.gif" alt="Loading"></span> Waiting for @item.ConsultantName to start the call </p>
+                                    }
+                                    else if (item.SessionTitle.ToLower() == "audio")
+                                    {
+                                        <div class="inline-icon-text"><span><img src="../assets/images/call.svg" alt="Call"></span> Audio Call</div>
+                                        <p><span><img src="../assets/images/ZKZg.gif" alt="Loading"></span> Waiting for @item.ConsultantName to start the call </p>
+                                    }
+                                    else
+                                    {
+                                        <div class="inline-icon-text"><span><img src="../assets/images/communication.svg" alt="Chat"></span> Chat</div>
+                                        <p><span><img src="../assets/images/ZKZg.gif" alt="Loading"></span> Waiting for @item.ConsultantName to start the call </p>
+                                    }
+
+                                </div>
+                            </div>
+                        </div>
+                    }
+                }
+            </div>
+        </div>
+    </div>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="title">
+                    <h2>Available Consultants</h2>
+                </div>
+            </div>
+            @if (Model.lstModelConsultant != null && Model.lstModelConsultant.Count() > 0)
+            {
+                <div id="rowList" class="row">
+                    @foreach (var item in Model.lstModelConsultant)
+                    {
+                        <div class="col-lg-4 col-md-6" id="">
+                            <div class="login-home-wrap">
+                                @if (@item.IsFavConsultantornot == true)
+                                {
+                                    <img src="~/assets/images/Heart.svg" class="like-svg FavouriteConsultant clickable" data-model-value="@item.CurrentId" alt="Favourite" />
+                                }
+                                else
+                                {
+                                    <img src="~/assets/images/NotFavourite.svg" class="like-svg NotFavouriteConsultant clickable" data-model-value="@item.CurrentId" alt="NotFavourite" />
+                                }
+
+                                @*<img src="~/assets/images/Heart.svg" class="like-svg" alt="like" />*@
+                                <div class="login-img-wrap" id="userProfileImg">
+                                    @if (item.ProfilePic == "")
+                                    {
+                                        <img src="~/assets/images/profile-pic-2.png" alt="Profile" />
+                                    }
+                                    else
+                                    {
+                                        <img src="@item.ProfilePic" alt="Profile" style="border-radius:50%;" />
+                                    }
+                                </div>
+                                <a href="/Home/ConsultantDetail?id=@item.CurrentId">
+                                    <div class="login-conent-wrap">
+                                        <h3 style="text-transform: capitalize;">
+                                            @item.FirstName @item.LastName
+                                            <br/>
+                                            <img src="~/assets/images/full-star.svg" alt="full-star" />
+                                            @item.AvgRating <span>
+
+                                                (@{
+                                                    var reviewCountAbbreviated = "";
+                                                    var reviewCount = @item.CountRating;
+
+                                                    var suffixes = new string[] { "", "k", "M", "B", "T" }; // Add more suffixes as needed
+
+                                                    for (var i = 0; i < suffixes.Length; i++)
+                                                    {
+                                                        if (reviewCount < 1000)
+                                                        {
+                                                            reviewCountAbbreviated = reviewCount + suffixes[i];
+                                                            break;
+                                                        }
+                                                        reviewCount /= 1000;
+                                                    }
+                                                }
+                                                @Html.Raw(reviewCountAbbreviated + " Reviews") )
+
+
+                                            </span>
+                                        </h3>
+                                        <p class="dark-text">@item.LanguageName</p>
+                                        <p>Type of services</p>
+                                        <h4 class="mb-0">@item.TypeOfServiceName</h4>
+                                    </div>
+                                </a>
+                            </div>
+                        </div>
+                    }
+                </div>
+            }
+
+            @if (rankVal > 0)
+            {
+                <div class="login-home-wrap-btn text-center" id="LoadMoreHeader">
+                    <p class="load-btn" role="button" onclick="btnLoadMore(@rankVal)">Load More</p>
+                </div>
+            }
+        </div>
+    </div>
+</section>
+
+<script>
+    function btnLoadMore(sCntArg) {
+        debugger
+        let sCntObj = {
+            sCnt: sCntArg
+        }
+
+        $.ajax({
+            type: "POST",
+            url: "/Home/UserHomeIndexLoadMore",
+            data: sCntObj,
+            success: function (data) {
+                if (data.length > 0) {
+                    var options = '';
+
+                    for (var i = 0; i < data.length; i++) {
+                        debugger;
+                        var pPic = data[i].profilePic;
+                        var like = data[i].isFavConsultantornot;
+
+                        if (pPic == "") {
+                            pPic = "../assets/images/defaultProfile.png";
+                        } else {
+                            pPic = data[i].profilePic;
+                        }
+
+                        var LikePic = "";
+                        var likeLinkCss = "";
+                        var fName = "";
+
+                        if (like == true) {
+                            LikePic = "Heart.svg";
+                            likeLinkCss = "FavouriteConsultant";
+                            fName = "handleFavouriteConsultantClick";
+                        }
+                        else {
+                            LikePic = "NotFavourite.svg";
+                            likeLinkCss = "NotFavouriteConsultant";
+                            fName = "handleNotFavouriteConsultantClick";
+                        }
+
+                        var counting = data[i].countRating;
+                        var reviewCountAbbreviateds = "";
+                        var reviewCounts = counting;
+                        var suffixes = ["", "k", "M", "B", "T"]; // Add more suffixes as needed
+
+                        for (var j = 0; j < suffixes.length; j++) {
+                            if (reviewCounts < 1000) {
+                                reviewCountAbbreviateds = reviewCounts + suffixes[j];
+                                break;
+                            }
+                            reviewCounts /= 1000;
+                        }
+
+
+                        options += '<div class="col-lg-4 col-md-6"> <div class="login-home-wrap"> <img src="../assets/images/' + LikePic + '" class="like-svg clickable ' + likeLinkCss + '" data-model-value="' + data[i].currentId + '" alt="Favourite" /> <div class="login-img-wrap" id="userProfileImg"> <img src="' + pPic + '" alt="Profile" style="border-radius:50%;" /></div> <a href="/Home/ConsultantDetail?id=' + data[i].currentId + '"> <div class="login-conent-wrap"><h3 style="text-transform: capitalize;">' + data[i].firstName + ' &nbsp; ' + data[i].lastName + '<br/><img src="../assets/images/full-star.svg" alt="full-star" /> ' + data[i].avgRating + ' <span>( ' + reviewCountAbbreviateds + ' Reviews )</span> </h3><p class="dark-text">' + data[i].languageName + '</p><p>Type of services</p> <h4 class="mb-0">' + data[i].typeOfServiceName + '</h4> </div> </a></div></div>';
+                    }
+
+                    $('#rowList').append(options);
+                    $("#LoadMoreHeader").html("");
+                    $("#LoadMoreHeader").hide();
+
+                }
+                else {
+                    $("#LoadMoreHeader").html("");
+                    $("#LoadMoreHeader").hide();
+                }
+            },
+            error: function () {
+                alert("Error occured!!")
+            }
+        });
+    }
+
+    //$(".FavouriteConsultant").on("click", handleFavouriteConsultantClick);
+
+    function handleFavouriteConsultantClick(event) {
+        //debugger;
+
+        // Your existing click event handling code for ".NotFavouriteConsultant" class
+        event.preventDefault();
+        var clickedElement = $(this);
+        var ConsultantId = clickedElement.data('model-value');
+        var currentImageSrc = clickedElement.attr("src");
+
+        clickedElement.off("click", handleFavouriteConsultantClick);
+        $.ajax({
+            type: "POST",
+            url: "/Home/RemoveFavouriteConsultant",
+            data: { "ConsultantId": ConsultantId },
+            success: function (response) {
+                debugger;
+                if (response != 0) {
+                    if (currentImageSrc.includes("Heart.svg")) {
+                        clickedElement.removeClass("FavouriteConsultant").addClass("NotFavouriteConsultant");
+                        clickedElement.attr("src", "/assets/images/NotFavourite.svg");
+
+                        clickedElement.on("click", handleNotFavouriteConsultantClick);
+                    }
+                    //clickedElement.attr("src", "/assets/images/NotFavourite.svg");
+                }
+            },
+            error: function () {
+                alert("Error occured!!")
+            }
+        });
+    }
+
+    function handleNotFavouriteConsultantClick(event) {
+        //debugger;
+        // Your existing click event handling code for ".NotFavouriteConsultant" class
+        event.preventDefault();
+        var clickedElement = $(this);
+        var ConsultantId = clickedElement.data('model-value');
+        var currentImageSrc = clickedElement.attr("src");
+        clickedElement.off("click", handleNotFavouriteConsultantClick);
+        $.ajax({
+            type: "POST",
+            url: "/Home/AddFavouriteConsultant",
+            data: { "ConsultantId": ConsultantId },
+            success: function (response) {
+                debugger;
+                if (response != 0) {
+                    if (currentImageSrc.includes("NotFavourite.svg")) {
+                        clickedElement.removeClass("NotFavouriteConsultant").addClass("FavouriteConsultant");
+                        clickedElement.attr("src", "/assets/images/Heart.svg");
+
+                        clickedElement.on("click", handleFavouriteConsultantClick);
+                    }
+                    //clickedElement.attr("src", "/assets/images/Heart.svg");
+                }
+            },
+            error: function () {
+                alert("Error occured!!")
+            }
+        });
+    }
+
+        //$(".NotFavouriteConsultant").on("click", handleNotFavouriteConsultantClick);
+
+</script>                              

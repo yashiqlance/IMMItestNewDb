@@ -1,0 +1,448 @@
+﻿@{
+    //Layout = null;
+}
+@model IMMIWeb.Service.Models.UserViewModel
+@using (Html.BeginForm("GuestEditForRetain", "Retain", FormMethod.Post, new { id = "UserSignUpForm", enctype = "multipart/form-data" }))
+{
+    <input type="hidden" id="ProfilePicUpload" name="ProfilePicUpload">
+    <input value="@Model.lstMobileVal" type="hidden" id="txtlstMobileVal" name="txtlstMobileVal">
+    <section class="signin-section mt-90">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-xl-8">
+                    <div class="signin-wrap text-center signup-wrap">                        
+                        <div class="avatar-upload">
+                            <div class="avatar-edit">
+                                <input type='file' name="imageUploadAWS" id="imageUploadAWS" accept=".png, .jpg, .jpeg" />
+                                <label for="imageUploadAWS"></label>
+                            </div>
+                            <div class="avatar-preview">
+                                <div id="imagePreviewAWS" style="background-image: url('../assets/images/defaultProfile.png');"></div>
+                            </div>
+                        </div>
+                        <div style="padding-bottom:20px;">
+                            <span id="ErrorImageUpload" class="text-danger"></span>
+                        </div>
+                        <div class="row">
+                            <div class="col-lg-6">
+                                <div class="input-group">
+                                    <input type="text" class="form-control" maxlength="36" value="@Model.FirstName" placeholder="First Name*" id="FirstName" name="FirstName">
+                                    <label for="">First name</label>
+                                    <span id="ErrorFirstName" class="text-danger"></span>
+                                </div>
+                            </div>
+                            <div class="col-lg-6">
+                                <div class="input-group">
+                                    <input type="text" class="form-control" maxlength="36" value="@Model.LastName" placeholder="Last Name*" id="LastName" name="LastName">
+                                    <label for="">Last name</label>
+                                    <span id="ErrorLastName" class="text-danger"></span>
+                                </div>
+                            </div>
+                            <div class="col-lg-12">
+                                <div class="input-group">
+                                    <input type="email" class="form-control existEmail" value="@Model.Email" placeholder="Email address*" id="Email" name="Email">
+                                    <label for="">Email</label>
+                                    <span id="ErrorEmail" class="text-danger">@Model.EmailErrMsg</span>
+                                    @* @if (TempData["AlertMessageFailEmail"] != null && TempData["AlertMessageFailEmail"].ToString() != "")
+                                {
+                                <span class="text-danger">@TempData["AlertMessageFailEmail"].ToString()</span>
+                                }*@
+                                </div>
+                            </div>
+                            <div class="col-lg-12 position-relative mb-2">
+                                <div class="cst-slect">
+                                    <select class="mySelect fontColor" name="MobileCountryCode" id="MobileCountryCode">
+                                        @foreach (var item in Model.lstMobile.ToList())
+                                        {
+                                            <option value="+@item.Name">+@item.Name @item.Prefix</option>
+                                        }
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <input type="tel" maxlength="12" style="padding-left: 105px;" class="fgd form-control" id="Mobile" name="Mobile" value="@Model.Mobile" placeholder="Mobile number*" />
+                                </div>
+                                <div style="text-align:left;">
+                                    <span id="ErrorMobile" class="text-danger">@Model.MobileErrMsg</span>
+                                    @*  @if (TempData["AlertMessageFailMobile"] != null && TempData["AlertMessageFailMobile"].ToString() != "")
+                                {
+                                <span class="text-danger">@TempData["AlertMessageFailMobile"].ToString()</span>
+                                }*@
+                                </div>
+                            </div>
+                            <div class="col-lg-12">
+                                <div class="input-group">
+                                    <select id="Country" name="Country" class="form-control">
+                                        <option value="">Country you belong*</option>
+                                        @foreach (var item in Model.lstCountry)
+                                        {
+                                            <option value="@item.Id">@item.Name</option>
+                                        }
+                                    </select>
+                                    <label for="">Country you belong</label>
+                                    <span id="ErrorCountry" class="text-danger"></span>
+                                </div>
+                            </div>
+                            <div class="col-lg-12">
+                                <div class="input-group">
+                                    <select id="ImmigrationCountry" name="ImmigrationCountry" class="form-control">
+                                        <option value="">Immigration Country*</option>
+                                        @foreach (var item in Model.lstCountryByTypeOfService)
+                                        {
+                                            <option value="@item.Id" data-value="@item.Name">@item.Name</option>
+                                        }
+                                    </select>
+                                    <label for="">Immigration Country</label>
+                                    <span id="ErrorImmigrationCountry" class="text-danger"></span>
+                                </div>
+                            </div>
+                            <div class="col-lg-12 clsTos" style="display:none;">
+                                <div class="input-group">
+                                    <select id="TypeOfServiceName" name="TypeOfServiceName" class="form-control clsTos" style="display:none;">
+                                        <option value="">Type of immigration stream</option>
+                                    </select>
+                                    <label for="">Type of immigration stream</label>
+                                    <span id="ErrorTypeOfServiceName" class="text-danger"></span>
+                                </div>
+                            </div>
+                            <div class="col-lg-12">
+                                <div class="input-group">
+                                    <select id="CommunicationLanguage" name="CommunicationLanguage" class="form-control">
+                                        <option value="">Communication Language*</option>
+                                        @foreach (var item in Model.lstLanguage)
+                                        {
+                                            <option value="@item.Id" data-value="@Model.CommunicationLanguage">@item.Name</option>
+                                        }
+                                    </select>
+                                    <label for="">Communication Language</label>
+                                    <span id="ErrorCommunicationLanguage" class="text-danger"></span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="lost-mobile-wrap text-start">
+                            <input type="hidden" id="IsAgreement" name="IsAgreement">
+                            <input type="checkbox" id="chkIsAgreement" name="chkIsAgreement">
+                            <label for="checkbox">I have read and accept the <a asp-controller="UserCMS" asp-action="Agreement">Agreement</a>, <a asp-controller="UserCMS" asp-action="PrivacyPolicy">Privacy policies</a> & <a asp-controller="UserCMS" asp-action="TermsandCondition">Terms and Conditions</a> </label>
+                            <br />
+                            <span id="ErrorAgreement" class="text-danger"></span>
+                        </div>
+                        <button type="button" class="g-btn" id="btnSubmit">Submit</button>
+                        
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+}
+<script type="text/javascript">
+    $(document).ready(function () {
+
+        $("#MobileCountryCode").prop("disabled", true);
+        $("#Mobile").prop("disabled", true);
+        $("#ImmigrationCountry").prop("disabled", true);
+        $("#TypeOfServiceName").prop("disabled", true);
+
+        $("#Mobile").focusout(function () {
+            let mobileObj = {
+                numberString: $('#Mobile').val(),
+                codeString: $('#MobileCountryCode').val()
+            }
+
+            if (mobileObj.numberString != "" && mobileObj.codeString != "") {
+                $.ajax({
+                    type: "POST",
+                    url: "/UserAccount/GetExistMobile",
+                    data: mobileObj,
+                    success: function (data) {
+                        if (data > 0) {
+                            $(".existMobile").text("Number is already exist");
+                        } else {
+                            $(".existMobile").text("");
+                        }
+                    },
+                    error: function () {
+                        alert("Error occured!!")
+                    }
+                });
+            }
+        });
+
+        $('#Email').focusout(function () {
+            let emailObj = {
+                emailString: $('#Email').val()
+            }
+
+            if (emailObj.emailString != "") {
+                $.ajax({
+                    type: "POST",
+                    url: "/UserAccount/GetExistEmail",
+                    data: emailObj,
+                    success: function (data) {
+                        if (data > 0) {
+                            $(".existMail").text("Email is already exist");
+                        } else {
+                            $(".existMail").text("");
+                        }
+                    },
+                    error: function () {
+                        alert("Error occured!!")
+                    }
+                });
+            }
+        });
+
+        var modelMessage = '@Model.Message';
+
+        if (modelMessage && modelMessage.length > 0) {
+            $(".clsErrorMsg").html(modelMessage);
+            setTimeout(function () {
+                $(".clsErrorMsg").html("");
+            }, 5000);
+        }
+
+        var mobileCodeVal = $("#txtlstMobileVal").val();
+
+        if (mobileCodeVal != "") {
+            $("#MobileCountryCode").val(mobileCodeVal);
+        }
+        if ('@Model.lstCountryVal' != "0") {
+            $("#Country").val('@Model.lstCountryVal');
+        }
+        if ('@Model.lstCountryByTypeOfServiceVal' != "0") {
+            $("#ImmigrationCountry").val('@Model.lstCountryByTypeOfServiceVal');
+
+            var getCurrentVal = $("#ImmigrationCountry").val();
+
+            if (getCurrentVal != "0") {
+                let countryObj = {
+                    countryId: $('#ImmigrationCountry').val()
+                }
+
+                if (countryObj.countryId != "") {
+                    $.ajax({
+                        type: "POST",
+                        url: "/UserAccount/GetServiceByCountry",
+                        data: countryObj,
+                        success: function (data) {
+                            $('#TypeOfServiceName').html('');
+                            var options = '';
+                            options += '<option value="">Type Of Immigration Stream</option>';
+                            for (var i = 0; i < data.length; i++) {
+                                options += '<option value="' + data[i].id + '">' + data[i].name + '</option>';
+                            }
+                            $('#TypeOfServiceName').append(options);
+                            $('.clsTos').show();
+                            $("#TypeOfServiceName").val('@Model.lstTypeOfServiceVal');
+                        },
+                        error: function () {
+                            alert("Error occured!!")
+                        }
+                    });
+                }
+            }
+            else {
+                $('.clsTos').hide();
+            }
+
+        }
+        if ('@Model.lstLanguageVal' != "0") {
+            $("#CommunicationLanguage").val('@Model.lstLanguageVal');
+        }
+
+
+        $('#ImmigrationCountry').change(function () {
+
+            var getCurrentVal = $("#ImmigrationCountry").val();
+
+            if (getCurrentVal != "0") {
+                let countryObj = {
+                    countryId: $('#ImmigrationCountry').val()
+                }
+
+                if (countryObj.countryId != "") {
+                    $.ajax({
+                        type: "POST",
+                        url: "/UserAccount/GetServiceByCountry",
+                        data: countryObj,
+                        success: function (data) {
+                            $('#TypeOfServiceName').html('');
+                            var options = '';
+                            options += '<option value="">Type Of Immigration Stream</option>';
+                            for (var i = 0; i < data.length; i++) {
+                                options += '<option value="' + data[i].id + '">' + data[i].name + '</option>';
+                            }
+                            $('#TypeOfServiceName').append(options);
+                            $('.clsTos').show();
+                        },
+                        error: function () {
+                            alert("Error occured!!")
+                        }
+                    });
+                }
+            }
+            else {
+                $('.clsTos').hide();
+            }
+
+
+        });
+
+        $("#Mobile").on("input", function () {
+            var mobileInput = $(this).val();
+            var sanitizedInput = mobileInput.replace(/[^0-9]/g, ''); // Remove non-numeric characters
+            $(this).val(sanitizedInput);
+        });
+
+        $("#FirstName").on("input", function () {
+            var firstNameInput = $(this).val();
+            var sanitizedInput = firstNameInput.replace(/[^a-zA-Z]/g, ''); // Remove numeric and special characters
+            $(this).val(sanitizedInput);
+        });
+
+        $("#LastName").on("input", function () {
+            var lastNameInput = $(this).val();
+            var sanitizedInput = lastNameInput.replace(/[^a-zA-Z]/g, ''); // Remove numeric and special characters
+            $(this).val(sanitizedInput);
+        });
+
+        function showPic(input) {
+            var reader = new FileReader();
+            reader.onload = function (e) {
+                $('#imagePreviewAWS').css('background-image', 'url(' + e.target.result + ')');
+            };
+
+            reader.readAsDataURL(input.files[0]);
+            $('#ProfilePicUpload').val(input.files[0].name);
+        }
+
+        $("#imageUploadAWS").change(function () {
+            showPic(this);
+        });
+
+        $('#btnSubmit').click(function (event) {
+
+            var isValidForm = true;
+
+            var ProfilePic = $("#imageUploadAWS").val();
+            var firstName = $("#FirstName").val();
+            var lastName = $("#LastName").val();
+            var email = $("#Email").val();
+            var mobile = $("#Mobile").val();
+            var country = $("#Country").val();
+            var immigrationCountry = $("#ImmigrationCountry").val();
+            var typeofservice = $("#TypeOfServiceName").val();
+            var communicationlanguage = $("#CommunicationLanguage").val();
+            var isAgreementChecked = $("#chkIsAgreement").is(":checked");
+
+            if (ProfilePic.trim() === "") {
+                $("#ErrorImageUpload").text("Please select profile picture.");
+                isValidForm = false;
+            } else {
+                $("#ErrorImageUpload").text("")
+            }
+
+            if (firstName.trim() === "") {
+                $("#ErrorFirstName").text("First name is required.");
+                isValidForm = false;
+            } else if (firstName.length < 3) {
+                $("#ErrorFirstName").text("First name must be minimum 2 characters.");
+                isValidForm = false;
+            } else {
+                $("#ErrorFirstName").text("");
+            }
+
+            if (lastName.trim() === "") {
+                $("#ErrorLastName").text("Last name is required.");
+                isValidForm = false;
+            } else if (lastName.length < 3) {
+                $("#ErrorLastName").text("Last name must be minimum 2 characters.");
+                isValidForm = false;
+            } else {
+                $("#ErrorLastName").text("");
+            }
+
+            if (email.trim() === "") {
+                $("#ErrorEmail").text("Email is required.");
+                isValidForm = false;
+            } else if (!isValidEmail(email)) {
+                $("#ErrorEmail").text("Enter a valid email address.");
+                isValidForm = false;
+            } else {
+                $("#ErrorEmail").text("");
+            }
+
+            if (mobile.trim() === "") {
+                $("#ErrorMobile").text("Mobile number is required.");
+                isValidForm = false;
+            } else if (!/^\d{6,12}$/.test(mobile)) {
+                $("#ErrorMobile").text("Mobile number must be between 6 and 12 digits.");
+                isValidForm = false;
+            } else if (!/^[0-9]+$/.test(mobile)) {
+                $("#ErrorMobile").text("Please enter only numeric digits in the mobile number");
+                isValidForm = false;
+            } else {
+                $("#ErrorMobile").text("");
+            }
+
+            if (country.trim() === "") {
+                $("#ErrorCountry").text("Please select the country you belong.");
+                isValidForm = false;
+            } else {
+                $("#ErrorCountry").text("");
+            }
+
+            if (immigrationCountry === "") {
+                $("#ErrorImmigrationCountry").text("Please select an immigration country.");
+                isValidForm = false;
+            } else {
+                $("#ErrorImmigrationCountry").text("");
+            }
+
+            if (typeofservice === "") {
+                $("#ErrorTypeOfServiceName").text("Please select an type of service.");
+                isValidForm = false;
+            } else {
+                $("#ErrorTypeOfServiceName").text("");
+            }
+
+            if (communicationlanguage === "") {
+                $("#ErrorCommunicationLanguage").text("Please select a communication language.");
+                isValidForm = false;
+            } else {
+                $("#ErrorCommunicationLanguage").text("");
+            }
+
+            if (!isAgreementChecked) {
+                $("#ErrorAgreement").text("Please accept the agreement, privacy policies, and terms and conditions");
+                isValidForm = false;
+            } else {
+                $("#ErrorAgreement").text("");
+            }
+
+
+            if (isValidForm) {
+                $("#UserSignUpForm").submit();
+            }
+
+        });
+
+        $('#chkIsAgreement').change(function () {
+            if (this.checked) {
+                $("#IsAgreement").val("accepted");
+            }
+            else {
+                $("#IsAgreement").val("unaccepted");
+            }
+        });
+
+        function isValidEmail(email) {
+            var emailPattern = /^[^\s]+[^\s]+\.[^\s]+$/i;
+            return emailPattern.test(email);
+        }
+
+    });
+</script>
+<script type="text/javascript">
+    function preventBack() { window.history.forward(); }
+    setTimeout("preventBack()", 0);
+    window.onunload = function () { null };
+</script>

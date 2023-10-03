@@ -1,0 +1,185 @@
+﻿@model IMMIWeb.Service.Models.ConsultantDetailViewModel
+@using IMMIWeb.Infrastructure;
+@{
+    int rankVal = 0;
+    if (Model != null && Model.lstGetConsultantReviewViewModel.Count() > 0)
+    {
+        rankVal = Model.lstGetConsultantReviewViewModel.Count() + 1;
+    }
+}
+
+<section class="login-home fav-con-sec mt-90">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="title">
+                    <h2>Rating & Reviews</h2>
+                </div>
+            </div>
+            @if (Model.lstGetConsultantReviewViewModel != null && Model.lstGetConsultantReviewViewModel.Count() > 0)
+            {
+                <div id="rowList" class="row">
+                    @foreach (var item in Model.lstGetConsultantReviewViewModel)
+                    {
+                        <div class="col-lg-4 col-md-6">
+                            <div class="login-home-wrap rating-reviews">
+                                <div class="rating-wrapper">
+                                    
+                                    @for (int i = 0; i < item.Rating; i++)
+                                    {
+                                        <img src="/assets/images/full-star.svg" alt="full-star">
+                                    }
+                                    @for (int i = item.Rating; i < 5; i++)
+                                    {
+                                        <img src="/assets/images/null-star.svg" alt="null-star">
+                                    }
+                                </div>
+                                <div class="login-img-wrap" id="responsiveHeaderImg">
+                                    @if (@item.ProfilePic != null && item.ProfilePic != "")
+                                    {
+                                        <img src="@item.ProfilePic" alt="Profile">
+                                    }
+                                    else
+                                    {
+                                        <img src="~/assets/images/defaultProfile.png" alt="user" />
+                                    }
+                                </div>
+                                <div class="login-conent-wrap">
+                                    <h3>@item.FirstName</h3>
+                                    <p>
+                                        @{
+                                            var convertfromutctolocal = TimeZoneInfo.ConvertTimeFromUtc(@item.CreatedOn, TimeZoneInfo.Local);
+                                            var LocalTime = TimeZoneInfo.ConvertTimeBySystemTimeZoneId(convertfromutctolocal, TimeZoneInfo.Local.Id, SessionFactory.TimeZone);
+                                            var Date = LocalTime.Date;
+                                        }
+
+                                        @Date.ToString("dd MMM yyyy")
+                                    </p>
+                                    <p class="dark-text">@item.Review</p>
+
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+                
+            }
+                    
+        </div>
+        @if (rankVal > 0)
+        {
+            <div class="login-home-wrap-btn text-center" id="LoadMoreHeader">
+                <a href="#" class="load-btn" onclick="btnLoadMoreRating(@rankVal)">Load More</a>
+            </div>
+        }
+        
+    </div>
+</section>
+<script type="text/javascript">
+    function btnLoadMoreRating(sCntArg) {
+        //debugger
+        let sCntObj = {
+            sCnt: sCntArg
+        }
+
+        $.ajax({
+            type: "POST",
+            url: '@Url.Action("ConsultantRatingReviewLoadMore", "ConsultantHome")',   //"/ConsultantHome/ConsultantRatingReviewLoadMore",
+            data: sCntObj,
+            success: function (data) {
+                //debugger;
+                if (data.length > 0) {
+                    var options = '';
+
+                    for (var i = 0; i < data.length; i++) {
+                        //debugger;
+                        var pPic = data[i].profilePic;
+                        var Rating = data[i].rating;
+                        var Review = data[i].review;
+                        var FirstName = data[i].firstName;
+                        var CreatedOn = data[i].createdOn;
+                        var dateObj = moment.utc(data[i].createdOn, 'YYYY/MM/DD, h:mm:ss.ss A Z');
+                        //var date = new Date(CreatedOn);
+                        var date = dateObj._d;
+                        //var options = { year: 'numeric', month: 'short', day: 'numeric' };
+                        //var formattedDate = date.toLocaleString('en-US', options);
+
+                        var day = date.getDate();
+                        var monthIndex = date.getMonth();
+                        var year = date.getFullYear();
+
+
+                        // Define an array to store the month names
+                        var monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+
+                        // Format the day to have leading zeros if necessary
+                        var formattedDay = day < 10 ? '0' + day : day;
+
+                        // Get the abbreviated month name from the monthNames array
+                        var monthName = monthNames[monthIndex];
+
+                        // Create the formatted date string in "dd MMM yyyy" format
+                        var formattedDate = formattedDay + ' ' + monthName + ' ' + year;
+
+                        if (pPic == "") {
+                            pPic = "../assets/images/defaultProfile.png";
+                        } else {
+                            pPic = data[i].profilePic;
+                        }
+
+                        // Create the HTML content and append it to the options variable
+                        options += '<div class="col-lg-4 col-md-6">';
+                        options += '<div class="login-home-wrap rating-reviews">';
+                        options += '<div class="rating-wrapper">';
+
+                        // Add the star images based on your item's rating
+                        for (var i = 0; i < Rating; i++) {
+                            options += '<img src="/assets/images/full-star.svg" alt="full-star">';
+                        }
+
+                        for (var i = Rating; i < 5; i++) {
+                            options += '<img src="/assets/images/null-star.svg" alt="null-star">';
+                        }
+
+                        options += '</div>';
+                        options += '<div class="login-img-wrap">';
+
+                        // Check if a profile picture exists and add it
+                        if (pPic != null && pPic != "") {
+                            options += '<img src="' + pPic + '" alt="Profile">';
+                        } else {
+                            options += '<img src="~/assets/images/defaultProfile.png" alt="user" />';
+                        }
+
+                        options += '</div>';
+                        options += '<div class="login-conent-wrap">';
+                        options += '<h3>' + FirstName + '</h3>';
+                        options += '<p>' + formattedDate + '</p>';
+                        options += '<p class="dark-text">' + Review + '</p>';
+                        options += '</div>';
+                        options += '</div>';
+                        options += '</div>';
+
+
+
+
+                    }
+
+                    $('#rowList').append(options);
+                    $("#LoadMoreHeader").html("");
+                    var nextLoadCount = data[data.length - 1].rank + 1;
+                    var optionsCnt = '<a href="#" class="load-btn"  onclick="btnLoadMoreRating(' + nextLoadCount + ')">Load More</p>';
+                    $("#LoadMoreHeader").append(optionsCnt);
+
+                }
+                else {
+                    $("#LoadMoreHeader").html("");
+                    $("#LoadMoreHeader").hide();
+                }
+            },
+            error: function () {
+                alert("Error occured!!")
+            }
+        });
+    }
+</script>

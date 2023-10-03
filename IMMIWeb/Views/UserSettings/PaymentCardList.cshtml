@@ -1,0 +1,132 @@
+﻿@model IMMIWeb.Service.Models.UserCardDetails
+
+
+<section class="my-card-section my-card-add-card mt-90">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-10">
+                <div class="my-card-wrap">
+                    <div class="row">
+                        <div class="col-lg-6 col-md-6">
+                            <div class="my-card-wrap border-0 p-0">
+                                <button type="button" class="btn g-btn float-end" onclick="location.href='@Url.Action("UserAddPaymentCard", "UserSettings")'">+ Add Card</button>
+                                <h2 class="row">My Cards</h2>
+                                @foreach (var item in Model.CardList.OrderByDescending(card => card.IsPrimary))
+                                {
+                                    <input type="hidden" value="@item.CardId" />
+                                    <input type="hidden" value="@item.Id" id="singleCardId" />
+                                    <div class="card-wrap">
+                                        <div class="visa-icon-wrap">
+                                            <img src="~/assets/images/visa.png" alt="visa" />
+                                        </div>
+                                        <div class="visa-text">
+                                            <h3>@item.CardName</h3>
+                                            <h4 class="formatted-card-number">@item.CardNumber</h4>
+                                            <div class="d-flex align-items-center justify-content-between">
+                                                <p class="mb-0">@item.ExpMonth/@item.ExpYear</p>
+                                                @if ((bool)item.IsPrimary)
+                                                {
+                                                    <p class="mb-0 primary-card-label">Primary Card</p>
+                                                    <h5 class="mb-0 btn btn-link remove-primary-card mb-0" style="text-decoration:none;" data-card-id="@item.CardId">Remove</h5>
+                                                }
+                                                else
+                                                {
+                                                    <h5 class="mb-0 btn btn-link set-primary-card-button mb-0" style="text-decoration:none;" data-card-id="@item.CardId">Set Primary</h5>
+                                                    <h5 class="mb-0 btn btn-link remove-card-button mb-0" style="text-decoration:none;" data-card-id="@item.CardId">Remove</h5>
+                                                }
+                                                @*<button class="btn btn-link remove-card-button mb-0" data-card-id="@item.CardId">Remove</button>*@
+                                            </div>
+                                            <span class="ErrorCard text-danger"></span>
+                                        </div>
+                                    </div>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<script type="text/javascript">
+
+    $(document).ready(function () {
+
+
+        $(".remove-primary-card").click(function () {
+            $(".ErrorCard").text("This is the primary card.");
+
+            setTimeout(function () {
+                $(".ErrorCard").text("");
+            }, 3000);
+        });
+
+        $(".set-primary-card-button").click(function () {
+            var cardId = $(this).data("card-id");
+            var Id = document.getElementById("singleCardId").value;
+            $('#loading-overlay').show();
+            $.ajax({
+                type: "POST",
+                url: "@Url.Action("SetPrimayCard", "UserSettings")",
+                data: { cardId: cardId, id: Id },
+                success: function (result) {
+                    if (result.success) {
+                        $('#loading-overlay').hide();
+                        $(".primary-card-label").remove();
+
+
+                        $(this).closest(".card-wrap").append('<p class="mb-0 primary-card-label">Primary</p>');
+                        location.reload();
+                        window.location.href = window.location.href;
+                    } else {
+                        $('#loading-overlay').hide();
+                        console.log(result.message);
+                    }
+                },
+                error: function () {
+                    console.log("Error occurred while setting the primary card.");
+                }
+            });
+        });
+
+        $(".remove-card-button").click(function () {
+            $('#loading-overlay').show();
+            var cardId = $(this).data("card-id");
+            var Id = document.getElementById("singleCardId").value;
+            $.ajax({
+                type: "POST",
+                url: "@Url.Action("RemoveUserCardsDetail", "UserSettings")",
+                data: { cardId: cardId, id: Id },
+                success: function (result) {
+                    $('#loading-overlay').hide();
+                    $(this).closest(".card-wrap").remove();
+                    location.reload();
+                    window.location.href = window.location.href;
+                },
+                error: function () {
+                    $('#loading-overlay').hide();
+                    console.log("Error occurred during card removal.");
+                }
+            });
+        });
+
+        function formatCardNumber(cardNumber) {
+            if (cardNumber.length <= 4) {
+                return cardNumber;
+            }
+
+            var formattedCardNumber = '*'.repeat(cardNumber.length - 4) + cardNumber.slice(-4);
+            formattedCardNumber = formattedCardNumber.replace(/(.{4})/g, '$1 '); // Add space after every 4 characters
+
+
+            return formattedCardNumber;
+        }
+
+        $(".formatted-card-number").each(function () {
+            var originalCardNumber = $(this).text();
+            var formattedCardNumber = formatCardNumber(originalCardNumber);
+            $(this).text(formattedCardNumber);
+        });
+    });
+</script>
